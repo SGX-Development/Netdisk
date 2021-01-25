@@ -12,25 +12,20 @@ type MainController struct {
 	beego.Controller
 }
 
-func (c *MainController) Get() {
-	c.Data["Website"] = "beego.me"
-	c.Data["Email"] = "astaxie@gmail.com"
-	c.TplName = "index.tpl"
-}
 
 func (c *MainController) Showlogin() {
-	c.TplName = "login.tpl"
+	c.TplName = "login.html"
 }
 
 func (c *MainController) Handlelogin() {
 	userName := c.GetString("userName")
 	passWd := c.GetString("passWd")
-	email := c.GetString("email")
+	// email := c.GetString("email")
 
 	valid := validation.Validation{}
 	valid.Required(userName, "userName")    //userName can't be blank
 	valid.Required(passWd, "passWd")        //passWd can't be blank
-	valid.Required(email, "email")          //email can't be blank
+	// valid.Required(email, "email")          //email can't be blank
 	valid.MaxSize(userName, 15, "userName") //userName MaxSize is 15
 	valid.MinSize(userName, 3, "userName")  //userName MinSize is 3
 	valid.MaxSize(passWd, 15, "passWd")     //passWd Maxsize is 15
@@ -44,23 +39,29 @@ func (c *MainController) Handlelogin() {
 		}
 
 	}
-	o := orm.NewOrm()
-	user := models.User{}
-	user.Name = userName
 
-	err := o.Read(&user,"userName")
-	if err != nil{
-		log.Println("ERROR!")
+	if userName == "" || passWd == "" {
+		log.Println("输入数据不合法")
 		c.TplName = "login.html"
 		return
 	}
 
-	c.Ctx.WriteString("登陆成功，欢迎您")
-	c.Redirect("/", 200)
+	o := orm.NewOrm()
+	user := models.User{}
+
+	user.Name = userName
+	err := o.Read(&user, "Name")
+	if err != nil{
+		log.Println("查询失败")
+		c.TplName = "login.html"
+		return
+	}
+
+	c.Ctx.WriteString("Welcome")
 }
 
 func (c *MainController) ShowRegister() {
-	c.TplName = "register.tpl"
+	c.TplName = "register.html"
 }
 
 func (c *MainController) HandleRegister() {
@@ -93,5 +94,4 @@ func (c *MainController) HandleRegister() {
 	}
 
 	c.TplName = "login.html"
-	c.Redirect("/login",200)
 }

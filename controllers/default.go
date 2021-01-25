@@ -14,6 +14,9 @@ type MainController struct {
 	beego.Controller
 }
 
+func (c *MainController) ShowIndex(){
+	c.TplName = "index.tpl"
+}
 
 // 处理登录
 func (c *MainController) Showlogin() {

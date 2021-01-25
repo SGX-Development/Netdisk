@@ -75,6 +75,7 @@ func (c *MainController) Handlelogin() {
 		c.TplName = "login.html"
 		return
 	}
+
 	c.SetSession("userName", user.Name)
 	c.SetSession("passWd", pwmd5)
 

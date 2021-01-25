@@ -13,6 +13,7 @@ type MainController struct {
 }
 
 
+// 处理登录
 func (c *MainController) Showlogin() {
 	c.TplName = "login.html"
 }
@@ -35,9 +36,7 @@ func (c *MainController) Handlelogin() {
 		for _, err := range valid.Errors {
 			data := "Verify" + err.Key
 			c.Data[data] = err.Message
-			//log.Println(err.Key, err.Message)
 		}
-
 	}
 
 	if userName == "" || passWd == "" {
@@ -52,14 +51,21 @@ func (c *MainController) Handlelogin() {
 	user.Name = userName
 	err := o.Read(&user, "Name")
 	if err != nil{
-		log.Println("查询失败")
+		log.Println("查询失败，用户可能不存在")
 		c.TplName = "login.html"
 		return
 	}
-
+	// 检查密码是否正确
+	if user.Passwd != passWd{
+		log.Println("密码错误")
+		c.TplName = "login.html"
+		return
+	}
 	c.Ctx.WriteString("Welcome")
 }
 
+
+// 处理注册
 func (c *MainController) ShowRegister() {
 	c.TplName = "register.html"
 }
@@ -82,14 +88,14 @@ func (c *MainController) HandleRegister() {
 
 	user := models.User{}
 	user.Name = userName
-	user.Passwd = passWd
 	user.Email = email
+	user.Passwd = passWd
 
 	_,err := o.Insert(&user)
 
 	if err != nil{
 		log.Println("插入数据库失败")
-		c.Redirect("/register",302)
+		c.TplName = "register.html"
 		return
 	}
 

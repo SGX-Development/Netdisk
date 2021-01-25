@@ -6,10 +6,13 @@ import (
 )
 
 type User struct {
-	Id int
-	Name string `orm:"unique"`
-	Passwd string
-	Email string
+	Id int `json:"id"`
+	Name string `json:"name" gorm:"type:varchar(45) not null;unique"`
+	Passwd string `json:"password" gorm:"type:varchar(255)"`
+	Email string `json:"email" orm:"unique"`
+	Iconpath string  `json:"iconpath" gorm:"type:varchar(512);null"`
+	Isactive bool  `json:"isactive" gorm:"default:true"`
+	Isdelete bool  `json:"isdelete" gorm:"default:false"`
 }
 
 func init(){

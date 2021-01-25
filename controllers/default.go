@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"crypto/md5"
+	"fmt"
 	"github.com/beego/beego/v2/core/validation"
 	beego "github.com/beego/beego/v2/server/web"
 	"log"
@@ -56,7 +58,13 @@ func (c *MainController) Handlelogin() {
 		return
 	}
 	// 检查密码是否正确
-	if user.Passwd != passWd{
+	var pwByte []byte = []byte(passWd)
+	pw := md5.New()
+	pw.Write(pwByte)
+	cipherStr := pw.Sum(nil)
+	pwmd5 := fmt.Sprintf("%x", cipherStr)
+
+	if user.Passwd != pwmd5{
 		log.Println("密码错误")
 		c.TplName = "login.html"
 		return
@@ -84,12 +92,19 @@ func (c *MainController) HandleRegister() {
 	valid.MaxSize(passWd, 15, "passWd")     //passWd Maxsize is 15
 	valid.MinSize(passWd, 6, "passWd")      //passWd Minsize is 6
 
-	o := orm.NewOrm()
+	var pwByte []byte = []byte(passWd)
+	pw := md5.New()
+	pw.Write(pwByte)
+	cipherStr := pw.Sum(nil)
+	pwmd5 := fmt.Sprintf("%x", cipherStr)
 
+	o := orm.NewOrm()
 	user := models.User{}
 	user.Name = userName
 	user.Email = email
-	user.Passwd = passWd
+	user.Passwd = pwmd5
+	user.Isactive = true
+	user.Isdelete = false
 
 	_,err := o.Insert(&user)
 

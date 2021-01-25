@@ -6,11 +6,23 @@
 </head>
 <body>
 <h1>注册页面</h1>
+{{.message}}
 <form method="post" action="/register">
-    <input type="test" name="userName">
-    <input type="email" name="email">
-    <input type="password" name="passWd">
-    <input type="submit" name="注册">
+    <p>
+        用户名：    <input type="test" name="userName">
+    </p>
+    <p>
+        Email：     <input type="email" name="email">
+    </p>
+    <p>
+        密码：       <input type="password" name="passWd">
+    </p>
+    <p>
+        重复密码：  <input type="password" name="passWd_2">
+    </p>
+    <p>
+        <input type="submit" name="注册">
+    </p>
 </form>
 </body>
 </html>

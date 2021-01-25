@@ -31,12 +31,10 @@ func (c *MainController) Showlogin() {
 func (c *MainController) Handlelogin() {
 	userName := c.GetString("userName")
 	passWd := c.GetString("passWd")
-	// email := c.GetString("email")
 
 	valid := validation.Validation{}
 	valid.Required(userName, "userName")    //userName can't be blank
 	valid.Required(passWd, "passWd")        //passWd can't be blank
-	// valid.Required(email, "email")          //email can't be blank
 	valid.MaxSize(userName, 15, "userName") //userName MaxSize is 15
 	valid.MinSize(userName, 3, "userName")  //userName MinSize is 3
 	valid.MaxSize(passWd, 15, "passWd")     //passWd Maxsize is 15
@@ -51,17 +49,17 @@ func (c *MainController) Handlelogin() {
 
 	if userName == "" || passWd == "" {
 		log.Println("输入数据不合法")
+		c.Data["message"] = "输入数据不合法"
 		c.TplName = "login.html"
 		return
 	}
 
 	o := orm.NewOrm()
 	user := models.User{}
-
 	user.Name = userName
 	err := o.Read(&user, "Name")
 	if err != nil{
-		log.Println("查询失败，用户可能不存在")
+		c.Data["message"] = "用户名或密码错误"
 		c.TplName = "login.html"
 		return
 	}
@@ -73,7 +71,7 @@ func (c *MainController) Handlelogin() {
 	pwmd5 := fmt.Sprintf("%x", cipherStr)
 
 	if user.Passwd != pwmd5{
-		log.Println("密码错误")
+		c.Data["message"] = "密码错误"
 		c.TplName = "login.html"
 		return
 	}
@@ -81,7 +79,7 @@ func (c *MainController) Handlelogin() {
 	c.SetSession("passWd", pwmd5)
 
 	//successfully login
-	c.Ctx.Redirect(302, "http://58.196.135.54:10009")
+	c.Ctx.Redirect(302, "http://58.196.135.54:10010")
 }
 
 /*
@@ -114,6 +112,7 @@ func (c *MainController) ShowRegister() {
 func (c *MainController) HandleRegister() {
 	userName := c.GetString("userName")
 	passWd := c.GetString("passWd")
+	passWd_2 := c.GetString("passWd_2")
 	email := c.GetString("email")
 
 	valid := validation.Validation{}
@@ -124,6 +123,12 @@ func (c *MainController) HandleRegister() {
 	valid.MinSize(userName, 3, "userName")  //userName MinSize is 3
 	valid.MaxSize(passWd, 15, "passWd")     //passWd Maxsize is 15
 	valid.MinSize(passWd, 6, "passWd")      //passWd Minsize is 6
+
+	if passWd!=passWd_2 {
+		c.Data["message"] = "两次密码不一致"
+		c.TplName = "register.html"
+		return
+	}
 
 	var pwByte []byte = []byte(passWd)
 	pw := md5.New()
@@ -142,10 +147,11 @@ func (c *MainController) HandleRegister() {
 	_,err := o.Insert(&user)
 
 	if err != nil{
-		log.Println("插入数据库失败")
+		c.Data["message"] = "Error"
 		c.TplName = "register.html"
 		return
 	}
+
 	//successfully register
-	c.Ctx.Redirect(302, "http://58.196.135.54:10009/login")
+	c.Ctx.Redirect(302, "http://58.196.135.54:10010/login")
 }

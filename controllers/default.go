@@ -15,7 +15,12 @@ type MainController struct {
 }
 
 func (c *MainController) ShowIndex(){
-	c.TplName = "index.tpl"
+	c.TplName = "index.html"
+}
+
+type JsonMsg struct {
+	Code int
+	Msg  string
 }
 
 // 处理登录
@@ -72,9 +77,34 @@ func (c *MainController) Handlelogin() {
 		c.TplName = "login.html"
 		return
 	}
-	c.Ctx.WriteString("Welcome")
+	c.SetSession("userName", user.Name)
+	c.SetSession("passWd", pwmd5)
+
+	//successfully login
+	c.Ctx.Redirect(302, "http://58.196.135.54:10009")
 }
 
+/*
+func (c *UserStatusController) Logout() {
+	if !c.islogin {
+		c.Ctx.ResponseWriter.WriteHeader(403)
+		c.Data["json"] = CreateMsg(403, "用户未登陆")
+		c.ServeJSON()
+		return
+	}
+	c.DestroySession()
+	c.Data["json"] = CreateMsg(200, "用户注销成功")
+	c.ServeJSON()
+}
+*/
+
+func CreateMsg(code int, msg string) (m*JsonMsg){
+	m = &JsonMsg{
+		Code: code,
+		Msg:  msg,
+	}
+	return
+}
 
 // 处理注册
 func (c *MainController) ShowRegister() {
@@ -116,6 +146,6 @@ func (c *MainController) HandleRegister() {
 		c.TplName = "register.html"
 		return
 	}
-
-	c.TplName = "login.html"
+	//successfully register
+	c.Ctx.Redirect(302, "http://58.196.135.54:10009/login")
 }

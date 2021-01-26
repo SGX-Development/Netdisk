@@ -74,12 +74,12 @@ func (c *UserController) Handlelogin() {
 		c.TplName = "login.html"
 		return
 	}
-
+	c.SetSession("islogin", true)
 	c.SetSession("userName", user.Name)
-	c.SetSession("passWd", pwmd5)
+	c.SetSession("userid", user.Id)
 
 	//successfully login
-	c.Ctx.Redirect(302, "http://58.196.135.54:10010/introduction")
+	c.Ctx.Redirect(302, "http://58.196.135.54:10111")
 }
 
 // 处理注册
@@ -88,6 +88,12 @@ func (c *UserController) ShowRegister() {
 }
 
 func (c *UserController) HandleRegister() {
+	if c.GetSession("islogin")!=nil{
+		c.Data["message"] = "登陆状态下不允许注册！"
+		c.TplName = "register.html"
+		return
+	}
+
 	userName := c.GetString("userName")
 	passWd := c.GetString("passWd")
 	passWd_2 := c.GetString("passWd_2")
@@ -131,6 +137,17 @@ func (c *UserController) HandleRegister() {
 	}
 
 	//successfully register
-	c.Ctx.Redirect(302, "http://58.196.135.54:10010/login")
+	c.Ctx.Redirect(302, "http://58.196.135.54:10111/login")
 }
 
+func (c *UserController) DelAcc() {
+	curSession := c.GetSession("userName")
+	userName,ok := curSession.(string)
+	if ok {
+		user := models.User{}
+		user.Name = userName
+		user.Isdelete = true
+		c.Redirect("/", 302)
+	}
+	return
+}

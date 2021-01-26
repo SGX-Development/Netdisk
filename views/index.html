@@ -1,7 +1,18 @@
 <!DOCTYPE html>
 
 <html>
-    <a href="login.html">登陆</a>
-    <a href="register.html">注册</a>
-    <button>logout</button>
+    <p>
+        <a href="login.html">登陆</a>
+    </p>
+    <p>
+        <a href="register.html">注册</a>
+    </p>
+    <p>
+        {{.message}}
+    </p>
+    <form class="form-horizontal" action="" method="post">
+        <a href="">
+            <button type="submit"  method="post" class="btn btn-primary"> logout </button>
+        </a>
+    </form>
 </html>

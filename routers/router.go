@@ -6,7 +6,17 @@ import (
 )
 
 func init() {
-    beego.Router("/", &controllers.MainController{}, "get:ShowIndex")
-    beego.Router("/login", &controllers.UserController{},"get:Showlogin;post:Handlelogin")
-    beego.Router("/register", &controllers.UserController{}, "get:ShowRegister;post:HandleRegister")
+    beego.Router("/introduction", &controllers.MainController{}, "get:ShowIndex")  //INTRODUCTION界面
+
+    beego.Router("/login", &controllers.UserController{},"get:Showlogin;post:Handlelogin")  //登录界面
+    beego.Router("/register", &controllers.UserController{}, "get:ShowRegister;post:HandleRegister")  //注册界面
+
+    beego.Router("/product", &controllers.ProductController{}, "get:Show")  //PRODUCT界面
+
+    beego.Router("/personalcenter", &controllers.PersonalCenterController{}, "get:Show")  //PERSONAL CENTER界面
+
+    beego.Router("/contactus", &controllers.ContactusController{}, "get:Show")  //CONTACT US界面
+
+
+
 }

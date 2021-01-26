@@ -71,7 +71,7 @@ func (c *UserController) Handlelogin() {
 	c.SetSession("passWd", pwmd5)
 
 	//successfully login
-	c.Ctx.Redirect(302, "http://58.196.135.54:10011")
+	c.Ctx.Redirect(302, "http://58.196.135.54:10011/introduction")
 }
 
 // 处理注册

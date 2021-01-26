@@ -10,5 +10,5 @@ type MainController struct {
 }
 
 func (c *MainController) ShowIndex(){
-	c.TplName = "index.html"
+	c.TplName = "introduction.html"
 }

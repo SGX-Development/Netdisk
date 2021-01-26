@@ -34,36 +34,19 @@ func (c *UserController) Handlelogin() {
 		return
 	}
 
-	o := orm.NewOrm()
-	user := models.User{}
-	user.Name = userName
-
-	err := o.Read(&user, "Name")
-	if err != nil{
-		c.Data["message"] = "用户名或密码错误"
-		c.TplName = "login.html"
-		return
-	}
-
-	if user.Isdelete {
-		c.Data["message"] = "用户不存在！"
-		c.TplName = "login.html"
-		return
-	}
-
-	// 检查密码是否正确
-	if user.Passwd != PassWord(passWd){
-		c.Data["message"] = "用户名或密码错误"
+	errMsg, flag, id:= CheckAct(userName, passWd)
+	if !flag {
+		c.Data["message"] = errMsg
 		c.TplName = "login.html"
 		return
 	}
 
 	c.SetSession("islogin", true)
-	c.SetSession("userName", user.Name)
-	c.SetSession("userid", user.Id)
+	c.SetSession("userName", userName)
+	c.SetSession("userid", id)
 
 	//successfully login
-	c.Ctx.Redirect(302, "http://58.196.135.54:10002")
+	c.Ctx.Redirect(302, "http://58.196.135.54:10015")
 }
 
 // 处理注册
@@ -89,29 +72,15 @@ func (c *UserController) HandleRegister() {
 		c.Data[key] = value
 	}
 
-	if passWd!=passWd_2 {
-		c.Data["message"] = "两次密码不一致"
-		c.TplName = "register.html"
-		return
-	}
-
-	o := orm.NewOrm()
-	user := models.User{}
-	user.Name = userName
-	user.Email = email
-	user.Passwd = PassWord(passWd)
-	user.Isactive = true
-	user.Isdelete = false
-
-	_,err := o.Insert(&user)
-	if err != nil{
-		c.Data["message"] = "Error"
+	errMsg, flag := CheckReg(userName, passWd, passWd_2, email);
+	if !flag {
+		c.Data["message"] = errMsg
 		c.TplName = "register.html"
 		return
 	}
 
 	//successfully register
-	c.Ctx.Redirect(302, "http://58.196.135.54:10002/login")
+	c.Ctx.Redirect(302, "http://58.196.135.54:10015/login")
 }
 
 func (c *UserController) DelAcc() {
@@ -152,4 +121,56 @@ func PassWord(passWd string) (pwmd5 string){
 	pw.Write(pwByte)
 	cipherStr := pw.Sum(nil)
 	return fmt.Sprintf("%x", cipherStr)
+}
+
+func CheckAct(userName string, passWd string)(errMsg string, flag bool, id int) {
+	errMsg = ""
+	flag = true
+	id = -1
+	o := orm.NewOrm()
+	user := models.User{}
+	user.Name = userName
+	err := o.Read(&user, "Name")
+	if err != nil {
+		flag = false
+		errMsg = "用户名或密码错误！"
+	} else if user.Isdelete {
+		flag = false
+		errMsg = "用户不存在！"
+	} else if user.Passwd != PassWord(passWd) {
+		flag = false
+		errMsg = "用户名或密码错误！"
+	} else {
+		id = user.Id
+	}
+	return errMsg, flag, id
+}
+
+func CheckReg(userName string, passWd string, passWd_2 string, email string)(errMsg string, flag bool) {
+	errMsg = ""
+	flag = true
+	if passWd != passWd_2 {
+		errMsg = "两次输入的密码不一致"
+		flag = false
+		return errMsg, flag
+	}
+	o := orm.NewOrm()
+	user := models.User{}
+	user.Name = userName
+	err := o.Read(&user, "Name")
+	if err==nil && !user.Isdelete {
+		errMsg = "该用户名已被占用！"
+		flag = false
+	} else {
+		user.Email = email
+		user.Passwd = PassWord(passWd)
+		user.Isactive = true
+		user.Isdelete = false
+		_,err = o.Insert(&user)
+		if err != nil {
+			errMsg = "Error!"
+			flag = false
+		}
+	}
+	return errMsg, flag
 }

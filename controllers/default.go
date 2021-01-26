@@ -14,9 +14,10 @@ func (c *MainController) ShowIndex(){
 }
 
 func (c *MainController) Logout() {
-	userName := c.GetSession("userName")
-	if userName != nil {
-		c.DelSession("userName")
+	status := c.GetSession("status").(UserStatus)
+	if  status.islogin {
+		status.islogin = false
+		c.SetSession("status", status)
 		c.Redirect("/login", 302)
 	} else {
 		c.TplName = "index.html"

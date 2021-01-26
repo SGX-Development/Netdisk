@@ -48,12 +48,20 @@ func (c *UserController) Handlelogin() {
 	o := orm.NewOrm()
 	user := models.User{}
 	user.Name = userName
+
 	err := o.Read(&user, "Name")
 	if err != nil{
 		c.Data["message"] = "用户名或密码错误"
 		c.TplName = "login.html"
 		return
 	}
+
+	if user.Isdelete {
+		c.Data["message"] = "用户不存在！"
+		c.TplName = "login.html"
+		return
+	}
+
 	// 检查密码是否正确
 	var pwByte []byte = []byte(passWd)
 	pw := md5.New()
@@ -71,7 +79,7 @@ func (c *UserController) Handlelogin() {
 	c.SetSession("passWd", pwmd5)
 
 	//successfully login
-	c.Ctx.Redirect(302, "http://58.196.135.54:10011/introduction")
+	c.Ctx.Redirect(302, "http://58.196.135.54:10010/introduction")
 }
 
 // 处理注册
@@ -123,5 +131,6 @@ func (c *UserController) HandleRegister() {
 	}
 
 	//successfully register
-	c.Ctx.Redirect(302, "http://58.196.135.54:10011/login")
+	c.Ctx.Redirect(302, "http://58.196.135.54:10010/login")
 }
+

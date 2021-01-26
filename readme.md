@@ -9,14 +9,12 @@ http:url:port/login
 
 通过c.Data["string"]向前端传递字符串，前端页面通过{{.string}}接收
 
+登陆前检查该帐户是否已删除
+
 登陆成功后重定向到主页
 
 ### plan:
 登陆页面添加验证码
-
-通过session记录登陆状态
-
-前端没写
 
 ## 注册
 http:url:port/register
@@ -32,10 +30,8 @@ http:url:port/register
 ### plan
 注册页面添加验证码
 
-前端没写
-
 ## 注销功能
-待添加
+通过session实现
 
 ## 文件上传、搜索、删除功能
 待添加

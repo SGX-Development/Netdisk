@@ -7,7 +7,6 @@ import (
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/validation"
 	beego "github.com/beego/beego/v2/server/web"
-	"log"
 )
 
 type UserController struct {
@@ -23,24 +22,14 @@ func (c *UserController) Handlelogin() {
 	userName := c.GetString("userName")
 	passWd := c.GetString("passWd")
 
-	valid := validation.Validation{}
-	valid.Required(userName, "userName")    //userName can't be blank
-	valid.Required(passWd, "passWd")        //passWd can't be blank
-	valid.MaxSize(userName, 15, "userName") //userName MaxSize is 15
-	valid.MinSize(userName, 3, "userName")  //userName MinSize is 3
-	valid.MaxSize(passWd, 15, "passWd")     //passWd Maxsize is 15
-	valid.MinSize(passWd, 6, "passWd")      //passWd Minsize is 6
-
-	if valid.HasErrors() {
-		for _, err := range valid.Errors {
-			data := "Verify" + err.Key
-			c.Data[data] = err.Message
-		}
+	var hashtable = make(map[string]string)
+	IsValid(userName, passWd, passWd, "1111@qq.com", hashtable)
+	for key, value := range hashtable {
+		c.Data[key] = value
 	}
 
 	if userName == "" || passWd == "" {
-		log.Println("输入数据不合法")
-		c.Data["message"] = "输入数据不合法"
+		c.Data["message"] = "用户名和密码不能为空"
 		c.TplName = "login.html"
 		return
 	}
@@ -63,23 +52,18 @@ func (c *UserController) Handlelogin() {
 	}
 
 	// 检查密码是否正确
-	var pwByte []byte = []byte(passWd)
-	pw := md5.New()
-	pw.Write(pwByte)
-	cipherStr := pw.Sum(nil)
-	pwmd5 := fmt.Sprintf("%x", cipherStr)
-
-	if user.Passwd != pwmd5{
-		c.Data["message"] = "密码错误"
+	if user.Passwd != PassWord(passWd){
+		c.Data["message"] = "用户名或密码错误"
 		c.TplName = "login.html"
 		return
 	}
+
 	c.SetSession("islogin", true)
 	c.SetSession("userName", user.Name)
 	c.SetSession("userid", user.Id)
 
 	//successfully login
-	c.Ctx.Redirect(302, "http://58.196.135.54:10111")
+	c.Ctx.Redirect(302, "http://58.196.135.54:10002")
 }
 
 // 处理注册
@@ -99,14 +83,11 @@ func (c *UserController) HandleRegister() {
 	passWd_2 := c.GetString("passWd_2")
 	email := c.GetString("email")
 
-	valid := validation.Validation{}
-	valid.Required(userName, "userName")    //userName can't be blank
-	valid.Required(passWd, "passWd")        //passWd can't be blank
-	valid.Required(email, "email")          //email can't be blank
-	valid.MaxSize(userName, 15, "userName") //userName MaxSize is 15
-	valid.MinSize(userName, 3, "userName")  //userName MinSize is 3
-	valid.MaxSize(passWd, 15, "passWd")     //passWd Maxsize is 15
-	valid.MinSize(passWd, 6, "passWd")      //passWd Minsize is 6
+	var hashtable = make(map[string]string)
+	IsValid(userName, passWd, passWd_2, email, hashtable)
+	for key, value := range hashtable {
+		c.Data[key] = value
+	}
 
 	if passWd!=passWd_2 {
 		c.Data["message"] = "两次密码不一致"
@@ -114,22 +95,15 @@ func (c *UserController) HandleRegister() {
 		return
 	}
 
-	var pwByte []byte = []byte(passWd)
-	pw := md5.New()
-	pw.Write(pwByte)
-	cipherStr := pw.Sum(nil)
-	pwmd5 := fmt.Sprintf("%x", cipherStr)
-
 	o := orm.NewOrm()
 	user := models.User{}
 	user.Name = userName
 	user.Email = email
-	user.Passwd = pwmd5
+	user.Passwd = PassWord(passWd)
 	user.Isactive = true
 	user.Isdelete = false
 
 	_,err := o.Insert(&user)
-
 	if err != nil{
 		c.Data["message"] = "Error"
 		c.TplName = "register.html"
@@ -137,7 +111,7 @@ func (c *UserController) HandleRegister() {
 	}
 
 	//successfully register
-	c.Ctx.Redirect(302, "http://58.196.135.54:10111/login")
+	c.Ctx.Redirect(302, "http://58.196.135.54:10002/login")
 }
 
 func (c *UserController) DelAcc() {
@@ -150,4 +124,32 @@ func (c *UserController) DelAcc() {
 		c.Redirect("/", 302)
 	}
 	return
+}
+
+func IsValid(userName string, passWd string, passWd2 string, email string, hashtable map[string]string) {
+	valid := validation.Validation{}
+	valid.Required(userName, "userName")    //userName can't be blank
+	valid.Required(passWd, "passWd")        //passWd can't be blank
+	valid.Required(passWd2, "passWd2")
+	valid.Required(email, "email")          //email can't be blank
+	valid.MaxSize(userName, 15, "userName") //userName MaxSize is 15
+	valid.MinSize(userName, 3, "userName")  //userName MinSize is 3
+	valid.MaxSize(passWd, 15, "passWd")     //passWd Maxsize is 15
+	valid.MinSize(passWd, 6, "passWd")      //passWd Minsize is 6
+
+	//var hashtable = make(map[string]string)
+
+	if valid.HasErrors() {
+		for _, err := range valid.Errors {
+			hashtable["Verify"+err.Key] = err.Message
+		}
+	}
+}
+
+func PassWord(passWd string) (pwmd5 string){
+	var pwByte []byte = []byte(passWd)
+	pw := md5.New()
+	pw.Write(pwByte)
+	cipherStr := pw.Sum(nil)
+	return fmt.Sprintf("%x", cipherStr)
 }

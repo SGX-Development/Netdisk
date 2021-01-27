@@ -8,5 +8,5 @@ import (
 
 func main() {
 	beego.BConfig.WebConfig.Session.SessionOn = true
-	beego.Run("0.0.0.0:10005")
+	beego.Run("0.0.0.0:10006")
 }

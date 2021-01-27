@@ -22,4 +22,5 @@ func init() {
 
     beego.Router("/upload", &controllers.UploadController{}, "get:ShowUpload;post:Upload")
 
+    beego.Router("/download", &controllers.DownloadController{}, "get:Download")
 }

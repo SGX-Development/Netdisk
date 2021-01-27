@@ -41,3 +41,5 @@ func (c *UploadController) Upload() {
 		c.Ctx.WriteString("上传成功")
 	}
 }
+
+

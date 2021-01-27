@@ -7,7 +7,7 @@ import (
 
 func init() {
     beego.Router("/", &controllers.MainController{}, "get:ShowIndex;post:Logout")
-    beego.Router("/intro", &controllers.IntroController{}, "get:ShowIntro")  //INTRODUCTION界面
+    beego.Router("/introduction", &controllers.IntroController{}, "get:ShowIntro")  //INTRODUCTION界面
 
     beego.Router("/login", &controllers.UserController{},"get:Showlogin;post:Handlelogin")  //登录界面
     beego.Router("/register", &controllers.UserController{}, "get:ShowRegister;post:HandleRegister")  //注册界面

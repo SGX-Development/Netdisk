@@ -20,6 +20,6 @@ func init() {
 
     beego.Router("/contactus", &controllers.ContactusController{}, "get:Show")  //CONTACT US界面
 
-
+    beego.Router("/upload", &controllers.UploadController{}, "get:ShowUpload;post:Upload")
 
 }

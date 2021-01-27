@@ -1,18 +1,238 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <title>产品</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <!-------------Global css-------------->
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <link rel="stylesheet" href="../static/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/Style/owlcarousel/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="../static/Style/owlcarousel/css/owl.theme.green.min.css">
+    <link rel="stylesheet" href="../static/Style/wow/css/animate.css">
+    <link rel="stylesheet" href="../static/Style/swiper/css/swiper.min.css">
+    <link rel="stylesheet" href="../static/Style/iCheck/css/all.css">
+    <!--------------custom css------------->
+    <link rel="stylesheet" href="../static/css/custom.css">
+</head>
+<body>
+<!-------------Preloader-------------->
+<div class="preloader" style="position:fixed;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    z-index:100000;
+    backface-visibility: hidden;
+    background: #ffffff;">
+    <div style=" width: 50px;
+    height: 50px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    background-position: center;
+    margin:-25px 0 0 -25px;">
+        <img src="../static/image/loader.gif" alt="loading...">
+    </div>
+</div>
+<!-------------Preloader end------------->
+<div class="tp-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-7 col-md-6"></div>
+            <div class="col-xs-5 col-md-6 text-right">
+                <span class="signin" data-toggle="modal" data-target="#myModal"><span class="hidden-xs"><a href="/login">Login</a></span><i
+                        class="fa fa-sign-in visible-xs-block" aria-hidden="true"></i> </span>
+                <span class="register" data-toggle="modal" data-target="#myModal"><span
+                        class="hidden-xs"><a href="/register">Register</a></span><i class="fa fa-user-plus visible-xs-block"
+                                                            aria-hidden="true"></i></span>
+            </div>
+        </div>
+    </div>
+</div>
 
-<html>
-    <p>
-        <a href="login.html">登陆</a>
-    </p>
-    <p>
-        <a href="register.html">注册</a>
-    </p>
-    <p>
-        {{.message}}
-    </p>
-    <form class="form-horizontal" action="" method="post">
-        <a href="">
-            <button type="submit"  method="post" class="btn btn-primary"> logout </button>
-        </a>
-    </form>
+<header>
+    <div class="container">
+        <nav class="navbar navbar-default">
+            <div class="navbar-header">
+                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#myMegamenu"><span
+                        class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+
+                </button>
+                <a class="navbar-brand" href="index.html">
+                    <img src="../static/image/3.png" class="img-responsive" alt="company-logo">
+                </a>
+            </div>
+            <div class="collapse navbar-collapse navbar-right" id="myMegamenu">
+                <ul class="nav navbar-nav">
+                    <li class="list2"><a href="/introduction" class="hvr-underline-from-center">INTRODUCTION</a></li>
+                    <li class="list2"><a href="/product" class="hvr-underline-from-center">PRODUCT</a></li>
+                    <li class="list2"><a href="/personalcenter" class="hvr-underline-from-center">PERSONAL CENTER</a></li>
+                    <li class="list2"><a href="/contactus" class="hvr-underline-from-center">CONTACT US</a></li>
+                </ul>
+            </div>
+
+        </nav>
+    </div>
+</header>
+
+<!--------------Body Section Start------------->
+<div class="container">
+    <div class="row wow fadeInDown" data-wow-duration="1s" data-wow-delay="0.2s">
+        <div class="col-sm-6 col-sm-offset-3 m-t-50">
+            <h2 class="heading underline"> Pralines Master</h2>
+            <p class="text-center">
+                Sed ut perspiciatis unde omnis iste natus error sitvoluptatem accusantium doloremque
+                laudantium.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 section-top-30">
+            <h4 class=" heading_left underline_left">Mobile Development</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="swiper-container Products_page_swiper section-top-align">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img src="../static/image/mobile1.jpg" class="img-responsive" alt="image-missing">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="../static/image/android1.jpg" class="img-responsive" alt="image-missing">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="../static/image/productsswipperimg.jpg" class="img-responsive" alt="image-missing">
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <p class="text-justify section-top-10 wow fadeInDown" data-wow-duration="1s" data-wow-delay="0.2s"> Lorem
+                ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
+                nonummy nibh
+                euismod tincidunt ut laoreet euismod tincidunt ut laoreet.</p>
+            <p class="text-justify wow fadeInDown" data-wow-duration="1s" data-wow-delay="0.2s"> Dolore magna aliquam
+                erat volutpat ut wisi enim ad minim veniam.....
+                <a href="#" class="text-success">Read More</a>
+            </p>
+        </div>
+        <div class="col-md-4 wow fadeInDown" data-wow-duration="1s" data-wow-delay="0.2s">
+            <h5>Android Development</h5>
+            <p class="text-justify section-top-10"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
+                nonummy nibh
+                euismod tincidunt ut laoreet euismod tincidunt ut laoreet.</p>
+            <p class="text-justify"> Dolore magna aliquam erat volutpat ut wisi enim ad minim veniam...
+                <a href="#" class="text-success">Read More</a>
+            </p>
+            <h5 class="section-top-25">Windows Application</h5>
+            <p class="text-justify">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+                euismod tincidunt ut laoreet euismod tincidunt ut laoreet.</p>
+            <p class="text-justify"> Dolore magna aliquam erat volutpat ut wisi enim ad minim veniam....
+                <a href="#" class="text-success">Read More</a>
+            </p>
+        </div>
+        <div class="col-md-4 wow fadeInRight" data-wow-duration="1s" data-wow-delay="0.2s">
+            <h5>IOS Applications Development</h5>
+            <p class="text-justify"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+                euismod tincidunt ut laoreet euismod tincidunt ut laoreet.</p>
+            <p> Dolore magna aliquam erat volutpat ut wisi enim ad minim veniam....
+                <a href="#" class="text-success">Read More</a>
+            </p>
+            <h5 class="section-top-25">BlackBerry Development</h5>
+            <p class="text-justify">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+                euismod tincidunt ut laoreet euismod tincidunt ut laoreet.</p>
+            <p class="text-justify"> Dolore magna aliquam erat volutpat ut wisi enim ad minim veniam....
+                <a href="#" class="text-success">Read More</a>
+            </p>
+        </div>
+    </div>
+    <div class="text-center section-top-25">
+        <a class="btn btn-empty home_seemore_btn icon_show">More Products...</a>
+    </div>
+    <div class="second_section">
+        <div class="row">
+            <div class="col-md-12">
+                <h4 class="heading_left underline_left">Web
+                    Development</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 section-top-25 image_alignment">
+                <div class="zoom thumb_zoom">
+                    <img src="../static/image/webdevelopment1.jpg" class="img-responsive" alt="it_service _image">
+                </div>
+                <p class="text-justify section-top-25">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
+                    diam nonummy nibh
+                    euismod tincidunt ut laoreet euismod tincidunt ut laoreet.</p>
+                <p class="text-justify"> Dolore magna aliquam erat volutpat ut wisi enim ad minim veniam....
+                    <a href="#" class="text-success">Read More</a>
+                </p>
+            </div>
+            <div class="section-top-10 col-md-4">
+                <h5>Web Design</h5>
+                <p class="text-justify"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+                    euismod tincidunt ut laoreet euismod tincidunt ut laoreet.</p>
+                <p class="text-justify"> Dolore magna aliquam erat volutpat ut wisi enim ad minim veniam....
+                    <a href="#" class="text-success">Read More</a>
+                </p>
+                <h5 class="section-top-25">Front-End Development</h5>
+                <p class="text-justify">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+                    euismod tincidunt ut laoreet euismod tincidunt ut laoreet.</p>
+                <p class="text-justify"> Dolore magna aliquam erat volutpat ut wisi enim ad minim veniam....
+                    <a href="#" class="text-success">Read More</a>
+                </p>
+            </div>
+            <div class="section-top-10 col-md-4">
+                <h5>Applications Development</h5>
+                <p class="text-justify"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+                    euismod tincidunt ut laoreet euismod tincidunt ut laoreet.</p>
+                <p class="text-justify"> Dolore magna aliquam erat volutpat ut wisi enim ad minim veniam.....
+                    <a href="#" class="text-success">Read More</a>
+                </p>
+                <h5 class="section-top-25">Back-End Development</h5>
+                <p class="text-justify">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+                    euismod tincidunt ut laoreet euismod tincidunt ut laoreet.</p>
+                <p class="text-justify"> Dolore magna aliquam erat volutpat ut wisi enim ad minim veniam.....
+                    <a href="#" class="text-success">Read More</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--------------Footer Start----------------->
+<div class="shape section-top-50"></div>
+<section class="copy-rights">
+    <div class="container ">
+        <div class="row">
+            <div >
+                <p class="footer_text_color"><a href="/introduction">INTRODUCTION</a> &nbsp;
+                    <a href="/product">PRODUCT</a> &nbsp;
+                    <a href="/personalcenter">PERSONAL CENTER</a> &nbsp;
+                    <a href="/contactus">CONTACT US</a>
+                </p>
+            </div>
+        </div>
+        <a href="#" id="return-to-top"><img src="../static/image/arrow.png" alt="image-missing"></a>
+    </div>
+</section>
+<!------------------Footer End------------------>
+
+<script src="../static/js/jquery.js"></script>
+<script src="../static/js/bootstrap.js"></script>
+<script src="../static/Style/owlcarousel/js/owl.carousel.min.js"></script>
+<script src="../static/Style/wow/js/wow.min.js"></script>
+<script src="../static/Style/swiper/js/swiper.jquery.min.js"></script>
+<script src="../static/Style/iCheck/js/icheck.js"></script>
+<script src="../static/Style/jribbble/js/jribbble.min.js"></script>
+<!--------------custom JS------------------->
+<script src="../static/js/custom.js"></script>
+
+</body>
 </html>

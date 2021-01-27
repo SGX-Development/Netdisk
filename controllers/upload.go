@@ -3,6 +3,7 @@ package controllers
 import (
 	beego "github.com/beego/beego/v2/server/web"
 	"log"
+	"strings"
 )
 
 type UploadController struct {
@@ -22,9 +23,17 @@ func (c *UploadController) Upload() {
 	defer file.Close()
 
 	filename:=head.Filename
-	userName := c.GetSession("status").(UserStatus).userName
-	log.Println("static/"+userName+"/"+filename)
-	err =c.SaveToFile("file","static/"+filename)
+
+	length := strings.Count(filename, "")
+	if filename[length-4:length-1] !=".txt" {
+		c.Ctx.WriteString("上传失败, 仅支持上传txt类型的文件")
+		return
+	}
+
+	//userName := c.GetSession("status").(UserStatus).userName
+	//log.Println("static/"+userName+"/"+filename)
+
+	err =c.SaveToFile("file","fileStorage/"+filename)
 	log.Println(err)
 	if err!=nil {
 		c.Ctx.WriteString("上传失败")

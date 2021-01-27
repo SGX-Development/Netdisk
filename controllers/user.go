@@ -59,7 +59,8 @@ func (c *UserController) ShowRegister() {
 }
 
 func (c *UserController) HandleRegister() {
-	if c.GetSession("status").(UserStatus).islogin{
+	curSession := c.GetSession("status")
+	if curSession!=nil && curSession.(UserStatus).islogin{
 		c.Data["message"] = "登陆状态下不允许注册！"
 		c.TplName = "register.html"
 		return

@@ -28,7 +28,7 @@ func (c *UploadController) Upload() {
 
 	length := strings.Count(filename, "")
 	log.Println(filename)
-	if filename[length-4:length-1] !=".txt" {
+	if filename[length-5:length-1] !=".txt" {
 		c.Ctx.WriteString("上传失败, 仅支持上传txt类型的文件")
 		return
 	}

@@ -3,6 +3,8 @@ package controllers
 import (
 	beego "github.com/beego/beego/v2/server/web"
 	"log"
+	"github.com/beego/beego/v2/client/orm"
+	"Netdisk/models"
 )
 
 type MainController struct {
@@ -10,6 +12,11 @@ type MainController struct {
 }
 
 func (c *MainController) ShowIndex(){
+	o := orm.NewOrm()
+	file := models.File{}
+	file.Id = 1
+	f := o.Read(&file, "Id")
+	log.Println(f)
 	c.TplName = "index.html"
 }
 

@@ -15,8 +15,12 @@ func (c *MainController) ShowIndex(){
 	o := orm.NewOrm()
 	file := models.File{}
 	file.Id = 1
-	f := o.Read(&file, "Id")
-	log.Println(f)
+	err := o.Read(&file, "Id")
+	if err != nil {
+		 c.Data["message"] = "暂无文件"
+	} else {
+		c.Data["filename"] = file.Name
+	}
 	c.TplName = "index.html"
 }
 

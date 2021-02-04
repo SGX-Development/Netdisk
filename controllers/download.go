@@ -9,6 +9,7 @@ type DownloadController struct {
 }
 
 
-func (c *DownloadController) Download() {
-	c.Ctx.Output.Download("fileStorage/test.jpg", "test.jpg")
+func (c *DownloadController) Download(filename string) {
+	route := "fileStorage" + filename
+	c.Ctx.Output.Download(route, filename)
 }

@@ -50,7 +50,7 @@ func (c *UserController) Handlelogin() {
 	c.SetSession("status", status)
 
 	//successfully login
-	c.Ctx.Redirect(302, "http://58.196.135.54:10009")
+	c.Ctx.Redirect(302, "http://58.196.135.54:10110")
 }
 
 // 处理注册
@@ -85,7 +85,7 @@ func (c *UserController) HandleRegister() {
 	}
 
 	//successfully register
-	c.Ctx.Redirect(302, "http://58.196.135.54:10009/login")
+	c.Ctx.Redirect(302, "http://58.196.135.54:10110/login")
 }
 
 func (c *UserController) DelAcc() {

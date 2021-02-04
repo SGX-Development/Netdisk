@@ -1,9 +1,11 @@
 package controllers
 
 import (
+	"github.com/beego/beego/v2/client/orm"
 	beego "github.com/beego/beego/v2/server/web"
 	"log"
 	"strings"
+	"Netdisk/models"
 )
 
 type UploadController struct {
@@ -25,6 +27,7 @@ func (c *UploadController) Upload() {
 	filename:=head.Filename
 
 	length := strings.Count(filename, "")
+	log.Println(filename)
 	if filename[length-4:length-1] !=".txt" {
 		c.Ctx.WriteString("上传失败, 仅支持上传txt类型的文件")
 		return
@@ -38,7 +41,15 @@ func (c *UploadController) Upload() {
 	if err!=nil {
 		c.Ctx.WriteString("上传失败")
 	}else {
-		c.Ctx.WriteString("上传成功")
+		o := orm.NewOrm()
+		file := models.File{}
+		file.Name = filename
+		_, err = o.Insert(&file)
+		if err != nil {
+			c.Ctx.WriteString("插入失败")
+		} else {
+			c.Ctx.WriteString("上传成功")
+		}
 	}
 }
 

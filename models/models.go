@@ -15,9 +15,15 @@ type User struct {
 	Isdelete bool  `json:"isdelete" gorm:"default:false"`
 }
 
+type File struct {
+	Id int `json:"id"`
+	Name string `json:"name" gorm:"type:varchar(45) not null;unique"`
+}
+
 func init(){
 	orm.RegisterDriver("mysql", orm.DRMySQL)
 	orm.RegisterDataBase("default", "mysql", "root:sgx12345@/netdisk?charset=utf8")
 	orm.RegisterModel(new(User))
+	orm.RegisterModel(new(File))
 	orm.RunSyncdb("default", false, true)
 }

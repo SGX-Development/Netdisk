@@ -81,11 +81,15 @@
 </header>
 
 <!--------------Body Section Start------------->
-<a href = "upload.html">上传文件</a>
+<form action="/upload"  enctype="multipart/form-data"  method="get">
+    <input type="submit" value="上传文件">
+</form>
 {{.message}}
-<a href = "upload.html">{{.filename}}</a>
+<p>
+    {{.filename}}
+</p>
 <form action="/download"  enctype="multipart/form-data"  method="get">
-    <input type="" value="下载">
+    <button>下载</button>
 </form>
 <!--------------Footer Start----------------->
 <div class="shape section-top-50"></div>

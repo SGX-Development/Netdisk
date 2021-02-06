@@ -17,7 +17,8 @@ type User struct {
 
 type File struct {
 	Id int `json:"id"`
-	Name string `json:"name" gorm:"type:varchar(45) not null;unique"`
+	FileName string `json:"name" gorm:"type:varchar(45) not null;unique"`
+	UserName string `json:"userName" gorm:"type:varchar(45) not null;"`
 }
 
 func init(){

@@ -13,10 +13,18 @@ type UploadController struct {
 }
 
 func (c *UploadController) ShowUpload() {
+	curSession := c.GetSession("status")
+	if curSession==nil || (curSession!=nil && !curSession.(UserStatus).islogin) {
+		c.Redirect("/login", 302)
+		return
+	}
 	c.TplName = "upload.html"
 }
 
 func (c *UploadController) Upload() {
+	curSession := c.GetSession("status")
+	userName := curSession.(UserStatus).userName
+
 	file,head,err:=c.GetFile("file")
 	if err!=nil {
 		c.Ctx.WriteString("获取文件失败")
@@ -43,7 +51,8 @@ func (c *UploadController) Upload() {
 	}else {
 		o := orm.NewOrm()
 		file := models.File{}
-		file.Name = filename
+		file.FileName = filename
+		file.UserName = userName
 		_, err = o.Insert(&file)
 		if err != nil {
 			c.Ctx.WriteString("插入失败")

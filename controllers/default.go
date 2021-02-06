@@ -19,7 +19,7 @@ func (c *MainController) ShowIndex(){
 	if err != nil {
 		 c.Data["message"] = "暂无文件"
 	} else {
-		c.Data["filename"] = file.Name
+		c.Data["filename"] = file.FileName
 	}
 	c.TplName = "index.html"
 }

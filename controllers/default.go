@@ -12,21 +12,30 @@ type MainController struct {
 }
 
 func (c *MainController) ShowIndex(){
+	status := c.GetSession("status")
+	if !Islogin(status) {
+		c.Redirect("/login", 302)
+	}
+
 	o := orm.NewOrm()
 	file := models.File{}
 	file.Id = 1
-	err := o.Read(&file, "Id")
+	file.UserName = status.(UserStatus).userName
+
+	err := o.Read(&file, "userName")
 	if err != nil {
 		 c.Data["message"] = "暂无文件"
 	} else {
+		log.Println(file.FileName)
 		c.Data["filename"] = file.FileName
 	}
 	c.TplName = "index.html"
 }
 
 func (c *MainController) Logout() {
-	status := c.GetSession("status").(UserStatus)
-	if  status.islogin {
+	status := c.GetSession("status")
+	if Islogin(status) {
+		status := c.GetSession("status").(UserStatus)
 		status.islogin = false
 		c.SetSession("status", status)
 		c.Redirect("/login", 302)
@@ -38,3 +47,6 @@ func (c *MainController) Logout() {
 	return
 }
 
+func Islogin(status interface{}) bool {
+	return !(status == nil || (status != nil && !status.(UserStatus).islogin))
+}

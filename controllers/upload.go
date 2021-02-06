@@ -13,8 +13,8 @@ type UploadController struct {
 }
 
 func (c *UploadController) ShowUpload() {
-	curSession := c.GetSession("status")
-	if curSession==nil || (curSession!=nil && !curSession.(UserStatus).islogin) {
+	status := c.GetSession("status")
+	if !Islogin(status) {
 		c.Redirect("/login", 302)
 		return
 	}

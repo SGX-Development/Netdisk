@@ -1,16 +1,20 @@
 package controllers
 
 import (
+	"fmt"
+	"github.com/beego/beego/v2/client/orm"
 	beego "github.com/beego/beego/v2/server/web"
 	"log"
-	"github.com/beego/beego/v2/client/orm"
-	"Netdisk/models"
 )
 
 type MainController struct {
 	beego.Controller
 }
 
+type File struct {
+	Id       int
+	Name 	string
+}
 func (c *MainController) ShowIndex(){
 	status := c.GetSession("status")
 	if !Islogin(status) {
@@ -18,17 +22,24 @@ func (c *MainController) ShowIndex(){
 	}
 
 	o := orm.NewOrm()
-	file := models.File{}
-	file.Id = 1
-	file.UserName = status.(UserStatus).userName
+	var maps []orm.Params
+	num, err:= o.QueryTable("file").Filter("UserName", status.(UserStatus).userName).Values(&maps, "FileName")//.Values(&maps)
 
-	err := o.Read(&file, "userName")
-	if err != nil {
-		 c.Data["message"] = "暂无文件"
+	log.Println(num)
+	log.Println(maps)
+
+	c.Data["filename"] = ""
+
+	if err == nil {
+		fmt.Printf("Result Nums: %d\n", num)
+		for _, m := range maps {
+			c.Data["filename"] = c.Data["filename"].(string) + m["FileName"].(string) + "\n"
+			fmt.Println(m["Id"], m["FileName"])
+		}
 	} else {
-		log.Println(file.FileName)
-		c.Data["filename"] = file.FileName
+		c.Data["message"] = "暂无文件"
 	}
+
 	c.TplName = "index.html"
 }
 

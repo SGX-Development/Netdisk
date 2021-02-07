@@ -58,6 +58,3 @@ func (c *MainController) Logout() {
 	return
 }
 
-func Islogin(status interface{}) bool {
-	return !(status == nil || (status != nil && !status.(UserStatus).islogin))
-}

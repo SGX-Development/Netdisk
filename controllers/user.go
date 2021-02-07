@@ -12,12 +12,6 @@ import (
 type UserController struct {
 	beego.Controller
 }
-//这个结构体有问题，后面修
-type UserStatus struct {
-	userName string
-	userid int
-	islogin bool
-}
 
 // 处理登录
 func (c *UserController) Showlogin() {
@@ -50,7 +44,7 @@ func (c *UserController) Handlelogin() {
 	c.SetSession("status", status)
 
 	//successfully login
-	c.Ctx.Redirect(302, "http://58.196.135.54:10111")
+	c.Ctx.Redirect(302, "http://58.196.135.54:10101")
 }
 
 // 处理注册
@@ -59,8 +53,8 @@ func (c *UserController) ShowRegister() {
 }
 
 func (c *UserController) HandleRegister() {
-	curSession := c.GetSession("status")
-	if curSession!=nil && curSession.(UserStatus).islogin{
+	status := c.GetSession("status")
+	if Islogin(status){
 		c.Data["message"] = "登陆状态下不允许注册！"
 		c.TplName = "register.html"
 		return
@@ -85,7 +79,7 @@ func (c *UserController) HandleRegister() {
 	}
 
 	//successfully register
-	c.Ctx.Redirect(302, "http://58.196.135.54:10111/login")
+	c.Ctx.Redirect(302, "http://58.196.135.54:10101/login")
 }
 
 func (c *UserController) DelAcc() {

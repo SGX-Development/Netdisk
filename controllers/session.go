@@ -10,7 +10,6 @@ type UserStatus struct {
 	islogin bool
 }
 
-
 func Islogin(status interface{}) bool {
 	return !(status == nil || (status != nil && !status.(UserStatus).islogin))
 }

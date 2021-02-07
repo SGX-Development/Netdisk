@@ -22,7 +22,6 @@ func (c *UploadController) ShowUpload() {
 
 func (c *UploadController) Upload() {
 	status := c.GetSession("status")
-	userName := status.(UserStatus).userName
 
 	file,head,err:=c.GetFile("file")
 	if err!=nil {
@@ -38,14 +37,14 @@ func (c *UploadController) Upload() {
 	if !CheckType(filename[length-5:length-1]) {
 		c.Ctx.WriteString("上传失败, 仅支持上传txt类型的文件")
 		return
-	} else if !CheckFile(filename, userName){
+	} else if !CheckFile(filename, UserName(status)){
 		c.Ctx.WriteString("文件已存在, 请删除后重试")
 		return
 	}
 
 	err =c.SaveToFile("file","fileStorage/"+filename)
 
-	if err!=nil || !InsertFile(filename, userName) {
+	if err!=nil || !InsertFile(filename, UserName(status)) {
 		c.Ctx.WriteString("上传失败")
 	} else {
 		c.Ctx.WriteString("上传成功")

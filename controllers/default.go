@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"github.com/beego/beego/v2/client/orm"
 	beego "github.com/beego/beego/v2/server/web"
 	"log"
@@ -21,24 +20,7 @@ func (c *MainController) ShowIndex(){
 		c.Redirect("/login", 302)
 	}
 
-	o := orm.NewOrm()
-	var maps []orm.Params
-	num, err:= o.QueryTable("file").Filter("UserName", status.(UserStatus).userName).Values(&maps, "FileName")//.Values(&maps)
-
-	log.Println(num)
-	log.Println(maps)
-
-	c.Data["filename"] = ""
-
-	if err == nil {
-		fmt.Printf("Result Nums: %d\n", num)
-		for _, m := range maps {
-			c.Data["filename"] = c.Data["filename"].(string) + m["FileName"].(string) + "\n"
-			fmt.Println(m["Id"], m["FileName"])
-		}
-	} else {
-		c.Data["message"] = "暂无文件"
-	}
+	c.Data["filename"], c.Data["message"] = Query(UserName(status))
 
 	c.TplName = "index.html"
 }
@@ -58,3 +40,20 @@ func (c *MainController) Logout() {
 	return
 }
 
+func Query(UserName string) (string, string){
+	o := orm.NewOrm()
+	var maps []orm.Params
+	num, err:= o.QueryTable("file").Filter("UserName", UserName).Values(&maps, "FileName")
+
+	res := ""
+	message := ""
+	if err == nil {
+		for _, m := range maps {
+			res += m["FileName"].(string) + "\n"
+		}
+	} else if num==0 {
+		message = "暂无文件"
+	}
+
+	return res, message
+}

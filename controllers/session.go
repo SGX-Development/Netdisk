@@ -14,3 +14,7 @@ type UserStatus struct {
 func Islogin(status interface{}) bool {
 	return !(status == nil || (status != nil && !status.(UserStatus).islogin))
 }
+
+func UserName(status interface{}) string {
+	return status.(UserStatus).userName
+}

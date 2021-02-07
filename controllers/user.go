@@ -6,20 +6,15 @@ import (
 	"fmt"
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/validation"
-	beego "github.com/beego/beego/v2/server/web"
 	"os"
 )
 
-type UserController struct {
-	beego.Controller
-}
-
 // 处理登录
-func (c *UserController) Showlogin() {
+func (c *MainController) Showlogin() {
 	c.TplName = "login.html"
 }
 
-func (c *UserController) Handlelogin() {
+func (c *MainController) Handlelogin() {
 	userName := c.GetString("userName")
 	passWd := c.GetString("passWd")
 
@@ -49,13 +44,12 @@ func (c *UserController) Handlelogin() {
 }
 
 // 处理注册
-func (c *UserController) ShowRegister() {
+func (c *MainController) ShowRegister() {
 	c.TplName = "register.html"
 }
 
-func (c *UserController) HandleRegister() {
-	status := c.GetSession("status")
-	if Islogin(status){
+func (c *MainController) HandleRegister() {
+	if c.Islogin(){
 		c.Data["message"] = "登陆状态下不允许注册！"
 		c.TplName = "register.html"
 		return
@@ -83,7 +77,7 @@ func (c *UserController) HandleRegister() {
 	c.Ctx.Redirect(302, "http://58.196.135.54:10100/login")
 }
 
-func (c *UserController) DelAcc() {
+func (c *MainController) DelAcc() {
 	curSession := c.GetSession("userName")
 	userName,ok := curSession.(string)
 	if ok {

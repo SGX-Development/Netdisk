@@ -11,8 +11,8 @@ func init() {
     //beego.Router("/", &controllers.MainController{}, "get:ShowIndex;post:Logout")
     beego.Router("/introduction", &controllers.IntroController{}, "get:ShowIntro")  //INTRODUCTION界面
 
-    beego.Router("/login", &controllers.UserController{},"get:Showlogin;post:Handlelogin")  //登录界面
-    beego.Router("/register", &controllers.UserController{}, "get:ShowRegister;post:HandleRegister")  //注册界面
+    beego.Router("/login", &controllers.MainController{},"get:Showlogin;post:Handlelogin")  //登录界面
+    beego.Router("/register", &controllers.MainController{}, "get:ShowRegister;post:HandleRegister")  //注册界面
 
     //beego.Router("/logout", &controllers.MainController{}, "get:Logout")
 
@@ -20,7 +20,7 @@ func init() {
 
     beego.Router("/contactus", &controllers.ContactusController{}, "get:Show")  //CONTACT US界面
 
-    beego.Router("/upload", &controllers.UploadController{}, "get:ShowUpload;post:Upload")
+    beego.Router("/upload", &controllers.MainController{}, "get:ShowUpload;post:Upload")
 
-    beego.Router("/download", &controllers.DownloadController{}, "get:Download")
+    beego.Router("/download", &controllers.MainController{}, "get:Download")
 }

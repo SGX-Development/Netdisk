@@ -16,19 +16,17 @@ type File struct {
 }
 
 func (c *MainController) ShowIndex(){
-	status := c.GetSession("status")
-	if !Islogin(status) {
+	if !c.Islogin() {
 		c.Redirect("/login", 302)
 	}
 
-	c.Data["filename"], c.Data["message"] = Query(UserName(status))
+	c.Data["filename"], c.Data["message"] = Query(c.UserName())
 
 	c.TplName = "index.html"
 }
 
 func (c *MainController) Logout() {
-	status := c.GetSession("status")
-	if Islogin(status) {
+	if c.Islogin() {
 		status := c.GetSession("status").(UserStatus)
 		status.islogin = false
 		c.SetSession("status", status)
@@ -44,16 +42,18 @@ func (c *MainController) Logout() {
 func Query(UserName string) (string, string){
 	o := orm.NewOrm()
 	var maps []orm.Params
-	_, err:= o.QueryTable("file").Filter("UserName", UserName).Values(&maps, "FileName")
+	num, err:= o.QueryTable("file").Filter("UserName", UserName).Values(&maps, "FileName")
 
 	res := ""
 	message := ""
 	if err == nil {
-		for _, m := range maps {
-			res += m["FileName"].(string) + "\n"
+		if num == 0 {
+			message = "暂无文件"
+		} else {
+			for _, m := range maps {
+				res += m["FileName"].(string) + "\n"
+			}
 		}
-	} else {
-		message = "暂无文件"
 	}
 
 	return res, message

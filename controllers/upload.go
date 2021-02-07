@@ -2,28 +2,20 @@ package controllers
 
 import (
 	"github.com/beego/beego/v2/client/orm"
-	beego "github.com/beego/beego/v2/server/web"
 	"log"
 	"strings"
 	"Netdisk/models"
 )
 
-type UploadController struct {
-	beego.Controller
-}
-
-func (c *UploadController) ShowUpload() {
-	status := c.GetSession("status")
-	if !Islogin(status) {
+func (c *MainController) ShowUpload() {
+	if !c.Islogin() {
 		c.Redirect("/login", 302)
 		return
 	}
 	c.TplName = "upload.html"
 }
 
-func (c *UploadController) Upload() {
-	status := c.GetSession("status")
-
+func (c *MainController) Upload() {
 	file,head,err:=c.GetFile("file")
 	if err!=nil {
 		c.Ctx.WriteString("获取文件失败")
@@ -38,14 +30,14 @@ func (c *UploadController) Upload() {
 	if !CheckType(filename[length-5:length-1]) {
 		c.Ctx.WriteString("上传失败, 仅支持上传txt类型的文件")
 		return
-	} else if !CheckFile(filename, UserName(status)){
+	} else if !CheckFile(filename, c.UserName()){
 		c.Ctx.WriteString("文件已存在, 请删除后重试")
 		return
 	}
 
-	err =c.SaveToFile("file","fileStorage/"+"zxc/"+filename)
+	err =c.SaveToFile("file","fileStorage/"+c.UserName()+"/"+filename)
 	log.Println(err)
-	if err!=nil || !InsertFile(filename, UserName(status)) {
+	if err!=nil || !InsertFile(filename, c.UserName()) {
 		c.Ctx.WriteString("上传失败")
 	} else {
 		c.Ctx.WriteString("上传成功")

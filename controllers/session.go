@@ -1,8 +1,5 @@
 package controllers
 
-import (
-
-)
 //这个结构体有问题，后面修
 type UserStatus struct {
 	userName string
@@ -10,10 +7,18 @@ type UserStatus struct {
 	islogin bool
 }
 
-func Islogin(status interface{}) bool {
+func (c *MainController) Islogin() bool {
+	status := c.GetSession("status")
+	if status == nil {
+		c.Redirect("/login", 302)
+	}
 	return !(status == nil || (status != nil && !status.(UserStatus).islogin))
 }
 
-func UserName(status interface{}) string {
+func (c *MainController) UserName() string {
+	status := c.GetSession("status")
+	if status == nil {
+		c.Redirect("/login", 302)
+	}
 	return status.(UserStatus).userName
 }

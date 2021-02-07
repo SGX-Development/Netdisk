@@ -14,6 +14,7 @@ type File struct {
 	Id       int
 	Name 	string
 }
+
 func (c *MainController) ShowIndex(){
 	status := c.GetSession("status")
 	if !Islogin(status) {
@@ -43,7 +44,7 @@ func (c *MainController) Logout() {
 func Query(UserName string) (string, string){
 	o := orm.NewOrm()
 	var maps []orm.Params
-	num, err:= o.QueryTable("file").Filter("UserName", UserName).Values(&maps, "FileName")
+	_, err:= o.QueryTable("file").Filter("UserName", UserName).Values(&maps, "FileName")
 
 	res := ""
 	message := ""
@@ -51,7 +52,7 @@ func Query(UserName string) (string, string){
 		for _, m := range maps {
 			res += m["FileName"].(string) + "\n"
 		}
-	} else if num==0 {
+	} else {
 		message = "暂无文件"
 	}
 

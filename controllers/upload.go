@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/beego/beego/v2/client/orm"
 	beego "github.com/beego/beego/v2/server/web"
+	"log"
 	"strings"
 	"Netdisk/models"
 )
@@ -42,8 +43,8 @@ func (c *UploadController) Upload() {
 		return
 	}
 
-	err =c.SaveToFile("file","fileStorage/"+filename)
-
+	err =c.SaveToFile("file","fileStorage/"+"zxc/"+filename)
+	log.Println(err)
 	if err!=nil || !InsertFile(filename, UserName(status)) {
 		c.Ctx.WriteString("上传失败")
 	} else {

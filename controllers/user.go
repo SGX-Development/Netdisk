@@ -7,6 +7,7 @@ import (
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/validation"
 	beego "github.com/beego/beego/v2/server/web"
+	"os"
 )
 
 type UserController struct {
@@ -44,7 +45,7 @@ func (c *UserController) Handlelogin() {
 	c.SetSession("status", status)
 
 	//successfully login
-	c.Ctx.Redirect(302, "http://58.196.135.54:10101")
+	c.Ctx.Redirect(302, "http://58.196.135.54:10100")
 }
 
 // 处理注册
@@ -77,9 +78,9 @@ func (c *UserController) HandleRegister() {
 		c.TplName = "register.html"
 		return
 	}
-
+	os.Mkdir("fileStorage/"+userName, 0777)
 	//successfully register
-	c.Ctx.Redirect(302, "http://58.196.135.54:10101/login")
+	c.Ctx.Redirect(302, "http://58.196.135.54:10100/login")
 }
 
 func (c *UserController) DelAcc() {

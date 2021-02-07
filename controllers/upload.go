@@ -39,13 +39,24 @@ func (c *UploadController) Upload() {
 	if filename[length-5:length-1] !=".txt" {
 		c.Ctx.WriteString("上传失败, 仅支持上传txt类型的文件")
 		return
+	} else {
+		o := orm.NewOrm()
+		var maps []orm.Params
+		num, err := o.QueryTable("file").Filter("FileName", filename).Filter("UserName", userName).Values(&maps)
+
+		if err != nil {
+			c.Ctx.WriteString("上传出错, 请重试")
+			return
+		} else if num != 0 {
+			c.Ctx.WriteString("文件已存在, 请删除后重试")
+			return
+		}
 	}
 
 	//userName := c.GetSession("status").(UserStatus).userName
 	//log.Println("static/"+userName+"/"+filename)
 
 	err =c.SaveToFile("file","fileStorage/"+filename)
-	log.Println(err)
 	if err!=nil {
 		c.Ctx.WriteString("上传失败")
 	}else {

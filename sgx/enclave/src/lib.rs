@@ -78,6 +78,21 @@ struct Article {
     Score: f32,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+struct RawInput {
+    id: String,
+    user: String,
+    text: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+struct DBInput {
+    id: String,
+    user: String,
+    text: String,
+    user_id: String,
+}
+
 lazy_static! {
     static ref schema: Schema = {
         let mut schema_builder = Schema::builder();
@@ -85,6 +100,7 @@ lazy_static! {
         schema_builder.add_text_field("id", STRING | STORED);
         schema_builder.add_text_field("user", STRING | STORED);
         schema_builder.add_text_field("text", TEXT | STORED);
+        schema_builder.add_text_field("user_id", STRING | STORED);
 
         schema_builder.build()
     };
@@ -154,9 +170,18 @@ pub extern "C" fn build_index(some_string: *const u8, some_len: usize) -> sgx_st
     }
 
     let line: String = x.unwrap();
-    println!("line: {}", line);
+    let raw_input: RawInput = serde_json::from_str(&line);
+    let db_input = DBInput{
+        id: raw_input.id.clone(),
+        user: raw_input.user.clone(),
+        text: raw_input.text.clone(),
+        user_id: format!("{} {}", &raw_input.user.clone(), &raw_input.id.clone()),
 
-    let doc = match schema.parse_document(&line) {
+    }
+    let input_string = serde_json::to_string(&db_input);
+    println!("line: {}", &input_string);
+
+    let doc = match schema.parse_document(&input_string) {
         Ok(doc) => doc,
         _ => {
             return sgx_status_t::SGX_ERROR_UNEXPECTED;
@@ -180,8 +205,8 @@ pub extern "C" fn delete_index(some_string: *const u8, some_len: usize) -> sgx_s
 
     let line: String = x.unwrap();
 
-    let id = schema.get_field("id").unwrap();
-    let delete_file = Term::from_field_text(id, &line);
+    let user_id = schema.get_field("user_id").unwrap();
+    let delete_file = Term::from_field_text(user_id, &line);
     // need checking whether it exist?
 
     let index_writer_clone_3 = index_writer.clone();

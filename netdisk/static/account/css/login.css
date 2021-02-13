@@ -1,0 +1,43 @@
+.content
+{
+    margin: 10px 600px 100px;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    border-radius: 30px;
+    background-color: white;
+    box-shadow: 5px 5px 2px rgba(32, 54, 67, 0.35);
+
+}
+
+h1
+{
+    margin: 20px;
+    text-align:center;
+    text-decoration:overline;
+    text-shadow: 5px 5px 5px #c0c0c0;
+
+}
+
+div.sticky
+{
+    top: 0;
+    position: sticky;
+    padding: 10px;
+}
+
+p.ex1
+{
+	font:italic bold 12px/30px Georgia,serif;
+}
+
+h5
+{
+    font:italic bold 12px/30px Georgia,serif;
+}
+body {
+    background-image: url("/static/image/tempbackground.jpg");
+    background-position: center center;
+    background-repeat: repeat-y;
+    background-attachment: fixed;
+    background-size:100%;
+}

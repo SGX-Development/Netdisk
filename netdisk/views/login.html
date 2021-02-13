@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <title>
+        登录
+    </title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta charset="utf-8">
+    <meta name="keywords" content="" />
+    <script type="application/x-javascript"> addEventListener("load", function () {
+        setTimeout(hideURLbar, 0);
+    }, false);
+
+    function hideURLbar() {
+        window.scrollTo(0, 1);
+    } </script>
+    <link href="/static/css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+    <link rel="stylesheet" href="/static/css/style.css" type="text/css" media="all">
+    <link href="http://fonts.googleapis.com/css?family=Crimson+Text:400,400i,600,600i,700,700i" rel="stylesheet">
+    <link
+        href="http://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700italic,700,400italic,300italic,300'
+        rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/account/css/login.css">
+</head>
+
+<body>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="content" align="center">
+        <br>
+        <br>
+        <h1>Login</h1>
+        <img border="0" src="/static/image/default_icon.bmp" alt="default_image" width="50" height="50">
+        <br>
+        <br>
+        <p class="ex1" style="color:#C8C8C8">-If you haven't registered, here
+            <strong><a href="/register">Register</a></strong>.-
+        </p>
+        <br>
+        <form class="form-horizontal" action="login.html" method="post">
+            <p>
+                Username <input type="test" name="userName">
+            </p>
+            <p>
+                Password&nbsp; <input type="password" name="passWd">
+            </p>
+            <p>
+                {{.message}}
+            </p>
+            <p>
+            <div class="btn-group btn-group-sm">
+                <a href="">
+                    <button type="submit" class="btn btn-primary"
+                        style="background-color: #203643;border-color: #cccccc"> login </button>
+                </a>
+            </div>
+            </p>
+        </form>
+        <br>
+        <br>
+    </div>
+
+
+    <script src="/static/js/jquery.js"></script>
+    <script src="/static/js/bootstrap.js"></script>
+
+</body>
+
+</html>

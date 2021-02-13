@@ -13,3 +13,9 @@ test:
 	sync
 	sudo $(MAKE) -C test
 
+.PHONY: netdisk
+netdisk: 
+	$(MAKE) -C sgx
+	cp sgx/bin/enclave.signed.so netdisk/
+	sync
+	# sudo $(MAKE) -C netdisk

@@ -2,8 +2,14 @@
 all:
 	$(MAKE) -C sgx
 	cp sgx/bin/enclave.signed.so test/
+	cp sgx/bin/enclave.signed.so netdisk/
 	sync
 	sudo $(MAKE) -C test
+
+.PHONY: cleandb
+cleandb:
+	rm -rf test/idx
+	sync
 
 .PHONY: clean
 clean:

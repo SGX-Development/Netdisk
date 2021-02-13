@@ -19,6 +19,13 @@ cd netdisk
 bee run			# 需要安装beego等
 ```
 [beego环境配置](https://github.com/SGX-Development/GO/blob/master/beego%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE.md)
+
+### sgx 调试
+在根目录下`make`编译所有文件（编译途中需要密码），`make clean`清空， `make cleandb`清空数据库。
+
+## 包传递
+get from client: `user||command||Enc(password||data)`
+
 ## 已实现部分
 
 ### RawInput（上传数据）
@@ -32,6 +39,16 @@ type RawInput struct {
 ```
 
 关于Id（Title）的格式：“用户Id + 空格 + 标题”，例如"1 Sky"，这样的写法并不漂亮，只是为了更容易地实现后面的search_title函数，之后可以改善这个实现
+
+### DBInput (DB存储格式)
+```rust
+struct DBInput {
+    id: String,
+    user: String,
+    text: String,
+    user_id: String, // user+' '+id
+}
+```
 
 ### aes_encrypt
 
@@ -104,7 +121,7 @@ output: None
 
   关于密钥的存储等等，还没想好。。。
 
-* [ ] Makefile整合
+* [x] Makefile整合
   希望整合Makefile。在第一目录make后可以完整compile所有文件，make sgx和make netdisk可以分别compile对应目录。
 
 * [ ] AES算法分开
@@ -117,6 +134,12 @@ output: None
 * [ ] 按标题搜索的衔接部分(在没有前端加密的情况下)
 
 * [ ] 按关键字搜索的衔接部分(在没有前端加密的情况下)
+
+* [ ] RSA在rust下的算法没有
+
+* [ ] search title 在搜无符合条件下有bug（未处理sgx返回值）
+
+
 
 ## 其它
 

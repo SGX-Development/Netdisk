@@ -179,7 +179,7 @@ pub extern "C" fn build_index(some_string: *const u8, some_len: usize) -> sgx_st
 
     };
     let input_string = serde_json::to_string(&db_input).unwrap();
-    println!("line: {}", &input_string);
+    // println!("line: {}", &input_string);
 
     let doc = match schema.parse_document(&input_string) {
         Ok(doc) => doc,

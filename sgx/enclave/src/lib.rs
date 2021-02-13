@@ -170,15 +170,15 @@ pub extern "C" fn build_index(some_string: *const u8, some_len: usize) -> sgx_st
     }
 
     let line: String = x.unwrap();
-    let raw_input: RawInput = serde_json::from_str(&line);
+    let raw_input: RawInput = serde_json::from_str(&line).unwrap();
     let db_input = DBInput{
         id: raw_input.id.clone(),
         user: raw_input.user.clone(),
         text: raw_input.text.clone(),
         user_id: format!("{} {}", &raw_input.user.clone(), &raw_input.id.clone()),
 
-    }
-    let input_string = serde_json::to_string(&db_input);
+    };
+    let input_string = serde_json::to_string(&db_input).unwrap();
     println!("line: {}", &input_string);
 
     let doc = match schema.parse_document(&input_string) {

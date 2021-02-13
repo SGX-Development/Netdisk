@@ -18,7 +18,7 @@ make netdisk
 cd netdisk
 bee run			# 需要安装beego等
 ```
-
+[beego环境配置](https://github.com/SGX-Development/GO/blob/master/beego%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE.md)
 ## 已实现部分
 
 ### RawInput（上传数据）

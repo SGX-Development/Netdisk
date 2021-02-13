@@ -4,9 +4,10 @@ import (
 	"Netdisk/models"
 	"crypto/md5"
 	"fmt"
+	"os"
+
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/validation"
-	"os"
 )
 
 // 处理登录
@@ -30,7 +31,7 @@ func (c *MainController) Handlelogin() {
 		return
 	}
 
-	errMsg, flag, id:= CheckAct(userName, passWd)
+	errMsg, flag, id := CheckAct(userName, passWd)
 	if !flag {
 		c.Data["message"] = errMsg
 		c.TplName = "login.html"
@@ -40,7 +41,7 @@ func (c *MainController) Handlelogin() {
 	c.SetSession("status", status)
 
 	//successfully login
-	c.Ctx.Redirect(302, "http://58.196.135.54:10100")
+	c.Ctx.Redirect(302, "/introduction")
 }
 
 // 处理注册
@@ -49,8 +50,8 @@ func (c *MainController) ShowRegister() {
 }
 
 func (c *MainController) HandleRegister() {
-	if c.Islogin(){
-		c.Data["message"] = "登陆状态下不允许注册！"
+	if c.Islogin() {
+		c.Data["message"] = "登录状态下不允许注册！"
 		c.TplName = "register.html"
 		return
 	}
@@ -66,7 +67,7 @@ func (c *MainController) HandleRegister() {
 		c.Data[key] = value
 	}
 
-	errMsg, flag := CheckReg(userName, passWd, passWd_2, email);
+	errMsg, flag := CheckReg(userName, passWd, passWd_2, email)
 	if !flag {
 		c.Data["message"] = errMsg
 		c.TplName = "register.html"
@@ -74,12 +75,12 @@ func (c *MainController) HandleRegister() {
 	}
 	os.Mkdir("fileStorage/"+userName, 0777)
 	//successfully register
-	c.Ctx.Redirect(302, "http://58.196.135.54:10100/login")
+	c.Ctx.Redirect(302, "/login")
 }
 
 func (c *MainController) DelAcc() {
 	curSession := c.GetSession("userName")
-	userName,ok := curSession.(string)
+	userName, ok := curSession.(string)
 	if ok {
 		user := models.User{}
 		user.Name = userName
@@ -91,8 +92,8 @@ func (c *MainController) DelAcc() {
 
 func IsValid(userName string, passWd string, passWd2 string, email string, hashtable map[string]string) {
 	valid := validation.Validation{}
-	valid.Required(userName, "userName")    //userName can't be blank
-	valid.Required(passWd, "passWd")        //passWd can't be blank
+	valid.Required(userName, "userName") //userName can't be blank
+	valid.Required(passWd, "passWd")     //passWd can't be blank
 	valid.Required(passWd2, "passWd2")
 	valid.Required(email, "email")          //email can't be blank
 	valid.MaxSize(userName, 15, "userName") //userName MaxSize is 15
@@ -109,7 +110,7 @@ func IsValid(userName string, passWd string, passWd2 string, email string, hasht
 	}
 }
 
-func PassWord(passWd string) (pwmd5 string){
+func PassWord(passWd string) (pwmd5 string) {
 	var pwByte []byte = []byte(passWd)
 	pw := md5.New()
 	pw.Write(pwByte)
@@ -117,7 +118,7 @@ func PassWord(passWd string) (pwmd5 string){
 	return fmt.Sprintf("%x", cipherStr)
 }
 
-func CheckAct(userName string, passWd string)(errMsg string, flag bool, id int) {
+func CheckAct(userName string, passWd string) (errMsg string, flag bool, id int) {
 	errMsg = ""
 	flag = true
 	id = -1
@@ -140,7 +141,7 @@ func CheckAct(userName string, passWd string)(errMsg string, flag bool, id int) 
 	return errMsg, flag, id
 }
 
-func CheckReg(userName string, passWd string, passWd_2 string, email string)(errMsg string, flag bool) {
+func CheckReg(userName string, passWd string, passWd_2 string, email string) (errMsg string, flag bool) {
 	errMsg = ""
 	flag = true
 	if passWd != passWd_2 {
@@ -152,7 +153,7 @@ func CheckReg(userName string, passWd string, passWd_2 string, email string)(err
 	user := models.User{}
 	user.Name = userName
 	err := o.Read(&user, "Name")
-	if err==nil && !user.Isdelete {
+	if err == nil && !user.Isdelete {
 		errMsg = "该用户名已被占用！"
 		flag = false
 	} else {
@@ -160,11 +161,24 @@ func CheckReg(userName string, passWd string, passWd_2 string, email string)(err
 		user.Passwd = PassWord(passWd)
 		user.Isactive = true
 		user.Isdelete = false
-		_,err = o.Insert(&user)
+		_, err = o.Insert(&user)
 		if err != nil {
 			errMsg = "Error!"
 			flag = false
 		}
 	}
 	return errMsg, flag
+}
+
+// 处理退出
+func (c *MainController) Logout() {
+	if c.Islogin() {
+		status := c.GetSession("status").(UserStatus)
+		status.islogin = false
+		c.SetSession("status", status)
+	} else {
+		c.Data["message"] = "未登录！"
+	}
+
+	c.Redirect("/login", 302)
 }

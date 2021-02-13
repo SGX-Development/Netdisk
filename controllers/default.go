@@ -1,9 +1,10 @@
 package controllers
 
 import (
+	// "log"
+
 	"github.com/beego/beego/v2/client/orm"
 	beego "github.com/beego/beego/v2/server/web"
-	"log"
 )
 
 type MainController struct {
@@ -11,11 +12,11 @@ type MainController struct {
 }
 
 type File struct {
-	Id       int
-	Name 	string
+	Id   int
+	Name string
 }
 
-func (c *MainController) ShowIndex(){
+func (c *MainController) ShowIndex() {
 	if !c.Islogin() {
 		c.Redirect("/login", 302)
 	}
@@ -25,24 +26,10 @@ func (c *MainController) ShowIndex(){
 	c.TplName = "index.html"
 }
 
-func (c *MainController) Logout() {
-	if c.Islogin() {
-		status := c.GetSession("status").(UserStatus)
-		status.islogin = false
-		c.SetSession("status", status)
-		c.Redirect("/login", 302)
-	} else {
-		c.TplName = "index.html"
-		c.Data["message"] = "未登陆！"
-	}
-	log.Println("succeed")
-	return
-}
-
-func Query(UserName string) (string, string){
+func Query(UserName string) (string, string) {
 	o := orm.NewOrm()
 	var maps []orm.Params
-	num, err:= o.QueryTable("file").Filter("UserName", UserName).Values(&maps, "FileName")
+	num, err := o.QueryTable("file").Filter("UserName", UserName).Values(&maps, "FileName")
 
 	res := ""
 	message := ""

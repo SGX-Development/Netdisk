@@ -147,10 +147,10 @@ header {
   padding-left: 10px;
   cursor: pointer; }
 
-.tp-header .signin {
+/* .tp-header .signin {
   padding-right: 10px;
   border-right: 1px solid #bbb;
-  cursor: pointer; }
+  cursor: pointer; } */
 
 .signin span, .register span {
   font-size: 13px;

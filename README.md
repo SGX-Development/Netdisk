@@ -1,15 +1,23 @@
-# NetdiskSGX
+# Netdisk
+
+## 项目结构
+
+`netdisk`：web部分
+
+`netdisk/controllers/sgx.go`：sgx提供的接口
+
+`sgx`：sgx部分
+
+`test`：原先sgx部分的main.go目录，可用于sgx部分的测试
 
 ## 项目运行
 
 ```shell
 make clean
-make test	
-cd test
-./test
+make netdisk	
+cd netdisk
+bee run			# 需要安装beego等
 ```
-
-如果只更改了main.go文件，没有必要到NetdiskSGX目录下`make clean`，直接在netdisk目录下`sudo make`，然后运行即可
 
 ## 已实现部分
 
@@ -26,11 +34,13 @@ type RawInput struct {
 关于Id（Title）的格式：“用户Id + 空格 + 标题”，例如"1 Sky"，这样的写法并不漂亮，只是为了更容易地实现后面的search_title函数，之后可以改善这个实现
 
 ### aes_encrypt
+
 input: string (plaintext)  
 output: string (encrypted text)   
 rust aes 调用到Golang中的API  
 
 ### aes_decrypt
+
 input: string (ciphertext)  
 output: string (decrypted text)   
 rust aes 调用到Golang中的API  
@@ -43,6 +53,7 @@ rust aes 调用到Golang中的API
 go部分的AES256加密并未实现，当前只能手动用rust版的AES256加密得到密文（将build_index_and_commit函数第二行输出结果手动加密），再传给sgx，见build_index_and_commit函数163-173行左右（因此main.go函数中传来的数据是无效数据。。。）
 
 ### delete_index_and_commit
+
 input: string (encrypted ID) 
 output: None
 
@@ -65,6 +76,10 @@ output: None
 同样，也是密文传至sgx，再密文传回
 
 关于go加解密的问题同build_index_and_commit的描述
+
+### 文件上传的衔接部分(在没有前端加密的情况下)
+
+后端组织成Rawinput数据结构，调用sgx函数上传即可
 
 ## TASK
 
@@ -95,7 +110,13 @@ output: None
 * [ ] AES算法分开
   有时间可以把`app/src/lib.rs`中的AES算法分到另一个文件`app/src/aes.rs`。 
 
-* [ ] ......
+* [x] 文件上传的衔接部分(在没有前端加密的情况下)
+
+* [ ] 文件删除的衔接部分(在没有前端加密的情况下)
+
+* [ ] 按标题搜索的衔接部分(在没有前端加密的情况下)
+
+* [ ] 按关键字搜索的衔接部分(在没有前端加密的情况下)
 
 ## 其它
 
@@ -110,5 +131,3 @@ output: None
 务必确保代码没有bug再上传至master branch，可自行创建其它branch并随意上传
 
 大家已经实现的功能自行简单添加到“已实现部分”内容中
-
-大家自行添加！！！

@@ -334,8 +334,6 @@ pub extern "C" fn get_origin_by_id(
     encrypted_result_string: *mut u8,
     result_max_len: usize,
 ) -> sgx_status_t {
-    // let v: &[u8] = unsafe { slice::from_raw_parts(some_string, some_len) };
-    // let line = String::from_utf8(v.to_vec()).unwrap();
 
     let x = sgx_decrypt(some_string, some_len);
 
@@ -348,10 +346,10 @@ pub extern "C" fn get_origin_by_id(
     println!("line: {}", line);
 
 
-    let id = schema.get_field("id").unwrap();
+    let user_id = schema.get_field("user_id").unwrap();
     let text = schema.get_field("text").unwrap();
 
-    let frankenstein_isbn = Term::from_field_text(id, &line);
+    let frankenstein_isbn = Term::from_field_text(user_id, &line);
     let frankenstein_doc_misspelled = extract_doc_given_id(&reader, &frankenstein_isbn)
         .map_err(|e| {
             panic!(e);

@@ -12,7 +12,7 @@ func (c *MainController) ShowUpload() {
 		c.Redirect("/login", 302)
 		return
 	}
-	c.TplName = "upload.html"
+	c.TplName = "index.html"
 }
 
 func (c *MainController) Upload() {
@@ -40,7 +40,7 @@ func (c *MainController) Upload() {
 	if err!=nil || !InsertFile(filename, c.UserName()) {
 		c.Ctx.WriteString("上传失败")
 	} else {
-		c.Ctx.WriteString("上传成功")
+		c.Ctx.Redirect(302, "/")
 	}
 }
 

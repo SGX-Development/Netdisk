@@ -8,13 +8,11 @@ import (
 func init() {
     beego.Router("/", &controllers.MainController{}, "get:ShowIndex")  //PRODUCT界面
 
-    beego.Router("/logout", &controllers.MainController{}, "get:Logout")
     beego.Router("/introduction", &controllers.IntroController{}, "get:ShowIntro")  //INTRODUCTION界面
 
     beego.Router("/login", &controllers.MainController{},"get:Showlogin;post:Handlelogin")  //登录界面
     beego.Router("/register", &controllers.MainController{}, "get:ShowRegister;post:HandleRegister")  //注册界面
-
-    //beego.Router("/logout", &controllers.MainController{}, "get:Logout")
+    beego.Router("/logout", &controllers.MainController{}, "get:Logout")
 
     beego.Router("/personalcenter", &controllers.PersonalCenterController{}, "get:Show")  //PERSONAL CENTER界面
 

@@ -183,6 +183,14 @@ pub extern "C" fn build_index(some_string: *const u8, some_len: usize) -> sgx_st
 
     let line: String = x.unwrap();
     let raw_input: RawInput = serde_json::from_str(&line).unwrap();
+
+    // find if user == request user in package
+    let op_user = raw_input.user.clone().parse::<i32>().unwrap();
+    if op_user != requester {
+        eprintln!("package error");
+        return sgx_status_t::SGX_ERROR_UNEXPECTED;
+    }
+
     let db_input = DBInput{
         id: raw_input.id.clone(),
         user: raw_input.user.clone(),

@@ -99,6 +99,12 @@ struct Package {
     data: String,
 }
 
+struct SessionKey {
+    user: i32,
+    key: [u8; 32],
+    vi: [u8; 16],
+}
+
 lazy_static! {
     static ref schema: Schema = {
         let mut schema_builder = Schema::builder();
@@ -188,6 +194,19 @@ pub extern "C" fn build_index(some_string: *const u8, some_len: usize) -> sgx_st
     let op_user = raw_input.user.clone().parse::<i32>().unwrap();
     if op_user != requester {
         eprintln!("package error");
+        return sgx_status_t::SGX_ERROR_UNEXPECTED;
+    }
+
+    let id = schema.get_field("id").unwrap();
+    let input_id = Term::from_field_text(id, &raw_input.id.clone());
+    let is_exist = extract_doc_given_id(&reader, &input_id)
+        .map_err(|e| {
+            panic!(e);
+        })
+        .unwrap();
+
+    if !is_exist.is_none() {
+        println!("Build Error: article ID exists.");
         return sgx_status_t::SGX_ERROR_UNEXPECTED;
     }
 

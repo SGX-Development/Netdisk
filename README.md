@@ -25,7 +25,7 @@ bee run			# 需要安装beego等
 
 ## 传递到SGX的包
 String getting from client: `user||Enc_k(data)`
-user 和 data部分中的user部分必须一致，否则会报错（未全部完成）
+user 和 data部分中的user部分必须一致，否则会报错
 
 ## 已实现部分
 
@@ -66,7 +66,7 @@ rust aes 调用到Golang中的API
 
 原来是RawInput明文传到sgx，现在改为了密文传送，并在enclave进行解密
 
-go部分的AES256加密并未实现，当前只能手动用rust版的AES256加密得到密文（将build_index_and_commit函数第二行输出结果手动加密），再传给sgx，见build_index_and_commit函数163-173行左右（因此main.go函数中传来的数据是无效数据。。。）
+现在导入的文章是不能**重名**的。
 
 ### delete_index_and_commit
 

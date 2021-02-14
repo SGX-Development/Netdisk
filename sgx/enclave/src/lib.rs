@@ -298,8 +298,16 @@ pub extern "C" fn do_query(
     let uid =user_id.clone().parse::<i32>().unwrap();
 
     if uid != requester {
-        eprintln!("request package error");
-        return sgx_status_t::SGX_ERROR_UNEXPECTED;
+        let error_msg = String::from("request package error");
+        eprintln!("{}", error_msg);
+        unsafe {
+            ptr::copy_nonoverlapping(
+                error_msg.as_ptr(),
+                encrypted_result_string,
+                error_msg.len(),
+            );
+        }
+        return sgx_status_t::SGX_SUCCESS;
     }
 
     reader.reload().unwrap();
@@ -399,7 +407,15 @@ pub extern "C" fn get_origin_by_id(
 
     let uid = get_id_from_data(line.clone());
     if uid != requester {
-        eprintln!("package error");
+        let error_msg = String::from("request package error");
+        eprintln!("{}", error_msg);
+        unsafe {
+            ptr::copy_nonoverlapping(
+                error_msg.as_ptr(),
+                encrypted_result_string,
+                error_msg.len(),
+            );
+        }
         return sgx_status_t::SGX_ERROR_UNEXPECTED;
     }
 
@@ -414,9 +430,19 @@ pub extern "C" fn get_origin_by_id(
         })
         .unwrap();
 
+
     if frankenstein_doc_misspelled.is_none() {
-        eprintln!("isnone");
-        return sgx_status_t::SGX_ERROR_WASM_BUFFER_TOO_SHORT;
+        let none_msg: &str = &String::from("None").to_string()[..];
+        // eprintln!("{}", none_msg);
+        let encrypted_none_msg = str2aes2base64(&none_msg, &requester);
+        unsafe {
+            ptr::copy_nonoverlapping(
+                encrypted_none_msg.as_ptr(),
+                encrypted_result_string,
+                encrypted_none_msg.len(),
+            );
+        }
+        return sgx_status_t::SGX_SUCCESS;
     }
 
     let y = frankenstein_doc_misspelled.unwrap();

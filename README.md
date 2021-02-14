@@ -136,7 +136,7 @@ output: None
 
 * [ ] RSA在rust下的算法没有
 
-* [ ] search title 在搜无符合条件下有bug（未处理sgx返回值）
+* [x] search title 在搜无符合条件下有bug（未处理sgx返回值）
 
 
 

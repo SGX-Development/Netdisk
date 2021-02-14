@@ -93,6 +93,12 @@ struct DBInput {
     user_id: String,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+struct Package {
+    user: i32,
+    data: String,
+}
+
 lazy_static! {
     static ref schema: Schema = {
         let mut schema_builder = Schema::builder();
@@ -162,7 +168,13 @@ lazy_static! {
 
 #[no_mangle]
 pub extern "C" fn build_index(some_string: *const u8, some_len: usize) -> sgx_status_t {
-    let x = sgx_decrypt(some_string, some_len);
+    let v: &[u8] = unsafe { std::slice::from_raw_parts(some_string, some_len) };
+    let vraw = String::from_utf8(v.to_vec()).unwrap();  
+    let package_input: Package = serde_json::from_str(&vraw).unwrap();
+    let requester = package_input.user;
+    let enc_data = package_input.data;
+
+    let x = sgx_decrypt(enc_data.as_ptr() as *const u8, enc_data.len(), &requester);
 
     if let Err(y) = x {
         eprintln!("sgx_decrypt failed: {:?}", y);
@@ -196,7 +208,13 @@ pub extern "C" fn build_index(some_string: *const u8, some_len: usize) -> sgx_st
 
 #[no_mangle]
 pub extern "C" fn delete_index(some_string: *const u8, some_len: usize) -> sgx_status_t {
-    let x = sgx_decrypt(some_string, some_len);
+    let v: &[u8] = unsafe { std::slice::from_raw_parts(some_string, some_len) };
+    let vraw = String::from_utf8(v.to_vec()).unwrap();  
+    let package_input: Package = serde_json::from_str(&vraw).unwrap();
+    let requester = package_input.user;
+    let enc_data = package_input.data;
+
+    let x = sgx_decrypt(enc_data.as_ptr() as *const u8, enc_data.len(), &requester);
 
     if let Err(y) = x {
         eprintln!("sgx_decrypt failed: {:?}", y);
@@ -233,8 +251,14 @@ pub extern "C" fn do_query(
     encrypted_result_string: *mut u8,
     result_max_len: usize,
 ) -> sgx_status_t {
-    // 对数据解密
-    let x = sgx_decrypt(some_string, some_len);
+    let v: &[u8] = unsafe { std::slice::from_raw_parts(some_string, some_len) };
+    let vraw = String::from_utf8(v.to_vec()).unwrap();  
+    let package_input: Package = serde_json::from_str(&vraw).unwrap();
+    let requester = package_input.user;
+    let enc_data = package_input.data;
+
+    let x = sgx_decrypt(enc_data.as_ptr() as *const u8, enc_data.len(), &requester);
+
     if let Err(y) = x {
         eprintln!("sgx_decrypt failed: {:?}", y);
         return sgx_status_t::SGX_ERROR_UNEXPECTED;
@@ -304,7 +328,8 @@ pub extern "C" fn do_query(
     }
 
     let x = serde_json::to_string(&point).unwrap();
-    let encrypted_x = str2aes2base64(&x);
+    let encrypted_x = str2aes2base64(&x, &requester);
+
 
     if encrypted_x.len() < result_max_len {
         unsafe {
@@ -335,7 +360,13 @@ pub extern "C" fn get_origin_by_id(
     result_max_len: usize,
 ) -> sgx_status_t {
 
-    let x = sgx_decrypt(some_string, some_len);
+    let v: &[u8] = unsafe { std::slice::from_raw_parts(some_string, some_len) };
+    let vraw = String::from_utf8(v.to_vec()).unwrap();  
+    let package_input: Package = serde_json::from_str(&vraw).unwrap();
+    let requester = package_input.user;
+    let enc_data = package_input.data;
+
+    let x = sgx_decrypt(enc_data.as_ptr() as *const u8, enc_data.len(), &requester);
 
     if let Err(y) = x {
         eprintln!("sgx_decrypt failed: {:?}", y);
@@ -364,7 +395,7 @@ pub extern "C" fn get_origin_by_id(
     let y = frankenstein_doc_misspelled.unwrap();
     let x = y.get_first(text).unwrap().text().unwrap();
 
-    let encrypted_x = str2aes2base64(&x);
+    let encrypted_x = str2aes2base64(&x, &requester);
 
     if encrypted_x.len() < result_max_len {
         unsafe {
@@ -447,7 +478,7 @@ fn decrypt(
     Ok(final_result)
 }
 
-extern "C" fn sgx_decrypt(ciphertext: *const u8, ciphertext_len: usize) -> Result<String, String> {
+extern "C" fn sgx_decrypt(ciphertext: *const u8, ciphertext_len: usize, requester: &i32) -> Result<String, String> {
     let ciphertext_slice = unsafe { slice::from_raw_parts(ciphertext, ciphertext_len) };
     // println!("{:?}", ciphertext_slice);
     let key: [u8; 32] = [0; 32];
@@ -541,7 +572,7 @@ fn encrypt(
     Ok(final_result)
 }
 
-pub fn str2aes2base64(message: &str) -> String {
+pub fn str2aes2base64(message: &str, requester: &i32) -> String {
     let g: G = G {
         A: message.to_string(),
     };

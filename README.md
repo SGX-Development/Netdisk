@@ -24,7 +24,7 @@ bee run			# 需要安装beego等
 在根目录下`make`编译所有文件（编译途中需要密码），`make clean`清空， `make cleandb`清空数据库。
 
 ## 包传递
-get from client: `user||command||Enc(password||data)`
+get from client: `state||user||command||Enc(password||data)`
 
 ## 已实现部分
 

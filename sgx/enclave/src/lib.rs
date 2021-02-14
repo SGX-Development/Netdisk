@@ -216,6 +216,7 @@ pub extern "C" fn build_index(some_string: *const u8, some_len: usize) -> sgx_st
 
 #[no_mangle]
 pub extern "C" fn delete_index(some_string: *const u8, some_len: usize) -> sgx_status_t {
+
     let v: &[u8] = unsafe { std::slice::from_raw_parts(some_string, some_len) };
     let vraw = String::from_utf8(v.to_vec()).unwrap();  
     let package_input: Package = serde_json::from_str(&vraw).unwrap();
@@ -230,6 +231,12 @@ pub extern "C" fn delete_index(some_string: *const u8, some_len: usize) -> sgx_s
     }
 
     let line: String = x.unwrap();
+
+    let uid = get_id_from_data(line.clone());
+    if uid != requester {
+        eprintln!("package error");
+        return sgx_status_t::SGX_ERROR_UNEXPECTED;
+    }
 
     let user_id = schema.get_field("user_id").unwrap();
     let delete_file = Term::from_field_text(user_id, &line);
@@ -288,6 +295,12 @@ pub extern "C" fn do_query(
     let pattern = String::from_utf8(pattern.to_vec()).unwrap();
     // println!("{}", user);
     // println!("{}", pattern);
+    let uid =user_id.clone().parse::<i32>().unwrap();
+
+    if uid != requester {
+        eprintln!("request package error");
+        return sgx_status_t::SGX_ERROR_UNEXPECTED;
+    }
 
     reader.reload().unwrap();
     let searcher = reader.searcher();
@@ -382,7 +395,13 @@ pub extern "C" fn get_origin_by_id(
     }
 
     let line: String = x.unwrap();
-    println!("line: {}", line);
+    println!("line: {}", &line);
+
+    let uid = get_id_from_data(line.clone());
+    if uid != requester {
+        eprintln!("package error");
+        return sgx_status_t::SGX_ERROR_UNEXPECTED;
+    }
 
 
     let user_id = schema.get_field("user_id").unwrap();
@@ -592,4 +611,17 @@ pub fn str2aes2base64(message: &str, requester: &i32) -> String {
     let x: Vec<u8> = encrypt(y.as_bytes(), &key, &iv).ok().unwrap();
 
     base64::encode(&x)
+}
+
+fn get_id_from_data(data: String) -> i32 {
+    let string_slice: &[u8] = unsafe { slice::from_raw_parts(data.as_ptr() as *const u8, data.len()) };
+    let mut i = 0;
+    for s in string_slice {
+        if *s == 32 {break;}
+        i += 1;
+    }
+    let user_id = &string_slice[0..i];
+    let user_id = String::from_utf8(user_id.to_vec()).unwrap();
+    let uid =user_id.parse::<i32>().unwrap();
+    uid
 }

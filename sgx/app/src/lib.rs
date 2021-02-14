@@ -24,6 +24,11 @@ struct G {
     A: String,
 }
 
+// #[derive(Serialize, Deserialize, Debug)]
+// struct Package {
+//     user: String,
+//     data: String,
+// }
 
 
 static ENCLAVE_FILE: &'static str = "enclave.signed.so";
@@ -37,6 +42,7 @@ extern "C" {
         retval: *mut sgx_status_t,
         line: *const u8,
         len: usize,
+        // user: i32,
     ) -> sgx_status_t;
     fn delete_index(
         eid: sgx_enclave_id_t,
@@ -212,6 +218,12 @@ pub extern "C" fn rust_build_index(
             ));
         }
     };
+
+    // let raw_package: Package = serde_json::from_str(&line).unwrap();
+    // // let package_user = raw_package.user;
+    // let package_data = raw_package.data;
+    // let package_user = raw_package.user.parse::<i32>().unwrap()
+        
     let enclave_id = enclave.geteid();
 
     let mut retval = sgx_status_t::SGX_SUCCESS;
@@ -234,7 +246,7 @@ pub extern "C" fn rust_build_index(
             }
             return Err(std::io::Error::new(
                 std::io::ErrorKind::Other,
-                "ecall failed",
+                "build ecall failed",
             ));
         }
     }
@@ -268,10 +280,7 @@ pub extern "C" fn rust_delete_index(
 ) -> Result<(), std::io::Error> {
     let v: &[u8] = unsafe { std::slice::from_raw_parts(some_string, some_len) };
     let line = String::from_utf8(v.to_vec()).unwrap();
-
-    let dec = rust_decrypt(line.clone());
-    println!("dec in delete:{}", dec);
-
+    
     let enclave = match &*SGX_ENCLAVE {
         Ok(r) => {
             println!("[+] rust_delete_index");

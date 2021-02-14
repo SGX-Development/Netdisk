@@ -25,6 +25,7 @@ bee run			# 需要安装beego等
 
 ## 传递到SGX的包
 String getting from client: `user||Enc_k(data)`
+user 和 data部分中的user部分必须一致，否则会报错（未全部完成）
 
 ## 已实现部分
 
@@ -37,8 +38,6 @@ type RawInput struct {
 	Text string `json:"text"`  // Content
 }
 ```
-
-关于Id（Title）的格式：“用户Id + 空格 + 标题”，例如"1 Sky"，这样的写法并不漂亮，只是为了更容易地实现后面的search_title函数，之后可以改善这个实现
 
 ### DBInput (DB存储格式)
 ```rust

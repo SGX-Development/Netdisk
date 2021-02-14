@@ -85,11 +85,14 @@ func main() {
 
 	do_query(package2)
 
-	// delete_index_and_commit(aes_encrypt("1 Sky"))
+	// package3 := Package_to_string(Package{User: 1, Data: aes_encrypt("1 Sky")})
+
+	// delete_index_and_commit(package3)
 
 	// do_query(aes_encrypt("1 Sky"))
 
-	// search_title(aes_encrypt("1 Sky"))
+	package4 := Package_to_string(Package{User: 2, Data: aes_encrypt("1 Sky")})
+	search_title(package4)
 
 	// raw_pack := Package{
 	// 	User: "1",
@@ -104,15 +107,12 @@ func main() {
 }
 
 func delete_index_and_commit(input string) {
-	success := (C.ulong)(0)
 
+	success := (C.ulong)(0)
+	fmt.Println("delete_index")
 	C.rust_delete_index(C.CString(input), C.ulong(len(input)), &success)
 
 	fmt.Printf("delete_index return %d\n", success)
-
-	if success == 0 {
-		return
-	}
 
 	C.rust_commit(&success)
 
@@ -142,6 +142,8 @@ func do_query(input string) {
 
 	str_encrypted := C.GoStringN(c_encrypted, (C.int)(d_encrypted))
 	fmt.Println(aes_decrypt(str_encrypted))
+	fmt.Println("query done!")
+
 }
 
 func search_title(title string) {
@@ -168,9 +170,9 @@ func build_index_and_commit(input string) {
 
 	fmt.Printf("build_index return %d\n", success)
 
-	if success == 0 {
-		return
-	}
+	// if success == 0 {
+	// 	return
+	// }
 
 	C.rust_commit(&success)
 

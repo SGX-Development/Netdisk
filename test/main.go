@@ -43,11 +43,11 @@ const STRING_LIMIT = 8192
 
 func main() {
 
-	file1 := RawInput{
-		Id:   "Sky",
-		User: "1",
-		Text: "The sky (also sometimes called celestial dome) is everything that lies above the surface of the Earth, including the atmosphere and outer space. In the field of astronomy, the sky is also called the celestial sphere. This is an abstract sphere, concentric to the Earth, on which the Sun, Moon, planets, and stars appear to be drifting. The celestial sphere is conventionally divided into designated areas called constellations. Usually, the term sky informally refers to a perspective from the Earth's surface; however, the meaning and usage can vary. An observer on the surface of the Earth can see a small part of the sky, which resembles a dome (sometimes called the sky bowl) appearing flatter during the day than at night.[1] In some cases, such as in discussing the weather, the sky refers to only the lower, denser layers of the atmosphere. The daytime sky appears blue because air molecules scatter shorter wavelengths of sunlight more than longer ones (redder light).[2][3][4][5] The night sky appears to be a mostly dark surface or region spangled with stars. The Sun and sometimes the Moon are visible in the daytime sky unless obscured by clouds. At night, the Moon, planets, and stars are similarly visible in the sky. Some of the natural phenomena seen in the sky are clouds, rainbows, and aurorae. Lightning and precipitation are also visible in the sky. Certain birds and insects, as well as human inventions like aircraft and kites, can fly in the sky. Due to human activities, smog during the day and light pollution during the night are often seen above large cities.",
-	}
+	// file1 := RawInput{
+	// 	Id:   "Sky",
+	// 	User: "1",
+	// 	Text: "The sky (also sometimes called celestial dome) is everything that lies above the surface of the Earth, including the atmosphere and outer space. In the field of astronomy, the sky is also called the celestial sphere. This is an abstract sphere, concentric to the Earth, on which the Sun, Moon, planets, and stars appear to be drifting. The celestial sphere is conventionally divided into designated areas called constellations. Usually, the term sky informally refers to a perspective from the Earth's surface; however, the meaning and usage can vary. An observer on the surface of the Earth can see a small part of the sky, which resembles a dome (sometimes called the sky bowl) appearing flatter during the day than at night.[1] In some cases, such as in discussing the weather, the sky refers to only the lower, denser layers of the atmosphere. The daytime sky appears blue because air molecules scatter shorter wavelengths of sunlight more than longer ones (redder light).[2][3][4][5] The night sky appears to be a mostly dark surface or region spangled with stars. The Sun and sometimes the Moon are visible in the daytime sky unless obscured by clouds. At night, the Moon, planets, and stars are similarly visible in the sky. Some of the natural phenomena seen in the sky are clouds, rainbows, and aurorae. Lightning and precipitation are also visible in the sky. Certain birds and insects, as well as human inventions like aircraft and kites, can fly in the sky. Due to human activities, smog during the day and light pollution during the night are often seen above large cities.",
+	// }
 
 	// file2 := RawInput{
 	// 	Id:   "Poetry",
@@ -55,11 +55,11 @@ func main() {
 	// 	Text: "Poetry (derived from the Greek poiesis) is a form of literature that uses aesthetic and often rhythmic[1][2][3] qualities of language—such as phonaesthetics, sound symbolism, and metre—to evoke meanings in addition to, or in place of, the prosaic ostensible meaning. Poetry has a long history – dating back to prehistoric times with hunting poetry in Africa, and to panegyric and elegiac court poetry of the empires of the Nile, Niger, and Volta River valleys.[4] Some of the earliest written poetry in Africa occurs among the Pyramid Texts written during the 25th century BCE. The earliest surviving Western Asian epic poetry, the Epic of Gilgamesh, was written in Sumerian.",
 	// }
 
-	// file3 := RawInput{
-	// 	Id:   "Sea",
-	// 	User: "2",
-	// 	Text: "The sea is the interconnected system of all the Earth's oceanic waters, including the Atlantic, Pacific, Indian, Southern and Arctic Oceans.[1] However, the word ’sea‘ can also be used for many specific, much smaller bodies of seawater, such as the North Sea or the Red Sea. There is no sharp distinction between seas and oceans, though generally seas are smaller, and are often partly (as marginal seas) or wholly (as inland seas) bordered by land.[2] However, the Sargasso Sea has no coastline and lies within a circular current, the North Atlantic Gyre.[3](p90) Seas are generally larger than lakes and contain salt water, but the Sea of Galilee is a freshwater lake.[4][a] The United Nations Convention on the Law of the Sea states that all of the ocean is sea.",
-	// }
+	file3 := RawInput{
+		Id:   "Sea",
+		User: "2",
+		Text: "The sea is the interconnected system of all the Earth's oceanic waters, including the Atlantic, Pacific, Indian, Southern and Arctic Oceans.[1] However, the word ’sea‘ can also be used for many specific, much smaller bodies of seawater, such as the North Sea or the Red Sea. There is no sharp distinction between seas and oceans, though generally seas are smaller, and are often partly (as marginal seas) or wholly (as inland seas) bordered by land.[2] However, the Sargasso Sea has no coastline and lies within a circular current, the North Atlantic Gyre.[3](p90) Seas are generally larger than lakes and contain salt water, but the Sea of Galilee is a freshwater lake.[4][a] The United Nations Convention on the Law of the Sea states that all of the ocean is sea.",
+	}
 
 	// file4 := RawInput{
 	// 	Id:   "Summer",
@@ -73,9 +73,11 @@ func main() {
 	// 	Text: "Wind blowing over the surface of a body of water forms waves that are perpendicular to the direction of the wind. The friction between air and water caused by a gentle breeze on a pond causes ripples to form. A strong blow over the ocean causes larger waves as the moving air pushes against the raised ridges of water. The waves reach their maximum height when the rate at which they are travelling nearly matches the speed of the wind. In open water, when the wind blows continuously as happens in the Southern Hemisphere in the Roaring Forties, long, organised masses of water called swell roll across the ocean.[3](pp83–84)[36][37][d] If the wind dies down, the wave formation is reduced, but already-formed waves continue to travel in their original direction until they meet land. The size of the waves depends on the fetch, the distance that the wind has blown over the water and the strength and duration of that wind. When waves meet others coming from different directions, interference between the two can produce broken, irregular seas.[36] Constructive interference can cause individual (unexpected) rogue waves much higher than normal.[38] Most waves are less than 3 m (10 ft) high[38] and it is not unusual for strong storms to double or triple that height;[39] offshore construction such as wind farms and oil platforms use metocean statistics from measurements in computing the wave forces (due to for instance the hundred-year wave) they are designed against.[40] Rogue waves, however, have been documented at heights above 25 meters (82 ft).",
 	// }
 
-	package1 := Package_to_string(Package{User: 1, Data: aes_encrypt(json_to_string(file1))})
+	// package1 := Package_to_string(Package{User: 1, Data: aes_encrypt(json_to_string(file1))})
+	package1 := Package_to_string(Package{User: 2, Data: aes_encrypt(json_to_string(file3))})
+
 	// fmt.Println(package1)
-	package2 := Package_to_string(Package{User: 1, Data: aes_encrypt("1 everything")})
+	package2 := Package_to_string(Package{User: 1, Data: aes_encrypt("1 sea")})
 
 	build_index_and_commit(package1)
 	// build_index_and_commit(aes_encrypt(json_to_string(file2)))

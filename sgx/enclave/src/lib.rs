@@ -197,9 +197,10 @@ pub extern "C" fn build_index(some_string: *const u8, some_len: usize) -> sgx_st
         return sgx_status_t::SGX_ERROR_UNEXPECTED;
     }
 
-    let id = schema.get_field("id").unwrap();
-    let input_id = Term::from_field_text(id, &raw_input.id.clone());
-    let is_exist = extract_doc_given_id(&reader, &input_id)
+    let userid = schema.get_field("user_id").unwrap();
+    let input_userid = format!("{} {}", &raw_input.user.clone(), &raw_input.id.clone());
+    let userid_field = Term::from_field_text(userid, &input_userid);
+    let is_exist = extract_doc_given_id(&reader, &userid_field)
         .map_err(|e| {
             panic!(e);
         })
@@ -214,7 +215,7 @@ pub extern "C" fn build_index(some_string: *const u8, some_len: usize) -> sgx_st
         id: raw_input.id.clone(),
         user: raw_input.user.clone(),
         text: raw_input.text.clone(),
-        user_id: format!("{} {}", &raw_input.user.clone(), &raw_input.id.clone()),
+        user_id: input_userid,
 
     };
     let input_string = serde_json::to_string(&db_input).unwrap();

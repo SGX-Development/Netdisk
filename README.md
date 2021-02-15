@@ -1,6 +1,6 @@
 # Netdisk
 
-## 项目结构
+## 1 项目结构
 
 `netdisk`：web部分
 
@@ -10,7 +10,7 @@
 
 `test`：原先sgx部分的main.go目录，可用于sgx部分的测试
 
-## 项目运行
+## 2 项目运行
 
 ```shell
 make clean
@@ -18,16 +18,114 @@ make netdisk
 cd netdisk
 bee run			# 需要安装beego等
 ```
+
 [beego环境配置](https://github.com/SGX-Development/GO/blob/master/beego%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE.md)
 
 ### sgx 调试
-在根目录下`make`编译所有文件（编译途中需要密码），`make clean`清空， `make cleandb`清空数据库。
 
-## 传递到SGX的包
-String getting from client: `user||Enc_k(data)`
-user 和 data部分中的user部分必须一致，否则会报错
+在根目录下`make`编译所有文件（编译途中需要密码），`make clean`清空， `make cleandb`清空数据库
 
-## 已实现部分
+## 3 session key
+
+### 前提
+
+公式约定：
+
+* $D_K(T):=$用密钥K对密文T解密
+* $E_K(T):=$用密钥K对明文T加密
+
+CA：
+
+* RSA算法，公钥P~CA~（假设大家都知道），私钥S~CA~
+* 假设申请证书的内容简化为只包含公钥P，则CA用S~CA~对其加密形成签名，即CA签名$=E_{S_{CA}}(P)$
+
+服务端SGX：
+
+* RSA算法，公钥P、私钥S
+* 由CA颁发的证书，假设它已经存在，并简化其内容为`[SGX公钥P，CA签名]`
+
+### 过程
+
+![image](https://github.com/SGX-Development/Netdisk/raw/main/image/session_key.jpg)
+
+## 4 SGX提供的函数
+
+### session key
+
+```rust
+fn func_name(SGX public key, CA signature)
+```
+
+功能：后端通过此函数获取SGX的证书
+
+参数：
+
+* SGX public key：SGX公钥（出SGX）
+* CA signature：CA签名，简化为用CA私钥加密SGX公钥的结果（出SGX）
+
+```rust
+fn func_name(user_id, m)
+```
+
+功能：后端通过此函数将会话密钥传递给k
+
+参数：
+
+* user_id：用户id（入SGX）
+* m：用SGX公钥加密的会话密钥（入SGX）
+
+### Register
+
+```rust
+fn func_name(passwd_session_key, passwd_sgx)
+```
+
+功能：后端将会话密钥加密过的用户口令传至SGX，SGX解密后用SGX公钥加密，返回给后端
+
+参数：
+
+* passwd_session_key：会话密钥加密过的用户口令（入SGX）
+* passwd_sgx：SGX加密过的用户口令（存入后端数据库）（出SGX）
+
+### Login
+
+```rust
+fn func_name(passwd_session_key, passwd_sgx, success)
+```
+
+功能：后端得到用会话密钥加密过的用户口令以及用SGX公钥加密过的用户口令，SGX内用私钥解密得到正确的用户口令，用会话密钥解密得到用户输入的口令，判断两者是否一致，通过success将结果返回给后端
+
+参数：
+
+* passwd_session_key：会话密钥加密过的用户口令（入SGX）
+* passwd_sgx：SGX公钥加密过的用户口令（从数据库取出）（入SGX）
+* success：true/false，判断用户是否登录成功（出SGX）
+
+### Logout
+
+```rust
+fn func_name(user_id)
+```
+
+功能：用户退出，SGX删除该用户对应的session key
+
+参数：
+
+* user_id：用户id（入SGX）
+
+### 文章处理函数（以下函数经过Golang处理，是Golang提供的接口，类似于现有的实现）
+
+
+
+
+
+
+
+
+
+
+
+## 5 已实现部分
 
 ### RawInput（上传数据）
 
@@ -40,6 +138,7 @@ type RawInput struct {
 ```
 
 ### DBInput (DB存储格式)
+
 ```rust
 struct DBInput {
     id: String,
@@ -52,7 +151,7 @@ struct DBInput {
 ### aes_encrypt
 
 input: string (plaintext)  
-output: string (encrypted text)   
+output: string (encrypted text)  
 rust aes 调用到Golang中的API  
 
 ### aes_decrypt
@@ -97,7 +196,7 @@ output: None
 
 后端组织成Rawinput数据结构，调用sgx函数上传即可
 
-## TASK
+## 6 TASK
 
 * [x] 基本的上传数据，按关键字搜索，按标题搜索——已完成
 
@@ -140,9 +239,11 @@ output: None
 
 
 
-## 其它
+## 7 其它
 
 [AES256_rust](https://github.com/SGX-Development/AES256_rust)
+
+[rustcrypto-RSA-sgx](https://github.com/mesalock-linux/rustcrypto-RSA-sgx)
 
 删除已构建的索引，只需删除netdisk/idx目录即可
 

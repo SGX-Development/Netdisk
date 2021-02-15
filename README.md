@@ -64,14 +64,14 @@ fn func_name(SGX public key, CA signature)
 * CA signature：CA签名，简化为用CA私钥加密SGX公钥的结果（出SGX）
 
 ```rust
-fn func_name(user_id, m)
+fn func_name(user, m)
 ```
 
 功能：后端通过此函数将会话密钥传递给k
 
 参数：
 
-* user_id：用户id（入SGX）
+* user：用户id（入SGX）
 * m：用SGX公钥加密的会话密钥（入SGX）
 
 ### Register
@@ -138,12 +138,12 @@ type RawInput struct {
 ```
 
 ### DBInput (DB存储格式)
-
+**注意!!! 这只是我存DB内的格式，只在enclave内部使用，不会与任何外部交互，包括sgx/app**
 ```rust
 struct DBInput {
-    id: String,
-    user: String,
-    text: String,
+    id: String, // Title
+    user: String,  // 用户Id
+    text: String, // Content
     user_id: String, // user+' '+id
 }
 ```

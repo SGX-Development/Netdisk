@@ -22,13 +22,14 @@
 
 extern crate rsa;
 
-
+extern crate num_bigint;
 extern crate rand;
 // use rand::rngs::{OsRng};
 // use rand::SeedableRng;
 use rand::{rngs::StdRng, SeedableRng,Rng};
 
 use rsa::{PublicKey, RSAPrivateKey, RSAPublicKey, PaddingScheme};
+use num_bigint::BigUint;
 
 // use rand::rngs::OsRng;
 // let mut rng = OsRng;
@@ -701,18 +702,30 @@ fn get_rsa(){
     let mut rng = rand::rngs::StdRng::seed_from_u64(seed);
     let bits = 2048;
     let private_key = RSAPrivateKey::new(&mut rng, bits).expect("failed to generate a key");
-    println!("private: {:?}", private_key);
+    // println!("private: {:?}", private_key);
     let public_key = RSAPublicKey::from(&private_key);
     println!("public: {:?}", public_key);
+    let nu8 = public_key.n_to_vecu8();
+    let eu8 = public_key.e_to_vecu8();
+    println!("public n: {:?}", &nu8);
+    println!("public e: {:?}", &eu8);
 
+    let newkey = RSAPublicKey::u8_form_pk(&nu8,&eu8);
+
+    // let pk_e = public_key.e().to_byte_be();
+    // let public_key_string = serde_json::to_string(&public_key).unwrap();
+    // println!("public: {}", public_key_string);
+
+
+    rng = rand::rngs::StdRng::seed_from_u64(0);
 
     // Encrypt
     let data = b"hello world";
     // let data = data.unwrap();
     let padding = PaddingScheme::new_pkcs1v15_encrypt();
-    let enc_data = public_key.encrypt(&mut rng, padding, &data[..]).expect("failed to encrypt");
+    let enc_data = newkey.encrypt(&mut rng, padding, &data[..]).expect("failed to encrypt");
     // let enc_string = String::from_utf8(enc_data.clone().to_vec()).unwrap();  
-    println!("haoye1: {:?}", enc_data);
+    // println!("haoye1: {:?}", enc_data);
 
     // Decrypt
     let padding = PaddingScheme::new_pkcs1v15_encrypt();

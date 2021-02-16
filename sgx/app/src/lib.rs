@@ -565,8 +565,9 @@ pub extern "C" fn rust_server_hello(
             string_limit,
         )
     };
-    println!("aaabaaa");
     println!("a----{}",len_tmp_pk_n);
+    println!("b----{}",len_tmp_pk_e);
+    println!("c----{}",len_tmp_certificate);
 
     match result {
         sgx_status_t::SGX_SUCCESS => {}
@@ -592,9 +593,9 @@ pub extern "C" fn rust_server_hello(
     
 
 
-    let mut pk_n_vec: Vec<u8> = ref_tmp_pk_n.to_vec();
-    // pk_n_vec.retain(|x| *x != 0x00u8);
-    println!("aaaaaa");
+    // let mut pk_n_vec: Vec<u8> = ref_tmp_pk_n.to_vec();
+    // // pk_n_vec.retain(|x| *x != 0x00u8);
+    // println!("aaaaaa");
 
     // let line_n = String::from_utf8(pk_n_vec.to_vec()).unwrap();
     
@@ -612,21 +613,27 @@ pub extern "C" fn rust_server_hello(
 
     // println!("usize n {}", &usize_n_len);
 
-    let pk_n_usize:usize = 256;
+    // let pk_n_usize:usize = 256;
 
     unsafe {
         *pk_n_len = len_tmp_pk_n;
         ptr::copy_nonoverlapping(
-            pk_n_vec.as_ptr(),
+            ref_tmp_pk_n.as_ptr(),
             pk_n,
-            pk_n_usize,
+            *pk_n_len,
         );
-        // *pk_e_len = e_len;
-        // ptr::copy_nonoverlapping(
-        //     ref_tmp_pk_e.as_ptr(),
-        //     pk_e,
-        //     ref_tmp_pk_e.len(),
-        // );
+        *pk_e_len = len_tmp_pk_e;
+        ptr::copy_nonoverlapping(
+            ref_tmp_pk_e.as_ptr(),
+            pk_e,
+            *pk_e_len,
+        );
+        *certificate_len = len_tmp_certificate;
+        ptr::copy_nonoverlapping(
+            ref_tmp_certificate.as_ptr(),
+            certificate,
+            *certificate_len,
+        );
     }
 
 

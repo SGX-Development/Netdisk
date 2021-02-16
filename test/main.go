@@ -40,6 +40,11 @@ type QueryRes struct {
 	A []Article
 }
 
+type string_public_key struct {
+	N string `json:"n"`
+	E string `json:"e"`
+}
+
 const STRING_LIMIT = 4096
 
 func main() {
@@ -107,11 +112,14 @@ func main() {
 	// pack_get := string_to_Package(pack_string)
 	// fmt.Println("%+v", pack_get)
 
-	server_hello()
+	public_key, certificate := server_hello()
+	fmt.Println("Welcome:")
+	fmt.Println(public_key)
+	fmt.Println(certificate)
 
 }
 
-func server_hello() {
+func server_hello() (string, string) {
 	pk_e := (*C.char)(C.malloc(STRING_LIMIT))
 	pk_e_len := (C.ulong)(0)
 
@@ -126,9 +134,21 @@ func server_hello() {
 	// fmt.Println("public_key_n_str: ", (C.int)(pk_n_len))
 
 	public_key_n_str := C.GoStringN(pk_n, (C.int)(pk_n_len))
-	fmt.Println("public_key_n_str: ", public_key_n_str)
+	// fmt.Println("public_key_n_str:", public_key_n_str)
 	public_key_e_str := C.GoStringN(pk_e, (C.int)(pk_e_len))
-	fmt.Println("public_key_e_str: ", public_key_e_str)
+	// fmt.Println("public_key_e_str:", public_key_e_str)
+	Certificate_str := C.GoStringN(Certificate, (C.int)(Certificate_len))
+	// fmt.Println("Certificate_str:", Certificate_str)
+	pkstr := string_public_key{
+		N: public_key_n_str,
+		E: public_key_e_str,
+	}
+
+	publickey, err := json.Marshal(pkstr)
+	if err != nil {
+		panic("marshal failed")
+	}
+	return string(publickey), Certificate_str
 
 }
 

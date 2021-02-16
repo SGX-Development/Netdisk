@@ -201,9 +201,10 @@ lazy_static! {
         RSAPrivateKey::new(&mut rng, bits).expect("failed to generate a key")
     };
     static ref public_key: RSAPublicKey = {RSAPublicKey::from(&*private_key)};
-
     static ref public_key_n: Vec<u8> = {(*public_key).n_to_vecu8()};
     static ref public_key_e: Vec<u8> = {(*public_key).e_to_vecu8()};
+
+    static ref certificate: Vec<u8> = get_from_CA();
 
 
 
@@ -712,6 +713,11 @@ fn get_id_from_data(data: String) -> i32 {
     uid
 }
 
+fn get_from_CA() -> Vec<u8> {
+    let cer = b"wo shi hao ren";
+    cer.to_vec()
+}
+
 #[no_mangle]
 pub extern "C" fn server_hello(
     ref_tmp_pk_n: *mut u8,
@@ -722,6 +728,7 @@ pub extern "C" fn server_hello(
     len_tmp_certificate: &mut usize,
     string_limit: usize,
 ) -> sgx_status_t {
+ 
 
     println!("[+] hello server!");
     println!("pk: {:?}", &*public_key);
@@ -731,8 +738,7 @@ pub extern "C" fn server_hello(
     
     *len_tmp_pk_n = (*public_key_n).len() ;
     *len_tmp_pk_e = (*public_key_e).len() ;
-    // println!("\npkni32ln: {}", &len_tmp_pk_n);
-
+    *len_tmp_certificate = (*certificate).len() ;
 
 
     // if ( &len_tmp_pk_n < string_limit && (*public_key_n).len() < string_limit ) {
@@ -742,18 +748,18 @@ pub extern "C" fn server_hello(
             ref_tmp_pk_n,
             (*public_key_n).len(),
         );
-        // ptr::copy_nonoverlapping(
-        //     (len_tmp_pk_na).as_ptr(),
-        //     len_tmp_pk_n,
-        //     (len_tmp_pk_na).len(),
-        // );
         ptr::copy_nonoverlapping(
             (*public_key_e).as_ptr(),
             ref_tmp_pk_e,
             (*public_key_e).len(),
         );
+        ptr::copy_nonoverlapping(
+            (*certificate).as_ptr(),
+            ref_tmp_certificate,
+            (*certificate).len(),
+        );
     }
-    return sgx_status_t::SGX_SUCCESS;
+    // return sgx_status_t::SGX_SUCCESS;
     // } else {
     //     eprintln!(
     //         "Public key len > buf size",

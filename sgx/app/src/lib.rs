@@ -70,6 +70,20 @@ extern "C" {
         encrypted_result_string: *const u8,
         result_max_len: usize,
     ) -> sgx_status_t;
+
+    fn server_hello(
+        eid: sgx_enclave_id_t,
+        retval: *mut sgx_status_t,
+        ref_tmp_pk_n: *const u8,
+        ref_tmp_pk_e: *const u8,
+        ref_tmp_certificate: *const u8,
+        string_limit: usize,
+    ) -> sgx_status_t;
+
+    fn rsa_init(
+        id: sgx_enclave_id_t,
+        retval: *mut sgx_status_t,
+    ) -> sgx_status_t;
 }
 
 #[no_mangle]
@@ -85,6 +99,8 @@ pub extern "C" fn init_enclave() -> SgxResult<SgxEnclave> {
         secs_attr: sgx_attributes_t { flags: 0, xfrm: 0 },
         misc_select: 0,
     };
+
+    
     let x = SgxEnclave::create(
         ENCLAVE_FILE,
         debug,
@@ -95,6 +111,7 @@ pub extern "C" fn init_enclave() -> SgxResult<SgxEnclave> {
     match &x {
         Ok(r) => {
             println!("[+] Init Enclave Successful {}!", r.geteid());
+      
         }
         Err(y) => {
             eprintln!("[-] Init Enclave Failed {}!", y.as_str());
@@ -486,6 +503,79 @@ pub extern "C" fn rust_search_title(
             );
         }
     
+    }
+
+    Ok(())
+}
+
+#[no_mangle]
+pub extern "C" fn rust_server_hello(
+    pk_n: *mut u8,
+    pk_n_len: *mut usize,
+    pk_e: *mut u8,
+    pk_e_len: *mut usize,
+    certificate: *mut u8,
+    certificate_len: *mut usize,
+    string_limit: usize,
+) -> Result<(), std::io::Error> {
+
+    let enclave = match &*SGX_ENCLAVE {
+        Ok(r) => {
+            println!("[+] rust_search_title");
+            r
+        }
+        Err(x) => {
+            println!("[-] Init Enclave Failed {}!", x.as_str());
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                "init enclave failed",
+            ));
+        }
+    };
+
+    let mut tmp_pk_n: Vec<u8> = vec![0; string_limit];
+    let mut tmp_pk_e: Vec<u8> = vec![0; string_limit];
+    let mut tmp_certificate: Vec<u8> = vec![0; string_limit];
+
+    let ref_tmp_pk_n = &mut tmp_pk_n[..];
+    let ref_tmp_pk_e = &mut tmp_pk_e[..];
+    let ref_tmp_certificate = &mut tmp_certificate[..];
+
+
+    let enclave_id = enclave.geteid();
+    let mut retval = sgx_status_t::SGX_SUCCESS;
+
+
+    let result = unsafe {
+        server_hello(
+            enclave_id,
+            &mut retval,
+            ref_tmp_pk_n.as_mut_ptr(),
+            ref_tmp_pk_e.as_mut_ptr(),
+            ref_tmp_certificate.as_mut_ptr(),
+            string_limit,
+        )
+    };
+
+    match result {
+        sgx_status_t::SGX_SUCCESS => {}
+        _ => {
+            eprintln!("[-] ECALL Enclave Failed {}!", result.as_str());
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                "ecall failed",
+            ));
+        }
+    }
+    match retval {
+        sgx_status_t::SGX_SUCCESS => {}
+        e => {
+            eprintln!("[-] ECALL Enclave Failed {}!", retval.as_str());
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                e.to_string(),
+            ));
+        }
     }
 
     Ok(())

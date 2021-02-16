@@ -9,6 +9,7 @@ package main
 //extern void rust_delete_index( char* some_string, size_t some_len,size_t * result_string_size);
 //extern void rust_search_title( char * some_string, size_t some_len,size_t result_string_limit, char * encrypted_result_string,size_t * encrypted_result_string_size);
 //extern void rust_commit(size_t* result);
+//extern void rust_server_hello( char* pk_n, size_t* pk_n_len, char* pk_e, size_t* pk_e_len, char* certificate, size_t* certificate_len, size_t string_limit);
 //extern void go_encrypt(size_t limit_length, char* plaintext, size_t plainlength, char* ciphertext, size_t* cipherlength);
 //extern void go_decrypt(size_t limit_length, char* ciphertext, size_t cipherlength, char* plaintext, size_t* plainlength);
 import "C"
@@ -39,7 +40,7 @@ type QueryRes struct {
 	A []Article
 }
 
-const STRING_LIMIT = 8192
+const STRING_LIMIT = 4096
 
 func main() {
 
@@ -55,11 +56,11 @@ func main() {
 	// 	Text: "Poetry (derived from the Greek poiesis) is a form of literature that uses aesthetic and often rhythmic[1][2][3] qualities of language—such as phonaesthetics, sound symbolism, and metre—to evoke meanings in addition to, or in place of, the prosaic ostensible meaning. Poetry has a long history – dating back to prehistoric times with hunting poetry in Africa, and to panegyric and elegiac court poetry of the empires of the Nile, Niger, and Volta River valleys.[4] Some of the earliest written poetry in Africa occurs among the Pyramid Texts written during the 25th century BCE. The earliest surviving Western Asian epic poetry, the Epic of Gilgamesh, was written in Sumerian.",
 	// }
 
-	file3 := RawInput{
-		Id:   "Sea",
-		User: "2",
-		Text: "The sea is the interconnected system of all the Earth's oceanic waters, including the Atlantic, Pacific, Indian, Southern and Arctic Oceans.[1] However, the word ’sea‘ can also be used for many specific, much smaller bodies of seawater, such as the North Sea or the Red Sea. There is no sharp distinction between seas and oceans, though generally seas are smaller, and are often partly (as marginal seas) or wholly (as inland seas) bordered by land.[2] However, the Sargasso Sea has no coastline and lies within a circular current, the North Atlantic Gyre.[3](p90) Seas are generally larger than lakes and contain salt water, but the Sea of Galilee is a freshwater lake.[4][a] The United Nations Convention on the Law of the Sea states that all of the ocean is sea.",
-	}
+	// file3 := RawInput{
+	// 	Id:   "Sea",
+	// 	User: "2",
+	// 	Text: "The sea is the interconnected system of all the Earth's oceanic waters, including the Atlantic, Pacific, Indian, Southern and Arctic Oceans.[1] However, the word ’sea‘ can also be used for many specific, much smaller bodies of seawater, such as the North Sea or the Red Sea. There is no sharp distinction between seas and oceans, though generally seas are smaller, and are often partly (as marginal seas) or wholly (as inland seas) bordered by land.[2] However, the Sargasso Sea has no coastline and lies within a circular current, the North Atlantic Gyre.[3](p90) Seas are generally larger than lakes and contain salt water, but the Sea of Galilee is a freshwater lake.[4][a] The United Nations Convention on the Law of the Sea states that all of the ocean is sea.",
+	// }
 
 	// file4 := RawInput{
 	// 	Id:   "Summer",
@@ -74,18 +75,18 @@ func main() {
 	// }
 
 	// package1 := Package_to_string(Package{User: 1, Data: aes_encrypt(json_to_string(file1))})
-	package1 := Package_to_string(Package{User: 2, Data: aes_encrypt(json_to_string(file3))})
+	// package1 := Package_to_string(Package{User: 2, Data: aes_encrypt(json_to_string(file3))})
 
 	// fmt.Println(package1)
-	package2 := Package_to_string(Package{User: 1, Data: aes_encrypt("1 sea")})
+	// package2 := Package_to_string(Package{User: 1, Data: aes_encrypt("1 sea")})
 
-	build_index_and_commit(package1)
+	// build_index_and_commit(package1)
 	// build_index_and_commit(aes_encrypt(json_to_string(file2)))
 	// build_index_and_commit(aes_encrypt(json_to_string(file3)))
 	// build_index_and_commit(aes_encrypt(json_to_string(file4)))
 	// build_index_and_commit(aes_encrypt(json_to_string(file5)))
 
-	do_query(package2)
+	// do_query(package2)
 
 	// package3 := Package_to_string(Package{User: 1, Data: aes_encrypt("1 Sky")})
 
@@ -106,6 +107,21 @@ func main() {
 	// pack_get := string_to_Package(pack_string)
 	// fmt.Println("%+v", pack_get)
 
+	server_hello()
+
+}
+
+func server_hello() {
+	pk_e := (*C.char)(C.malloc(STRING_LIMIT))
+	pk_e_len := (C.ulong)(0)
+
+	pk_n := (*C.char)(C.malloc(STRING_LIMIT))
+	pk_n_len := (C.ulong)(0)
+
+	Certificate := (*C.char)(C.malloc(STRING_LIMIT))
+	Certificate_len := (C.ulong)(0)
+
+	C.rust_server_hello(pk_n, &pk_n_len, pk_e, &pk_e_len, Certificate, &Certificate_len, STRING_LIMIT)
 }
 
 func delete_index_and_commit(input string) {

@@ -17,6 +17,11 @@ serde = { git = "https://github.com/mesalock-linux/serde-sgx", branch = "master"
 serde_json = { git = "https://github.com/mesalock-linux/serde-json-sgx", branch = "master" }
 base64 = { git = "https://github.com/mesalock-linux/rust-base64-sgx", branch = "master" }
 rust-crypto = { git = "https://github.com/mesalock-linux/rust-crypto-sgx", branch = "master" }
+#rsa = { git = "https://github.com/sunriseos/RSA", branch = "nostd", default-features = false, features = ["alloc"]}
+rsa = { path="../../../RSA", branch = "nostd", default-features = false, features = ["alloc"]}
+#rand = { version = "0.8.3", default-features = false , features = ["getrandom","std_rng"] }
+#rand_core = {version = "0.6.2", features = ["getrandom"]}
+rand = { version = "0.7.0", default-features = false }
 
 [target.'cfg(not(target_env = "sgx"))'.dependencies]
 sgx_types = {version = "1.0", rev = "v1.1.3",git = "https://github.com/apache/teaclave-sgx-sdk.git" }

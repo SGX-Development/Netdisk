@@ -20,6 +20,26 @@
 #![cfg_attr(not(target_env = "sgx"), no_std)]
 #![cfg_attr(target_env = "sgx", feature(rustc_private))]
 
+extern crate rsa;
+
+
+extern crate rand;
+// use rand::rngs::{OsRng};
+// use rand::SeedableRng;
+use rand::{rngs::StdRng, SeedableRng,Rng};
+
+use rsa::{PublicKey, RSAPrivateKey, RSAPublicKey, PaddingScheme};
+
+// use rand::rngs::OsRng;
+// let mut rng = OsRng;
+
+
+// use rsa::{RSAPublicKey, RSAPrivateKey, PaddingScheme};
+
+// extern crate rand_core;
+// use rand_core::OsRng;
+
+
 extern crate crypto;
 
 extern crate sgx_trts;
@@ -286,6 +306,8 @@ pub extern "C" fn do_query(
     encrypted_result_string: *mut u8,
     result_max_len: usize,
 ) -> sgx_status_t {
+    get_rsa();
+
     let v: &[u8] = unsafe { std::slice::from_raw_parts(some_string, some_len) };
     let vraw = String::from_utf8(v.to_vec()).unwrap();  
     let package_input: Package = serde_json::from_str(&vraw).unwrap();
@@ -670,4 +692,33 @@ fn get_id_from_data(data: String) -> i32 {
     let user_id = String::from_utf8(user_id.to_vec()).unwrap();
     let uid =user_id.parse::<i32>().unwrap();
     uid
+}
+
+fn get_rsa(){
+
+    let timeseed = std::time::SystemTime::now().duration_since(std::time::SystemTime::UNIX_EPOCH).unwrap();
+    let seed = timeseed.as_secs();
+    let mut rng = rand::rngs::StdRng::seed_from_u64(seed);
+    let bits = 2048;
+    let private_key = RSAPrivateKey::new(&mut rng, bits).expect("failed to generate a key");
+    println!("private: {:?}", private_key);
+    let public_key = RSAPublicKey::from(&private_key);
+    println!("public: {:?}", public_key);
+
+
+    // Encrypt
+    let data = b"hello world";
+    // let data = data.unwrap();
+    let padding = PaddingScheme::new_pkcs1v15_encrypt();
+    let enc_data = public_key.encrypt(&mut rng, padding, &data[..]).expect("failed to encrypt");
+    // let enc_string = String::from_utf8(enc_data.clone().to_vec()).unwrap();  
+    println!("haoye1: {:?}", enc_data);
+
+    // Decrypt
+    let padding = PaddingScheme::new_pkcs1v15_encrypt();
+    let dec_data = private_key.decrypt(padding, &enc_data).expect("failed to decrypt");
+    let dec_string = String::from_utf8(dec_data.clone().to_vec()).unwrap();  
+    println!("haoye2: {}", dec_string);
+
+
 }

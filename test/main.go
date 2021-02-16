@@ -122,6 +122,14 @@ func server_hello() {
 	Certificate_len := (C.ulong)(0)
 
 	C.rust_server_hello(pk_n, &pk_n_len, pk_e, &pk_e_len, Certificate, &Certificate_len, STRING_LIMIT)
+
+	// fmt.Println("public_key_n_str: ", (C.int)(pk_n_len))
+
+	public_key_n_str := C.GoStringN(pk_n, (C.int)(pk_n_len))
+	fmt.Println("public_key_n_str: ", public_key_n_str)
+	public_key_e_str := C.GoStringN(pk_e, (C.int)(pk_e_len))
+	fmt.Println("public_key_e_str: ", public_key_e_str)
+
 }
 
 func delete_index_and_commit(input string) {

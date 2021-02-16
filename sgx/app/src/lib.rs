@@ -56,7 +56,6 @@ extern "C" {
         retval: *mut sgx_status_t,
         line: *const u8,
         len: usize,
-        // result_string: *const u8,
         encrypted_result_string: *const u8,
         result_max_len: usize,
     ) -> sgx_status_t;
@@ -66,7 +65,6 @@ extern "C" {
         retval: *mut sgx_status_t,
         line: *const u8,
         len: usize,
-        // result_string: *const u8,
         encrypted_result_string: *const u8,
         result_max_len: usize,
     ) -> sgx_status_t;
@@ -75,8 +73,11 @@ extern "C" {
         eid: sgx_enclave_id_t,
         retval: *mut sgx_status_t,
         ref_tmp_pk_n: *const u8,
+        len_tmp_pk_n: &mut usize,
         ref_tmp_pk_e: *const u8,
+        len_tmp_pk_e: &mut usize,
         ref_tmp_certificate: *const u8,
+        len_tmp_certificate: &mut usize,
         string_limit: usize,
     ) -> sgx_status_t;
 
@@ -545,17 +546,27 @@ pub extern "C" fn rust_server_hello(
     let enclave_id = enclave.geteid();
     let mut retval = sgx_status_t::SGX_SUCCESS;
 
+    let mut len_tmp_pk_n: usize = 0;
+    let mut len_tmp_pk_e: usize = 0;
+    let mut len_tmp_certificate: usize = 0;
+    // let ref ref_len_tmp_pk_n = len_tmp_pk_n;
+    // let mut ref_len_tmp_pk_n = 0;
 
     let result = unsafe {
         server_hello(
             enclave_id,
             &mut retval,
             ref_tmp_pk_n.as_mut_ptr(),
+            &mut len_tmp_pk_n,
             ref_tmp_pk_e.as_mut_ptr(),
+            &mut len_tmp_pk_e,
             ref_tmp_certificate.as_mut_ptr(),
+            &mut len_tmp_certificate,
             string_limit,
         )
     };
+    println!("aaabaaa");
+    println!("a----{}",len_tmp_pk_n);
 
     match result {
         sgx_status_t::SGX_SUCCESS => {}
@@ -577,6 +588,47 @@ pub extern "C" fn rust_server_hello(
             ));
         }
     }
+
+    
+
+
+    let mut pk_n_vec: Vec<u8> = ref_tmp_pk_n.to_vec();
+    // pk_n_vec.retain(|x| *x != 0x00u8);
+    println!("aaaaaa");
+
+    // let line_n = String::from_utf8(pk_n_vec.to_vec()).unwrap();
+    
+    // let n_len = line_n.len();
+    // println!("pknlen: {}", n_len);
+    // if n_len > string_limit {
+    //     panic!("{} > {}", n_len, string_limit);
+    // }
+    // let e_len = ref_tmp_pk_e.len();
+    // if e_len > string_limit {
+    //     panic!("{} > {}", e_len, string_limit);
+    // }
+    // let usize_n_len = ref_len_tmp_pk_n;
+    // let usize_n_len = usizet_n_len as usize;
+
+    // println!("usize n {}", &usize_n_len);
+
+    let pk_n_usize:usize = 256;
+
+    unsafe {
+        *pk_n_len = len_tmp_pk_n;
+        ptr::copy_nonoverlapping(
+            pk_n_vec.as_ptr(),
+            pk_n,
+            pk_n_usize,
+        );
+        // *pk_e_len = e_len;
+        // ptr::copy_nonoverlapping(
+        //     ref_tmp_pk_e.as_ptr(),
+        //     pk_e,
+        //     ref_tmp_pk_e.len(),
+        // );
+    }
+
 
     Ok(())
 }

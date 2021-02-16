@@ -1,6 +1,6 @@
 .PHONY: all
 all:
-	rm -f enclave.signed.so
+	rm -f bin/*
 	$(MAKE) -C sgx
 	cp sgx/bin/enclave.signed.so test/
 	cp sgx/bin/enclave.signed.so netdisk/

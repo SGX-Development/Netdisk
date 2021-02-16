@@ -192,11 +192,21 @@ lazy_static! {
         }
     };
 
-    static ref SGX_RSA:u8 = rsa_init();
-    // static ref public_key: RSAPublicKey;
-    // static ref private_key: RSAPrivateKey;
-    // static ref public_key_n: Vec<u8> = vec![0;1024];
-    // static ref public_key_e: Vec<u8> = vec![0;1024];
+    // static ref SGX_RSA:u8 = rsa_init();
+    static ref private_key: RSAPrivateKey = {
+        let timeseed = std::time::SystemTime::now().duration_since(std::time::SystemTime::UNIX_EPOCH).unwrap();
+        let seed = timeseed.as_secs();
+        let mut rng = rand::rngs::StdRng::seed_from_u64(seed);
+        let bits = 2048;
+        RSAPrivateKey::new(&mut rng, bits).expect("failed to generate a key")
+    };
+    static ref public_key: RSAPublicKey = {RSAPublicKey::from(&*private_key)};
+
+    static ref public_key_n: Vec<u8> = {(*public_key).n_to_vecu8()};
+    static ref public_key_e: Vec<u8> = {(*public_key).e_to_vecu8()};
+
+
+
 
 }
 
@@ -704,37 +714,87 @@ fn get_id_from_data(data: String) -> i32 {
 
 #[no_mangle]
 pub extern "C" fn server_hello(
-    ref_tmp_pk_n: *const u8,
-    ref_tmp_pk_e: *const u8,
-    ref_tmp_certificate: *const u8,
+    ref_tmp_pk_n: *mut u8,
+    len_tmp_pk_n: &mut usize,
+    ref_tmp_pk_e: *mut u8,
+    len_tmp_pk_e: &mut usize,
+    ref_tmp_certificate: *mut u8,
+    len_tmp_certificate: &mut usize,
     string_limit: usize,
 ) -> sgx_status_t {
 
-    match &*SGX_RSA {
-        1 => {
-            println!("[+] hello server!");
-        }
-        _ => {
-            println!("[-] hello server fail!");
-            return sgx_status_t::SGX_ERROR_UNEXPECTED;
-        }
+    println!("[+] hello server!");
+    println!("pk: {:?}", &*public_key);
+    println!("\npkn: {:?}", &*public_key_n);
+    println!("\npke: {:?}", &*public_key_e);
+
+    
+    *len_tmp_pk_n = (*public_key_n).len() ;
+    *len_tmp_pk_e = (*public_key_e).len() ;
+    // println!("\npkni32ln: {}", &len_tmp_pk_n);
+
+
+
+    // if ( &len_tmp_pk_n < string_limit && (*public_key_n).len() < string_limit ) {
+    unsafe {
+        ptr::copy_nonoverlapping(
+            (*public_key_n).as_ptr(),
+            ref_tmp_pk_n,
+            (*public_key_n).len(),
+        );
+        // ptr::copy_nonoverlapping(
+        //     (len_tmp_pk_na).as_ptr(),
+        //     len_tmp_pk_n,
+        //     (len_tmp_pk_na).len(),
+        // );
+        ptr::copy_nonoverlapping(
+            (*public_key_e).as_ptr(),
+            ref_tmp_pk_e,
+            (*public_key_e).len(),
+        );
     }
+    return sgx_status_t::SGX_SUCCESS;
+    // } else {
+    //     eprintln!(
+    //         "Public key len > buf size",
+    //     );
+    //     return sgx_status_t::SGX_ERROR_WASM_BUFFER_TOO_SHORT;
+    // }
+
+    // match RSAPublicKey::check_public(&*public_key){
+    //     Ok(y)=>  {
+    //                 println!("[+] hello server!");
+    //             }
+    //     _ => {
+    //         println!("[-] hello server fail!");
+    //         return sgx_status_t::SGX_ERROR_UNEXPECTED;
+    //     }
+    // }
+    // match &*SGX_RSA {
+    //     1 => {
+    //         println!("[+] hello server!");
+    //     }
+    //     _ => {
+    //         println!("[-] hello server fail!");
+    //         return sgx_status_t::SGX_ERROR_UNEXPECTED;
+    //     }
+    // }
     return sgx_status_t::SGX_SUCCESS;
 }
 
 
-fn rsa_init() -> u8 {
-    let timeseed = std::time::SystemTime::now().duration_since(std::time::SystemTime::UNIX_EPOCH).unwrap();
-    let seed = timeseed.as_secs();
-    let mut rng = rand::rngs::StdRng::seed_from_u64(seed);
-    let bits = 2048;
-    let private_key = RSAPrivateKey::new(&mut rng, bits).expect("failed to generate a key");
-    let public_key = RSAPublicKey::from(&private_key);
-    let private_key_n = public_key.n_to_vecu8();
-    let private_key_e = public_key.e_to_vecu8();
-    println!("[+] Init RSA Successful!");
-    return 1;
-}
+// fn rsa_init() -> u8 {
+//     let timeseed = std::time::SystemTime::now().duration_since(std::time::SystemTime::UNIX_EPOCH).unwrap();
+//     let seed = timeseed.as_secs();
+//     let mut rng = rand::rngs::StdRng::seed_from_u64(seed);
+//     let bits = 2048;
+//     let private_key = RSAPrivateKey::new(&mut rng, bits).expect("failed to generate a key");
+//     let public_key = RSAPublicKey::from(&private_key);
+//     let private_key_n = public_key.n_to_vecu8();
+//     let private_key_e = public_key.e_to_vecu8();
+//     println!("[+] Init RSA Successful!");
+//     return 1;
+// }
 
 
 fn get_rsa(){

@@ -10,6 +10,7 @@ package main
 //extern void rust_search_title( char * some_string, size_t some_len,size_t result_string_limit, char * encrypted_result_string,size_t * encrypted_result_string_size);
 //extern void rust_commit(size_t* result);
 //extern void rust_server_hello( char* pk_n, size_t* pk_n_len, char* pk_e, size_t* pk_e_len, char* certificate, size_t* certificate_len, size_t string_limit);
+//extern void rust_get_session_key(char* user, size_t user_len, char* enc_sessionkey, size_t enc_sessionkey_len);
 //extern void go_encrypt(size_t limit_length, char* plaintext, size_t plainlength, char* ciphertext, size_t* cipherlength);
 //extern void go_decrypt(size_t limit_length, char* ciphertext, size_t cipherlength, char* plaintext, size_t* plainlength);
 import "C"
@@ -119,6 +120,8 @@ func main() {
 
 }
 
+//======================================================
+
 func server_hello() (string, string) {
 	pk_e := (*C.char)(C.malloc(STRING_LIMIT))
 	pk_e_len := (C.ulong)(0)
@@ -131,8 +134,6 @@ func server_hello() (string, string) {
 
 	C.rust_server_hello(pk_n, &pk_n_len, pk_e, &pk_e_len, Certificate, &Certificate_len, STRING_LIMIT)
 
-	// fmt.Println("public_key_n_str: ", (C.int)(pk_n_len))
-
 	public_key_n_str := C.GoStringN(pk_n, (C.int)(pk_n_len))
 	// fmt.Println("public_key_n_str:", public_key_n_str)
 	public_key_e_str := C.GoStringN(pk_e, (C.int)(pk_e_len))
@@ -144,13 +145,23 @@ func server_hello() (string, string) {
 		E: public_key_e_str,
 	}
 
+	user_str := "user1"
+	get_session_key(user_str, public_key_n_str)
+
 	publickey, err := json.Marshal(pkstr)
 	if err != nil {
 		panic("marshal failed")
 	}
 	return string(publickey), Certificate_str
-
 }
+
+func get_session_key(user string, enc_sessionkey string) {
+	C.rust_get_session_key(
+		C.CString(user), C.ulong(len(user)), C.CString(enc_sessionkey), C.ulong(len(enc_sessionkey)),
+	)
+}
+
+// ============================================
 
 func delete_index_and_commit(input string) {
 

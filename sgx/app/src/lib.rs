@@ -81,9 +81,18 @@ extern "C" {
         string_limit: usize,
     ) -> sgx_status_t;
 
-    fn rsa_init(
-        id: sgx_enclave_id_t,
+    // fn rsa_init(
+    //     id: sgx_enclave_id_t,
+    //     retval: *mut sgx_status_t,
+    // ) -> sgx_status_t;
+
+    fn get_session_key(
+        eid: sgx_enclave_id_t,
         retval: *mut sgx_status_t,
+        user: *const u8,
+        user_len: usize,
+        enc_sessionkey: *const u8,
+        enc_sessionkey_len: usize,
     ) -> sgx_status_t;
 }
 
@@ -509,6 +518,9 @@ pub extern "C" fn rust_search_title(
     Ok(())
 }
 
+//============================================================
+
+
 #[no_mangle]
 pub extern "C" fn rust_server_hello(
     pk_n: *mut u8,
@@ -591,8 +603,6 @@ pub extern "C" fn rust_server_hello(
     }
 
     
-
-
     // let mut pk_n_vec: Vec<u8> = ref_tmp_pk_n.to_vec();
     // // pk_n_vec.retain(|x| *x != 0x00u8);
     // println!("aaaaaa");
@@ -637,6 +647,44 @@ pub extern "C" fn rust_server_hello(
     }
 
 
+    Ok(())
+}
+
+#[no_mangle]
+pub extern "C" fn rust_get_session_key(
+    user: *const u8,
+    user_len: usize,
+    enc_sessionkey: *const u8,
+    enc_sessionkey_len: usize,
+) -> Result<(), std::io::Error> {
+
+    let enclave = match &*SGX_ENCLAVE {
+        Ok(r) => {
+            println!("[+] rust_delete_index");
+            r
+        }
+        Err(x) => {
+            eprintln!("[-] Init Enclave Failed {}!", x.as_str());
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                "init enclave failed",
+            ));
+        }
+    };
+    let enclave_id = enclave.geteid();
+
+    let mut retval = sgx_status_t::SGX_SUCCESS;
+
+    let result = unsafe {
+        get_session_key(
+            enclave_id,
+            &mut retval,
+            user,
+            user_len,
+            enc_sessionkey,
+            enc_sessionkey_len,
+        )
+    };
     Ok(())
 }
 

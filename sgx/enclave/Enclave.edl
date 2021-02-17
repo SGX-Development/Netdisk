@@ -41,15 +41,18 @@ from "sgx_tprotected_fs.edl" import *;
         public sgx_status_t delete_index([in, size=len] const uint8_t* some_string, size_t len);
         public sgx_status_t commit();
         public sgx_status_t do_query([in, size=len] const uint8_t* some_string, size_t len, 
-                                         [out, size=result_max_len]uint8_t * encrypted_result_string, 
-                                         size_t result_max_len );
+                                        [out, size=result_max_len]uint8_t * encrypted_result_string, 
+                                        size_t result_max_len );
         public sgx_status_t get_origin_by_id([in, size=some_len]uint8_t * some_string, size_t some_len, 
-                                           [out, size=result_max_len]uint8_t * encrypted_result_string, 
-                                           size_t result_max_len );
+                                        [out, size=result_max_len]uint8_t * encrypted_result_string, 
+                                        size_t result_max_len );
         public sgx_status_t server_hello([out, size=result_max_len] uint8_t* pk_n, size_t pk_n_len,
                                         [out, size=result_max_len] uint8_t* pk_e, size_t pk_e_len,
                                         [out, size=result_max_len] uint8_t * certficate, size_t certficate_len,
-                                         size_t result_max_len );
+                                        size_t result_max_len );
+        public sgx_status_t get_session_key([in, size=user_len] const uint8_t* user, size_t user_len, 
+                                        [in, size=enc_sessionkey_len] const uint8_t* enc_sessionkey, 
+                                        size_t enc_sessionkey_len );                                 
                             
     };
 };

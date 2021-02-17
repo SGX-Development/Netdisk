@@ -30,6 +30,7 @@ use rand::{rngs::StdRng, SeedableRng,Rng};
 
 use rsa::{PublicKey, RSAPrivateKey, RSAPublicKey, PaddingScheme};
 use num_bigint::BigUint;
+use std::collections::HashMap;
 
 // use rand::rngs::OsRng;
 // let mut rng = OsRng;
@@ -83,6 +84,9 @@ use crypto::buffer::{BufferResult, ReadBuffer, WriteBuffer};
 use crypto::{aes, blockmodes, buffer, symmetriccipher};
 use lazy_static::lazy_static;
 
+// #[macro_use] 
+// extern crate slice_as_array;
+
 #[derive(Serialize, Deserialize, Debug)]
 struct Articles {
     A: std::vec::Vec<Article>,
@@ -126,7 +130,14 @@ struct SessionKey {
     vi: [u8; 16],
 }
 
+extern crate spin;
+use spin::Mutex;
+
+
 lazy_static! {
+    static ref keymap: Mutex<HashMap<String, [u8;32]>> = Mutex::new(HashMap::new());
+
+
     static ref schema: Schema = {
         let mut schema_builder = Schema::builder();
 
@@ -205,9 +216,6 @@ lazy_static! {
     static ref public_key_e: Vec<u8> = {(*public_key).e_to_vecu8()};
 
     static ref certificate: Vec<u8> = get_from_CA();
-
-
-
 
 }
 
@@ -786,6 +794,55 @@ pub extern "C" fn server_hello(
     //     }
     // }
     return sgx_status_t::SGX_SUCCESS;
+}
+
+#[no_mangle]
+pub extern "C" fn get_session_key(
+    user: *const u8, 
+    user_len: usize,
+    enc_sessionkey: *const u8, 
+    enc_sessionkey_len: usize,
+) -> sgx_status_t {
+    let user_v: &[u8] = unsafe { std::slice::from_raw_parts(user, user_len) };
+    let user_line = String::from_utf8(user_v.to_vec()).unwrap();  
+
+    let enc_sessionkey_v: &[u8] = unsafe { std::slice::from_raw_parts(enc_sessionkey, enc_sessionkey_len) };
+    println!("user: {}", &user_line);
+    println!("sk_v: {:?}", &enc_sessionkey_v);
+
+    let padding = PaddingScheme::new_pkcs1v15_encrypt();
+    let dec_data = private_key.decrypt(padding, &enc_data).expect("failed to decrypt")
+
+    let mut sk:[u8;32];
+    match slice_to_array_32(enc_sessionkey_v){
+        Ok(r) => {
+            println!("[+] session key SUCCESS!");
+            sk = r.clone();
+        }
+        _ =>{
+            println!("[-] session key ERROR!");
+            return sgx_status_t::SGX_ERROR_UNEXPECTED;
+        }
+    }
+
+    (*keymap).lock().insert(user_line, sk);
+    println!("map: {:?}", &*keymap);
+
+
+    return sgx_status_t::SGX_SUCCESS;
+}
+
+struct TryFromSliceError(());
+
+fn slice_to_array_32<T>(slice: &[T]) -> Result<&[T; 32], TryFromSliceError> {
+    if slice.len() == 32 {
+        let ptr = slice.as_ptr() as *const [T; 32];
+        unsafe {Ok(&*ptr)}
+    } else {
+        Err(TryFromSliceError(()))
+    }
+    // let ptr = slice.as_ptr() as *const [T; 32];
+    // unsafe {Ok(&*ptr)}
 }
 
 

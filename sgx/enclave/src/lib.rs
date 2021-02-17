@@ -811,10 +811,10 @@ pub extern "C" fn get_session_key(
     println!("sk_v: {:?}", &enc_sessionkey_v);
 
     let padding = PaddingScheme::new_pkcs1v15_encrypt();
-    let dec_data = private_key.decrypt(padding, &enc_data).expect("failed to decrypt")
-
+    let sessionkey_v = match (*private_key).decrypt(padding, enc_sessionkey_v).expect("failed to decrypt");
+  
     let mut sk:[u8;32];
-    match slice_to_array_32(enc_sessionkey_v){
+    match slice_to_array_32(sessionkey_v){
         Ok(r) => {
             println!("[+] session key SUCCESS!");
             sk = r.clone();
@@ -833,8 +833,7 @@ pub extern "C" fn get_session_key(
 }
 
 struct TryFromSliceError(());
-
-fn slice_to_array_32<T>(slice: &[T]) -> Result<&[T; 32], TryFromSliceError> {
+fn slice_to_array_32<T>(slice: Vec<T>) -> Result<&'static [T; 32], TryFromSliceError> {
     if slice.len() == 32 {
         let ptr = slice.as_ptr() as *const [T; 32];
         unsafe {Ok(&*ptr)}

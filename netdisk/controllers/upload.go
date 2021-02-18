@@ -41,42 +41,42 @@ func (c *MainController) Upload() {
 	}
 	// ========================将文件内容存储至SGX中======================
 
-	// 读取文件内容
-    reader := bufio.NewReader(file)
-	Text := ""
-    for {
-        str, err := reader.ReadString('\n') //读到一个换行就结束
-		Text = Text + str
-        if err == io.EOF {                  //io.EOF 表示文件的末尾
-            break
-        }
-    }
-	fmt.Println(Text)
+	// // 读取文件内容
+    // reader := bufio.NewReader(file)
+	// Text := ""
+    // for {
+    //     str, err := reader.ReadString('\n') //读到一个换行就结束
+	// 	Text = Text + str
+    //     if err == io.EOF {                  //io.EOF 表示文件的末尾
+    //         break
+    //     }
+    // }
+	// fmt.Println(Text)
 
-	// 读取当前用户ID
-	o := orm.NewOrm()
-	user := models.User{Name: c.UserName()}
-	err = o.Read(&user, "Name")
-	if err != nil {
-		c.Redirect("/login", 302)
-		return
-	}
-	userId := strconv.Itoa(user.Id)
-	fmt.Println(userId)
+	// // 读取当前用户ID
+	// o := orm.NewOrm()
+	// user := models.User{Name: c.UserName()}
+	// err = o.Read(&user, "Name")
+	// if err != nil {
+	// 	c.Redirect("/login", 302)
+	// 	return
+	// }
+	// userId := strconv.Itoa(user.Id)
+	// fmt.Println(userId)
 
-	// 获取文章标题，并转换成userId + ' ' + Title的形式
-	filenameId := filename[0 : length-5]
-	filenameId = userId + " " + filenameId
-	fmt.Println(filenameId)
+	// // 获取文章标题，并转换成userId + ' ' + Title的形式
+	// filenameId := filename[0 : length-5]
+	// filenameId = userId + " " + filenameId
+	// fmt.Println(filenameId)
 
-	// 组织RawInput
-	file_update := RawInput{
-		Id: filenameId,
-		User: userId,
-		Text: Text,
-	}
+	// // 组织RawInput
+	// file_update := RawInput{
+	// 	Id: filenameId,
+	// 	User: userId,
+	// 	Text: Text,
+	// }
 
-	build_index_and_commit(aes_encrypt(json_to_string(file_update)))
+	// build_index_and_commit(aes_encrypt(json_to_string(file_update)))
 	// ========================end of 将文件内容存储至SGX中======================
 
 	err = c.SaveToFile("file", "fileStorage/"+c.UserName()+"/"+filename)

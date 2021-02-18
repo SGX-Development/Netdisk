@@ -811,7 +811,7 @@ pub extern "C" fn get_session_key(
     println!("sk_v: {:?}", &enc_sessionkey_v);
 
     let padding = PaddingScheme::new_pkcs1v15_encrypt();
-    let sessionkey_v = match (*private_key).decrypt(padding, enc_sessionkey_v).expect("failed to decrypt");
+    let sessionkey_v = (*private_key).decrypt(padding, enc_sessionkey_v).expect("failed to decrypt");
   
     let mut sk:[u8;32];
     match slice_to_array_32(sessionkey_v){

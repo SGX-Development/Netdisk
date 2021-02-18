@@ -1,15 +1,15 @@
 package controllers
 
 import (
-	"bufio"
-	"io"
+	// "bufio"
+	// "io"
 	"log"
-	"fmt"
+	// "fmt"
 	"netdisk/models"
 	"strings"
 
 	"github.com/beego/beego/v2/client/orm"
-	"strconv"
+	// "strconv"
 )
 
 func (c *MainController) ShowUpload() {

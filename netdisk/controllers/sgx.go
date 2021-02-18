@@ -73,8 +73,8 @@ func server_hello() (string, string) {
 		E: public_key_e_str,
 	}
 
-	user_str := "user1"
-	get_session_key(user_str, public_key_n_str)
+	// user_str := "user1"
+	// get_session_key(user_str, public_key_n_str)
 
 	publickey, err := json.Marshal(pkstr)
 	if err != nil {

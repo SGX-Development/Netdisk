@@ -73,6 +73,34 @@
 
     <script src="/static/js/jquery.js"></script>
     <script src="/static/js/bootstrap.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/node-forge@0.7.0/dist/forge.min.js"></script>
+
+    <script>
+
+        $(function () {
+
+            $.ajax({
+                // ajax默认是get请求
+                url: "/session_key",  //待载入页面的URL地址
+                date: {},  //待发送key/value参数
+                success: function (msg) {
+                    console.log(msg.pk_n);
+                    console.log(msg.pk_e);
+                    console.log(msg.certificate);
+
+                    var pem = "-----BEGIN PUBLIC KEY----- MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA" + msg.pk_n.substring(0, msg.pk_n.length-2) + "ID" + msg.pk_e + " -----END PUBLIC KEY-----";
+                    console.log(pem);
+
+                    var publicKey = forge.pki.publicKeyFromPem(pem);
+
+                    console.log(publicKey);
+                }
+            })
+        }
+        );
+
+
+    </script>
 
 </body>
 

@@ -135,9 +135,9 @@ func server_hello() (string, string) {
 	C.rust_server_hello(pk_n, &pk_n_len, pk_e, &pk_e_len, Certificate, &Certificate_len, STRING_LIMIT)
 
 	public_key_n_str := C.GoStringN(pk_n, (C.int)(pk_n_len))
-	// fmt.Println("public_key_n_str:", public_key_n_str)
+	fmt.Println("public_key_n_str:", public_key_n_str)
 	public_key_e_str := C.GoStringN(pk_e, (C.int)(pk_e_len))
-	// fmt.Println("public_key_e_str:", public_key_e_str)
+	fmt.Println("public_key_e_str:", public_key_e_str)
 	Certificate_str := C.GoStringN(Certificate, (C.int)(Certificate_len))
 	// fmt.Println("Certificate_str:", Certificate_str)
 	pkstr := string_public_key{

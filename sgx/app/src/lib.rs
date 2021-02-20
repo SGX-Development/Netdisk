@@ -534,7 +534,7 @@ pub extern "C" fn rust_server_hello(
 
     let enclave = match &*SGX_ENCLAVE {
         Ok(r) => {
-            println!("[+] rust_search_title");
+            println!("[+] rust_server_hello");
             r
         }
         Err(x) => {

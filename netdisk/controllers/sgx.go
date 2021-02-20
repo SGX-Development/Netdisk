@@ -16,10 +16,12 @@ package controllers
 import "C"
 
 // import "log"
-import "encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 // import "unsafe"
-import "fmt"
 
 type RawInput struct {
 	Id   string `json:"id"`
@@ -41,16 +43,16 @@ type QueryRes struct {
 	A []Article
 }
 
-type string_public_key struct {
-	N string `json:"n"`
-	E string `json:"e"`
-}
+// type string_public_key struct {
+// 	N string `json:"n"`
+// 	E string `json:"e"`
+// }
 
 const STRING_LIMIT = 4096
 
 //======================================================
 
-func server_hello() (string, string) {
+func server_hello() (string, string, string) {
 	pk_e := (*C.char)(C.malloc(STRING_LIMIT))
 	pk_e_len := (C.ulong)(0)
 
@@ -68,19 +70,19 @@ func server_hello() (string, string) {
 	// fmt.Println("public_key_e_str:", public_key_e_str)
 	Certificate_str := C.GoStringN(Certificate, (C.int)(Certificate_len))
 	// fmt.Println("Certificate_str:", Certificate_str)
-	pkstr := string_public_key{
-		N: public_key_n_str,
-		E: public_key_e_str,
-	}
+	// pkstr := string_public_key{
+	// 	N: public_key_n_str,
+	// 	E: public_key_e_str,
+	// }
 
 	// user_str := "user1"
 	// get_session_key(user_str, public_key_n_str)
 
-	publickey, err := json.Marshal(pkstr)
-	if err != nil {
-		panic("marshal failed")
-	}
-	return string(publickey), Certificate_str
+	// publickey, err := json.Marshal(pkstr)
+	// if err != nil {
+	// 	panic("marshal failed")
+	// }
+	return public_key_n_str, public_key_e_str, Certificate_str
 }
 
 func get_session_key(user string, enc_sessionkey string) {

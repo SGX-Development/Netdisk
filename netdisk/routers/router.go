@@ -22,4 +22,6 @@ func init() {
 	beego.Router("/upload", &controllers.MainController{}, "get:ShowUpload;post:Upload")
 
 	beego.Router("/download", &controllers.MainController{}, "get:Download")
+
+	beego.Router("/session_key", &controllers.SessionKeyController{}, "get:SkGet;post:SkPost")
 }

@@ -743,23 +743,29 @@ pub extern "C" fn server_hello(
     println!("\npkn: {:?}", &*public_key_n);
     println!("\npke: {:?}", &*public_key_e);
 
-    
-    *len_tmp_pk_n = (*public_key_n).len() ;
-    *len_tmp_pk_e = (*public_key_e).len() ;
+    let public_key_n_str = BigUint::from_bytes_le(&*public_key_n).to_string();
+    let public_key_e_str = BigUint::from_bytes_le(&*public_key_e).to_string();
+
+    println!("{:?}", public_key_n_str);
+    println!("{:?}", public_key_e_str);
+
+
+    *len_tmp_pk_n = public_key_n_str.len() ;
+    *len_tmp_pk_e = public_key_e_str.len() ;
     *len_tmp_certificate = (*certificate).len() ;
 
 
     // if ( &len_tmp_pk_n < string_limit && (*public_key_n).len() < string_limit ) {
     unsafe {
         ptr::copy_nonoverlapping(
-            (*public_key_n).as_ptr(),
+            public_key_n_str.as_ptr(),
             ref_tmp_pk_n,
-            (*public_key_n).len(),
+            public_key_n_str.len(),
         );
         ptr::copy_nonoverlapping(
-            (*public_key_e).as_ptr(),
+            public_key_e_str.as_ptr(),
             ref_tmp_pk_e,
-            (*public_key_e).len(),
+            public_key_e_str.len(),
         );
         ptr::copy_nonoverlapping(
             (*certificate).as_ptr(),

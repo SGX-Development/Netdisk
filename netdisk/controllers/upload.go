@@ -83,9 +83,8 @@ func (c *MainController) Upload() {
 	// build_index_and_commit(aes_encrypt(json_to_string(file_update)))
 	// ========================end of 将文件内容存储至SGX中======================
 
-	err = c.SaveToFile("file", "fileStorage/"+filename)
+	err = c.SaveToFile("file", "fileStorage/"+c.UserName()+"/"+filename)
 	log.Println(err)
-	log.Println("dads")
 	if err != nil || !InsertFile(filename, c.UserName()) {
 		c.Ctx.WriteString("上传失败")
 	} else {

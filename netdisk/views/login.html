@@ -82,23 +82,97 @@
             $.ajax({
                 // ajax默认是get请求
                 url: "/session_key",  //待载入页面的URL地址
-                date: {},  //待发送key/value参数
                 success: function (msg) {
                     console.log(msg.pk_n);
                     console.log(msg.pk_e);
                     console.log(msg.certificate);
 
-                    var pem = "-----BEGIN PUBLIC KEY----- MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA" + msg.pk_n.substring(0, msg.pk_n.length-2) + "ID" + msg.pk_e + " -----END PUBLIC KEY-----";
-                    console.log(pem);
+                    var rsa = forge.pki.rsa;
 
-                    var publicKey = forge.pki.publicKeyFromPem(pem);
+                    var rsaPublicKey = rsa.setPublicKey(new forge.jsbn.BigInteger(msg.pk_n), new forge.jsbn.BigInteger(msg.pk_e));
+                    console.log(rsaPublicKey);
+                    // console.log(forge.pki.publicKeyToPem(rsaPublicKey));
 
-                    console.log(publicKey);
+                    // =============对证书内容进行检验===============
+
+
+
+
+
+
+
+
+                    var result = true;
+                    // =============end of 检验证书内容==============
+                    if (result === false) {
+                        $.ajax({
+                            url: "/login",
+                            success: function (msg) {
+                                alert("证书验证失败，请刷新页面！")
+                            }
+                        })
+                    } else {
+                        alert("证书验证成功！");
+                        var seesion_key_arr = [];
+                        for (let i = 0; i < 32; i++) {
+                            seesion_key_arr.push(randomNum(0, 256));
+                        }
+                        // console.log(seesion_key_arr);
+                        var seesion_key_u8 = Uint8Array.from(seesion_key_arr);
+                        console.log(seesion_key_u8);
+                        // var seesion_key = Uint8ArrayToString(seesion_key_u8);
+                        // console.log(seesion_key);
+
+                        // 存储会话密钥
+                        sessionStorage.setItem('session_key', seesion_key_u8);
+                        // console.log(rsaPublicKey);
+
+                        var encrypted_session_key = rsaPublicKey.encrypt(seesion_key_u8, 'RSAES-PKCS1-V1_5');
+                        console.log(encrypted_session_key);
+                        // console.log(typeof(encrypted_session_key));
+
+                        // var test = rsaPublicKey.encrypt(seesion_key_u8);
+                        // console.log(test);
+
+                        // var test1 = rsaPublicKey.encrypt(seesion_key);
+                        // console.log(test1);
+
+                        // console.log(stringToUint8Array(encrypted_session_key));
+
+                        $.ajax({
+                            url: "/session_key",
+                            method: "POST",
+                            data: {"encrypted_session_key": encrypted_session_key},
+                            success: function (msg) {
+                                // console.log(msg.result);
+                                if(msg.result === true){
+                                    alert("会话密钥生成成功！");
+                                }else{
+                                    alert("会话密钥生成失败，请刷新页面！");
+                                }
+                            }
+                            
+                        })
+                    }
                 }
             })
         }
         );
 
+        //生成从minNum到maxNum的随机数
+        function randomNum(minNum, maxNum) {
+            switch (arguments.length) {
+                case 1:
+                    return parseInt(Math.random() * minNum + 1, 10);
+                    break;
+                case 2:
+                    return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10);
+                    break;
+                default:
+                    return 0;
+                    break;
+            }
+        }
 
     </script>
 

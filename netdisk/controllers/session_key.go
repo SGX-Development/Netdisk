@@ -3,7 +3,7 @@ package controllers
 import (
 	// "encoding/json"
 	"fmt"
-
+	"encoding/base64"
 	beego "github.com/beego/beego/v2/server/web"
 )
 
@@ -40,18 +40,15 @@ func (c *SessionKeyController) SkGet() {
 func (c *SessionKeyController) SkPost() {
 	ReturnData := make(map[string]interface{})
 
-	encrypted_session_key := c.GetString("encrypted_session_key")
+	date := c.GetString("encrypted_session_key")
+
+	encrypted_session_key,_ := base64.StdEncoding.DecodeString(date)
+
 	fmt.Println(encrypted_session_key)
 	fmt.Println([]byte(encrypted_session_key))
 
-	// ==================将encrypted_session_key传入sgx==============
+	get_session_key("1", string(encrypted_session_key[:]))
 
-
-
-
-
-
-	// ==================end of 将encrypted_session_key传入sgx==============
 	ReturnData["result"] = true
 
 	c.Data["json"] = ReturnData

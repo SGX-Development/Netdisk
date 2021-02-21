@@ -113,28 +113,28 @@
                         })
                     } else {
                         alert("证书验证成功！");
-                        var seesion_key_arr = [];
+                        var session_key_arr = [];
                         for (let i = 0; i < 32; i++) {
-                            seesion_key_arr.push(randomNum(0, 256));
+                            session_key_arr.push(randomNum(0, 256));
                         }
-                        // console.log(seesion_key_arr);
-                        var seesion_key_u8 = Uint8Array.from(seesion_key_arr);
-                        console.log(seesion_key_u8);
-                        // var seesion_key = Uint8ArrayToString(seesion_key_u8);
-                        // console.log(seesion_key);
+                        // console.log(session_key_arr);
+                        var session_key_u8 = Uint8Array.from(session_key_arr);
+                        console.log(session_key_u8);
+                        // var session_key = Uint8ArrayToString(session_key_u8);
+                        // console.log(session_key);
 
                         // 存储会话密钥
-                        sessionStorage.setItem('session_key', seesion_key_u8);
+                        sessionStorage.setItem('session_key', session_key_u8);
                         // console.log(rsaPublicKey);
 
-                        var encrypted_session_key = rsaPublicKey.encrypt(seesion_key_u8, 'RSAES-PKCS1-V1_5');
+                        var encrypted_session_key = rsaPublicKey.encrypt(bin2String(session_key_u8), 'RSAES-PKCS1-V1_5');
                         console.log(encrypted_session_key);
                         // console.log(typeof(encrypted_session_key));
 
-                        // var test = rsaPublicKey.encrypt(seesion_key_u8);
+                        // var test = rsaPublicKey.encrypt(session_key_u8);
                         // console.log(test);
 
-                        // var test1 = rsaPublicKey.encrypt(seesion_key);
+                        // var test1 = rsaPublicKey.encrypt(String.fromCharCode.apply(String, session_key_u8));
                         // console.log(test1);
 
                         // console.log(stringToUint8Array(encrypted_session_key));
@@ -142,16 +142,16 @@
                         $.ajax({
                             url: "/session_key",
                             method: "POST",
-                            data: {"encrypted_session_key": encrypted_session_key},
+                            data: { "encrypted_session_key": btoa(encrypted_session_key) },
                             success: function (msg) {
                                 // console.log(msg.result);
-                                if(msg.result === true){
+                                if (msg.result === true) {
                                     alert("会话密钥生成成功！");
-                                }else{
+                                } else {
                                     alert("会话密钥生成失败，请刷新页面！");
                                 }
                             }
-                            
+
                         })
                     }
                 }
@@ -172,6 +172,18 @@
                     return 0;
                     break;
             }
+        }
+
+        function bin2String(array) {
+            return String.fromCharCode.apply(String, array);
+        }
+
+        function string2Bin(str) {
+            var result = [];
+            for (var i = 0; i < str.length; i++) {
+                result.push(str.charCodeAt(i));
+            }
+            return result;
         }
 
     </script>

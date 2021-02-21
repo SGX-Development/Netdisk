@@ -739,6 +739,7 @@ pub extern "C" fn server_hello(
  
 
     println!("[+] hello server!");
+    println!("pk: {:?}", &*private_key);
     println!("pk: {:?}", &*public_key);
     println!("\npkn: {:?}", &*public_key_n);
     println!("\npke: {:?}", &*public_key_e);
@@ -753,6 +754,9 @@ pub extern "C" fn server_hello(
     *len_tmp_pk_n = public_key_n_str.len() ;
     *len_tmp_pk_e = public_key_e_str.len() ;
     *len_tmp_certificate = (*certificate).len() ;
+
+    // let m = String::from("hello");
+    // let c = internals::encrypt(&public_key_n, &m);
 
 
     // if ( &len_tmp_pk_n < string_limit && (*public_key_n).len() < string_limit ) {
@@ -824,6 +828,7 @@ pub extern "C" fn get_session_key(
         Ok(r) => {
             println!("[+] session key SUCCESS!");
             sk = r.clone();
+            println!("sk: {:?}", sk);
         }
         _ =>{
             println!("[-] session key ERROR!");

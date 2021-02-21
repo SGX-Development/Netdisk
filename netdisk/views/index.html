@@ -84,12 +84,47 @@
 </header>
 
 <!--------------Body Section Start------------->
-
-<form action="/upload"  enctype="multipart/form-data"  method="post">
-    <input type="file" name ="file">
-    <input type="submit" value="上传">
+<form action="/upload"  id="uploadForm" enctype="multipart/form-data"  method="post">
+    <input type="file" name ="file" id="file">
+    <input type="onclick" value="上传">
 </form>
+<script type="text/javascript">
+    $(function(){
+        $.ajax({
+            url: '/upload',
+            type: 'POST',
+            cache: false,
+            data: new FormData($('#uploadForm')[0]),
+            processData: false,
+            contentType: false
+        }).done(function(res) {
+        }).fail(function(res) {});
+    }
+    );
+    function uploadFile() {
+        alert("fzhsb")
+        var file = document.getElementById("file").files[0]
+        var reader = new FileReader();
 
+        var url = window.location + "upload"
+        var form = new FormData
+        form.append("file", file)
+
+        var xhr = new XMLHttpRequest()
+        xhr.open("post", url, true)
+        xhr.onload = uploadComplete
+        xhr.send(form)
+    }
+    function uploadComplete(evt) {
+        var data = JSON.parse(evt.target.responseText)
+        if (data.success) {
+            alert("上传成功!")
+        } else {
+          alert("上传失败!")
+        }
+    }
+
+</script>
 {{.message}}
 <p>
     {{.filename}}

@@ -1,12 +1,16 @@
 package controllers
 
 import (
+	"fmt"
+	"log"
+	"strings"
+
 	// "bufio"
 	// "io"
-	"log"
+	//"log"
 	// "fmt"
 	"netdisk/models"
-	"strings"
+	//"strings"
 
 	"github.com/beego/beego/v2/client/orm"
 	// "strconv"
@@ -19,11 +23,11 @@ func (c *MainController) ShowUpload() {
 	}
 	c.TplName = "index.html"
 }
-
 func (c *MainController) Upload() {
 	file, head, err := c.GetFile("file")
 	if err != nil {
 		c.Ctx.WriteString("获取文件失败")
+		fmt.Println("获取文件失败")
 		return
 	}
 	defer file.Close()
@@ -79,8 +83,9 @@ func (c *MainController) Upload() {
 	// build_index_and_commit(aes_encrypt(json_to_string(file_update)))
 	// ========================end of 将文件内容存储至SGX中======================
 
-	err = c.SaveToFile("file", "fileStorage/"+c.UserName()+"/"+filename)
+	err = c.SaveToFile("file", "fileStorage/"+filename)
 	log.Println(err)
+	log.Println("dads")
 	if err != nil || !InsertFile(filename, c.UserName()) {
 		c.Ctx.WriteString("上传失败")
 	} else {

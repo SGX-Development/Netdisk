@@ -81,10 +81,17 @@ extern "C" {
         string_limit: usize,
     ) -> sgx_status_t;
 
-    // fn rsa_init(
-    //     id: sgx_enclave_id_t,
-    //     retval: *mut sgx_status_t,
-    // ) -> sgx_status_t;
+    fn user_register(
+        eid: sgx_enclave_id_t,
+        retval: *mut sgx_status_t,
+        enc_user_pswd: *const u8,
+        enc_user_pswd_len: usize,
+        user: *const u8,
+        user_len: &mut usize,
+        enc_pswd: *const u8,
+        enc_pswd_len: &mut usize,
+        string_limit: usize,
+    ) -> sgx_status_t;
 
     fn get_session_key(
         eid: sgx_enclave_id_t,
@@ -649,6 +656,110 @@ pub extern "C" fn rust_server_hello(
 
     Ok(())
 }
+
+
+#[no_mangle]
+pub extern "C" fn rust_register(
+    enc_user_pswd: *const u8,
+    enc_user_pswd_len: usize,
+    user: *mut u8,
+    user_len: *mut usize,
+    enc_pswd: *mut u8,
+    enc_pswd_len: *mut usize,
+    success: *mut usize,
+    string_limit: usize,
+) -> Result<(), std::io::Error> {
+
+    let enc_vec: &[u8] = unsafe { std::slice::from_raw_parts(enc_user_pswd, enc_user_pswd_len) };
+    let enc_data = String::from_utf8(enc_vec.to_vec()).unwrap();
+
+    let enclave = match &*SGX_ENCLAVE {
+        Ok(r) => {
+            println!("[+] rust_server_hello");
+            r
+        }
+        Err(x) => {
+            println!("[-] Init Enclave Failed {}!", x.as_str());
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                "init enclave failed",
+            ));
+        }
+    };
+
+    let mut user_vec: Vec<u8> = vec![0; string_limit];
+    let mut enc_pswd_vec: Vec<u8> = vec![0; string_limit];
+
+    let tmp_user = &mut user_vec[..];
+    let tmp_enc_pswd = &mut enc_pswd_vec[..];
+
+    let mut tmp_user_len: usize = 0;
+    let mut tmp_enc_pswd_len: usize = 0;
+
+
+    let enclave_id = enclave.geteid();
+    let mut retval = sgx_status_t::SGX_SUCCESS;
+
+    let result = unsafe {
+        user_register(
+            enclave_id,
+            &mut retval,
+            enc_data.as_ptr() as *const u8,
+            enc_data.len(),
+            tmp_user.as_mut_ptr(),
+            &mut tmp_user_len,
+            tmp_enc_pswd.as_mut_ptr(),
+            &mut tmp_enc_pswd_len,
+            string_limit,
+        )
+    };
+
+    match result {
+        sgx_status_t::SGX_SUCCESS => {}
+        _ => {
+            eprintln!("[-] ECALL Enclave Failed {}!", result.as_str());
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                "ecall failed",
+            ));
+        }
+    }
+    match retval {
+        sgx_status_t::SGX_SUCCESS => {}
+        e => {
+            eprintln!("[-] ECALL Enclave Failed {}!", retval.as_str());
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                e.to_string(),
+            ));
+        }
+    }
+
+    
+
+
+    unsafe {
+        *user_len = tmp_user_len;
+        *enc_pswd_len = tmp_enc_pswd_len;
+        ptr::copy_nonoverlapping(
+            tmp_user.as_ptr(),
+            user,
+            *user_len,
+        );
+        ptr::copy_nonoverlapping(
+            tmp_enc_pswd.as_ptr(),
+            enc_pswd,
+            *enc_pswd_len,
+        );
+    }
+
+
+
+    Ok(())
+
+}
+
+
 
 #[no_mangle]
 pub extern "C" fn rust_get_session_key(

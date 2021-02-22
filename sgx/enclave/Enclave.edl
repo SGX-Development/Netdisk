@@ -48,8 +48,17 @@ from "sgx_tprotected_fs.edl" import *;
                                         size_t result_max_len );
         public sgx_status_t server_hello([out, size=result_max_len] uint8_t* pk_n, size_t pk_n_len,
                                         [out, size=result_max_len] uint8_t* pk_e, size_t pk_e_len,
-                                        [out, size=result_max_len] uint8_t * certficate, size_t certficate_len,
+                                        [out, size=result_max_len] uint8_t* certficate, size_t certficate_len,
                                         size_t result_max_len );
+        public sgx_status_t user_register(
+            [in, size=enc_user_pswd_len] uint8_t* enc_user_pswd, 
+            size_t enc_user_pswd_len, 
+            [out, size=result_max_len] uint8_t* usera, 
+            size_t usera_len, 
+            [out, size=result_max_len] uint8_t* enc_pswd, 
+            size_t enc_pswd_len, 
+            size_t result_max_len
+        );                             
         public sgx_status_t get_session_key([in, size=user_len] const uint8_t* user, size_t user_len, 
                                         [in, size=enc_sessionkey_len] const uint8_t* enc_sessionkey, 
                                         size_t enc_sessionkey_len );                                 

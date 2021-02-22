@@ -124,6 +124,12 @@ struct Package {
     data: String,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+struct UserInfo {
+    user: String,
+    password: String,
+}
+
 struct SessionKey {
     user: i32,
     key: [u8; 32],
@@ -746,14 +752,14 @@ pub extern "C" fn server_hello(
     println!("[+] hello server!");
     println!("pk: {:?}", &*private_key);
     println!("pk: {:?}", &*public_key);
-    println!("\npkn: {:?}", &*public_key_n);
-    println!("\npke: {:?}", &*public_key_e);
+    // println!("\npkn: {:?}", &*public_key_n);
+    // println!("\npke: {:?}", &*public_key_e);
 
     let public_key_n_str = BigUint::from_bytes_le(&*public_key_n).to_string();
     let public_key_e_str = BigUint::from_bytes_le(&*public_key_e).to_string();
 
-    println!("{:?}", public_key_n_str);
-    println!("{:?}", public_key_e_str);
+    // println!("{:?}", public_key_n_str);
+    // println!("{:?}", public_key_e_str);
 
 
     *len_tmp_pk_n = public_key_n_str.len() ;
@@ -811,6 +817,59 @@ pub extern "C" fn server_hello(
     return sgx_status_t::SGX_SUCCESS;
 }
 
+
+#[no_mangle]
+pub extern "C" fn user_register(
+    enc_user_pswd: *const u8,
+    enc_user_pswd_len: usize,
+    user: *mut u8,
+    user_len: &mut usize,
+    enc_pswd: *mut u8,
+    enc_pswd_len: &mut usize,
+    string_limit: usize,
+) -> sgx_status_t {
+
+    println!("[+] new user!");
+
+    let enc_vec: &[u8] = unsafe { std::slice::from_raw_parts(enc_user_pswd, enc_user_pswd_len) };
+    // let enc_data = String::from_utf8(enc_vec.to_vec()).unwrap();  
+
+    let padding = PaddingScheme::new_pkcs1v15_encrypt();
+    let user_data_vec= (*private_key).decrypt(padding, enc_vec).expect("failed to decrypt");
+    let user_data_string = String::from_utf8(user_data_vec.to_vec()).unwrap();  
+
+
+    let user_data: UserInfo = serde_json::from_str(&user_data_string).unwrap();
+    let tmp_user = user_data.user;
+    let tmp_pswd = user_data.password;
+
+    let mut rng = rand::rngs::StdRng::seed_from_u64(0);
+    let padding = PaddingScheme::new_pkcs1v15_encrypt();
+    let tmp_enc_pswd = (*public_key).encrypt(&mut rng, padding, &tmp_pswd.as_bytes()).expect("failed to encrypt");
+
+    *user_len = tmp_user.len();
+    *enc_pswd_len = tmp_enc_pswd.len();
+
+    // let m = String::from("hello");
+    // let c = internals::encrypt(&public_key_n, &m);
+
+
+    // if ( &len_tmp_pk_n < string_limit && (*public_key_n).len() < string_limit ) {
+    unsafe {
+        ptr::copy_nonoverlapping(
+            tmp_user.as_ptr(),
+            user,
+            tmp_user.len(),
+        );
+        ptr::copy_nonoverlapping(
+            tmp_enc_pswd.as_ptr(),
+            enc_pswd,
+            tmp_enc_pswd.len(),
+        );
+    }
+    
+    return sgx_status_t::SGX_SUCCESS;
+}
 
 
 

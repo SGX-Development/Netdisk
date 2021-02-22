@@ -155,6 +155,8 @@ func server_hello() (string, string) {
 	return string(publickey), Certificate_str
 }
 
+
+
 func get_session_key(user string, enc_sessionkey string) {
 	C.rust_get_session_key(
 		C.CString(user), C.ulong(len(user)), C.CString(enc_sessionkey), C.ulong(len(enc_sessionkey)),

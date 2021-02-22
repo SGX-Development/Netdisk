@@ -64,7 +64,10 @@ fn func_name(SGX public key, CA signature)
 * CA signature：CA签名，简化为用CA私钥加密SGX公钥的结果（出SGX）
 
 ```rust
-fn func_name(user, m)
+// fn func_name(user, m)
+fn func_name(enc_user_pswd_sessionkey, success) //session key and login
+fn get_from_userdb(user, enc_pswd)
+
 ```
 
 功能：后端通过此函数将会话密钥传递给k
@@ -77,7 +80,8 @@ fn func_name(user, m)
 ### Register
 
 ```rust
-fn func_name(passwd_session_key, passwd_sgx)
+// fn func_name(passwd_session_key, passwd_sgx)
+fn func_name(enc_user_pswd, user, enc_pswd, sucess)//in out out
 ```
 
 功能：后端将会话密钥加密过的用户口令传至SGX，SGX解密后用SGX公钥加密，返回给后端

@@ -708,6 +708,7 @@ pub fn str2aes2base64(message: &str, requester: &i32) -> String {
     base64::encode(&x)
 }
 
+
 fn get_id_from_data(data: String) -> i32 {
     let string_slice: &[u8] = unsafe { slice::from_raw_parts(data.as_ptr() as *const u8, data.len()) };
     let mut i = 0;
@@ -720,6 +721,11 @@ fn get_id_from_data(data: String) -> i32 {
     let uid =user_id.parse::<i32>().unwrap();
     uid
 }
+
+
+//---register--
+
+
 
 fn get_from_CA() -> Vec<u8> {
     let cer = b"wo shi hao ren";
@@ -736,7 +742,6 @@ pub extern "C" fn server_hello(
     len_tmp_certificate: &mut usize,
     string_limit: usize,
 ) -> sgx_status_t {
- 
 
     println!("[+] hello server!");
     println!("pk: {:?}", &*private_key);
@@ -805,6 +810,13 @@ pub extern "C" fn server_hello(
     // }
     return sgx_status_t::SGX_SUCCESS;
 }
+
+
+
+
+
+//-------------
+
 
 #[no_mangle]
 pub extern "C" fn get_session_key(

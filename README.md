@@ -48,6 +48,30 @@ CA：
 
 ![image](https://github.com/SGX-Development/Netdisk/raw/main/image/session_key.jpg)
 
+### 具体实现
+
+#### Register
+
+1. onclick触发js函数
+2. ajax从后端获得证书
+3. js验证证书，并得到SGX公钥
+4. js获取用户输入的账号、口令......，使用RSA公钥加密口令
+5. ajax传至后端，(加密口令 + user_name)传至SGX
+6. (口令+user_name)使用SGX公钥加密后从SGX返回，后端存至DB
+7. 返回给前端注册完成的结果
+
+#### Login
+
+1. onclick触发js函数
+2. ajax从后端获得证书
+3. js验证证书，并得到SGX公钥
+4. js获取用户输入的账号、口令......，使用RSA公钥加密口令
+5. ajax传至后端，(加密口令 + user_name + DB取出的pswd)传至SGX
+6. SGX：E~k~(DB取出的pswd) == (加密口令 || user_name)
+7. 若SGX验证通过，返回给前端正确结果
+8. 前端生成随机数作为会话密钥，使用SGX公钥加密后传至SGX，SGX解密得到会话密钥
+9. 前端跳转页面
+
 ## 4 SGX提供的函数
 
 ### session key
@@ -64,10 +88,7 @@ fn func_name(SGX public key, CA signature)
 * CA signature：CA签名，简化为用CA私钥加密SGX公钥的结果（出SGX）
 
 ```rust
-// fn func_name(user, m)
-fn func_name(enc_user_pswd_sessionkey, success) //session key and login
-fn get_from_userdb(user, enc_pswd)
-
+fn func_name(user, m)
 ```
 
 功能：后端通过此函数将会话密钥传递给k
@@ -80,8 +101,7 @@ fn get_from_userdb(user, enc_pswd)
 ### Register
 
 ```rust
-// fn func_name(passwd_session_key, passwd_sgx)
-fn func_name(enc_user_pswd, user, enc_pswd, sucess)//in out out
+fn func_name(passwd_session_key, passwd_sgx)
 ```
 
 功能：后端将会话密钥加密过的用户口令传至SGX，SGX解密后用SGX公钥加密，返回给后端
@@ -142,7 +162,9 @@ type RawInput struct {
 ```
 
 ### DBInput (DB存储格式)
+
 **注意!!! 这只是我存DB内的格式，只在enclave内部使用，不会与任何外部交互，包括sgx/app**
+
 ```rust
 struct DBInput {
     id: String, // Title

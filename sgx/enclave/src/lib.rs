@@ -749,7 +749,16 @@ pub extern "C" fn server_hello(
     string_limit: usize,
 ) -> sgx_status_t {
 
-    println!("[+] hello server!");
+    // match validate(&*public_key){
+    //     Ok(y)=>  {
+    //                 println!("[+] hello server!");
+    //             }
+    //     _ => {
+    //         println!("[-] hello server fail!");
+    //         return sgx_status_t::SGX_ERROR_UNEXPECTED;
+    //     }
+    // }
+
     println!("pk: {:?}", &*private_key);
     println!("pk: {:?}", &*public_key);
     // println!("\npkn: {:?}", &*public_key_n);
@@ -770,50 +779,35 @@ pub extern "C" fn server_hello(
     // let c = internals::encrypt(&public_key_n, &m);
 
 
-    // if ( &len_tmp_pk_n < string_limit && (*public_key_n).len() < string_limit ) {
-    unsafe {
-        ptr::copy_nonoverlapping(
-            public_key_n_str.as_ptr(),
-            ref_tmp_pk_n,
-            public_key_n_str.len(),
+    if ( public_key_n_str.len()< string_limit && 
+        public_key_e_str.len() < string_limit &&
+        (*certificate).len() < string_limit
+    ) {
+        unsafe {
+            ptr::copy_nonoverlapping(
+                public_key_n_str.as_ptr(),
+                ref_tmp_pk_n,
+                public_key_n_str.len(),
+            );
+            ptr::copy_nonoverlapping(
+                public_key_e_str.as_ptr(),
+                ref_tmp_pk_e,
+                public_key_e_str.len(),
+            );
+            ptr::copy_nonoverlapping(
+                (*certificate).as_ptr(),
+                ref_tmp_certificate,
+                (*certificate).len(),
+            );
+        }
+    } else {
+        eprintln!(
+            "Public key len > buf size",
         );
-        ptr::copy_nonoverlapping(
-            public_key_e_str.as_ptr(),
-            ref_tmp_pk_e,
-            public_key_e_str.len(),
-        );
-        ptr::copy_nonoverlapping(
-            (*certificate).as_ptr(),
-            ref_tmp_certificate,
-            (*certificate).len(),
-        );
+        return sgx_status_t::SGX_ERROR_WASM_BUFFER_TOO_SHORT;
     }
-    // return sgx_status_t::SGX_SUCCESS;
-    // } else {
-    //     eprintln!(
-    //         "Public key len > buf size",
-    //     );
-    //     return sgx_status_t::SGX_ERROR_WASM_BUFFER_TOO_SHORT;
-    // }
 
-    // match RSAPublicKey::check_public(&*public_key){
-    //     Ok(y)=>  {
-    //                 println!("[+] hello server!");
-    //             }
-    //     _ => {
-    //         println!("[-] hello server fail!");
-    //         return sgx_status_t::SGX_ERROR_UNEXPECTED;
-    //     }
-    // }
-    // match &*SGX_RSA {
-    //     1 => {
-    //         println!("[+] hello server!");
-    //     }
-    //     _ => {
-    //         println!("[-] hello server fail!");
-    //         return sgx_status_t::SGX_ERROR_UNEXPECTED;
-    //     }
-    // }
+    
     return sgx_status_t::SGX_SUCCESS;
 }
 
@@ -835,7 +829,18 @@ pub extern "C" fn user_register(
     // let enc_data = String::from_utf8(enc_vec.to_vec()).unwrap();  
 
     let padding = PaddingScheme::new_pkcs1v15_encrypt();
-    let user_data_vec= (*private_key).decrypt(padding, enc_vec).expect("failed to decrypt");
+    // let user_data_vec= (*private_key).decrypt(padding, enc_vec).expect("failed to decrypt");
+    let user_data_vec= match (*private_key).decrypt(padding, enc_vec) {
+        Ok(r) => {
+            println!("[+] session key decrypt SUCCESS!");
+            r
+        }
+        _ => {
+            println!("[-] session key decrypt ERROR!");
+            return sgx_status_t::SGX_ERROR_UNEXPECTED;
+        }
+    };
+
     let user_data_string = String::from_utf8(user_data_vec.to_vec()).unwrap();  
 
 
@@ -847,25 +852,26 @@ pub extern "C" fn user_register(
     let padding = PaddingScheme::new_pkcs1v15_encrypt();
     let tmp_enc_pswd = (*public_key).encrypt(&mut rng, padding, &tmp_pswd.as_bytes()).expect("failed to encrypt");
 
-    *user_len = tmp_user.len();
-    *enc_pswd_len = tmp_enc_pswd.len();
-
-    // let m = String::from("hello");
-    // let c = internals::encrypt(&public_key_n, &m);
-
-
-    // if ( &len_tmp_pk_n < string_limit && (*public_key_n).len() < string_limit ) {
-    unsafe {
-        ptr::copy_nonoverlapping(
-            tmp_user.as_ptr(),
-            user,
-            tmp_user.len(),
+    if ( tmp_user.len() < string_limit && tmp_user.len() < string_limit ) {
+        unsafe {
+            *user_len = tmp_user.len();
+            *enc_pswd_len = tmp_enc_pswd.len();
+            ptr::copy_nonoverlapping(
+                tmp_user.as_ptr(),
+                user,
+                tmp_user.len(),
+            );
+            ptr::copy_nonoverlapping(
+                tmp_enc_pswd.as_ptr(),
+                enc_pswd,
+                tmp_enc_pswd.len(),
+            );
+        }
+    } else {
+        eprintln!(
+            "Result len > buf size",
         );
-        ptr::copy_nonoverlapping(
-            tmp_enc_pswd.as_ptr(),
-            enc_pswd,
-            tmp_enc_pswd.len(),
-        );
+        return sgx_status_t::SGX_ERROR_WASM_BUFFER_TOO_SHORT;
     }
     
     return sgx_status_t::SGX_SUCCESS;
@@ -892,7 +898,17 @@ pub extern "C" fn get_session_key(
     println!("sk_v: {:?}", &enc_sessionkey_v);
 
     let padding = PaddingScheme::new_pkcs1v15_encrypt();
-    let sessionkey_v = (*private_key).decrypt(padding, enc_sessionkey_v).expect("failed to decrypt");
+    // let sessionkey_v = (*private_key).decrypt(padding, enc_sessionkey_v).expect("failed to decrypt");
+    let sessionkey_v = match (*private_key).decrypt(padding, enc_sessionkey_v){
+        Ok(r) => {
+            println!("[+] session key decrypt SUCCESS!");
+            r
+        }
+        _ => {
+            println!("[-] session key decrypt ERROR!");
+            return sgx_status_t::SGX_ERROR_UNEXPECTED;
+        }
+    };
   
     let mut sk:[u8;32];
     match slice_to_array_32(sessionkey_v){
@@ -922,23 +938,30 @@ fn slice_to_array_32<T>(slice: Vec<T>) -> Result<&'static [T; 32], TryFromSliceE
     } else {
         Err(TryFromSliceError(()))
     }
-    // let ptr = slice.as_ptr() as *const [T; 32];
-    // unsafe {Ok(&*ptr)}
 }
 
 
-// fn rsa_init() -> u8 {
-//     let timeseed = std::time::SystemTime::now().duration_since(std::time::SystemTime::UNIX_EPOCH).unwrap();
-//     let seed = timeseed.as_secs();
-//     let mut rng = rand::rngs::StdRng::seed_from_u64(seed);
-//     let bits = 2048;
-//     let private_key = RSAPrivateKey::new(&mut rng, bits).expect("failed to generate a key");
-//     let public_key = RSAPublicKey::from(&private_key);
-//     let private_key_n = public_key.n_to_vecu8();
-//     let private_key_e = public_key.e_to_vecu8();
-//     println!("[+] Init RSA Successful!");
-//     return 1;
-// }
+#[no_mangle]
+pub extern "C" fn enclave_test() -> sgx_status_t {
+    println!("[=] test SUCCESS!");
+
+    let test_u8:&[u8] = b"hello!";
+
+    let padding = PaddingScheme::new_pkcs1v15_encrypt();
+    let sessionkey_v = match (*private_key).decrypt(padding, test_u8){
+        Ok(r) => {
+            println!("[+] session key decrypt SUCCESS!");
+            r
+        }
+        _ => {
+            println!("[-] session key decrypt ERROR!");
+            return sgx_status_t::SGX_ERROR_UNEXPECTED;
+        }
+    };
+
+    return sgx_status_t::SGX_SUCCESS;
+
+}
 
 
 fn get_rsa(){

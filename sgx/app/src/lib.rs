@@ -101,6 +101,11 @@ extern "C" {
         enc_sessionkey: *const u8,
         enc_sessionkey_len: usize,
     ) -> sgx_status_t;
+
+    fn enclave_test(
+        eid: sgx_enclave_id_t,
+        retval: *mut sgx_status_t,
+    ) -> sgx_status_t;
 }
 
 #[no_mangle]
@@ -609,29 +614,6 @@ pub extern "C" fn rust_server_hello(
         }
     }
 
-    
-    // let mut pk_n_vec: Vec<u8> = ref_tmp_pk_n.to_vec();
-    // // pk_n_vec.retain(|x| *x != 0x00u8);
-    // println!("aaaaaa");
-
-    // let line_n = String::from_utf8(pk_n_vec.to_vec()).unwrap();
-    
-    // let n_len = line_n.len();
-    // println!("pknlen: {}", n_len);
-    // if n_len > string_limit {
-    //     panic!("{} > {}", n_len, string_limit);
-    // }
-    // let e_len = ref_tmp_pk_e.len();
-    // if e_len > string_limit {
-    //     panic!("{} > {}", e_len, string_limit);
-    // }
-    // let usize_n_len = ref_len_tmp_pk_n;
-    // let usize_n_len = usizet_n_len as usize;
-
-    // println!("usize n {}", &usize_n_len);
-
-    // let pk_n_usize:usize = 256;
-
     unsafe {
         *pk_n_len = len_tmp_pk_n;
         ptr::copy_nonoverlapping(
@@ -652,7 +634,6 @@ pub extern "C" fn rust_server_hello(
             *certificate_len,
         );
     }
-
 
     Ok(())
 }
@@ -675,11 +656,12 @@ pub extern "C" fn rust_register(
 
     let enclave = match &*SGX_ENCLAVE {
         Ok(r) => {
-            println!("[+] rust_server_hello");
+            println!("[+] rust register");
             r
         }
         Err(x) => {
-            println!("[-] Init Enclave Failed {}!", x.as_str());
+            println!("[-] rust register failled {}!", x.as_str());
+            unsafe{ *success = 0; }
             return Err(std::io::Error::new(
                 std::io::ErrorKind::Other,
                 "init enclave failed",
@@ -718,6 +700,7 @@ pub extern "C" fn rust_register(
         sgx_status_t::SGX_SUCCESS => {}
         _ => {
             eprintln!("[-] ECALL Enclave Failed {}!", result.as_str());
+            unsafe{ *success = 0; }
             return Err(std::io::Error::new(
                 std::io::ErrorKind::Other,
                 "ecall failed",
@@ -728,15 +711,13 @@ pub extern "C" fn rust_register(
         sgx_status_t::SGX_SUCCESS => {}
         e => {
             eprintln!("[-] ECALL Enclave Failed {}!", retval.as_str());
+            unsafe{ *success = 0; }
             return Err(std::io::Error::new(
                 std::io::ErrorKind::Other,
                 e.to_string(),
             ));
         }
     }
-
-    
-
 
     unsafe {
         *user_len = tmp_user_len;
@@ -752,8 +733,6 @@ pub extern "C" fn rust_register(
             *enc_pswd_len,
         );
     }
-
-
 
     Ok(())
 
@@ -796,13 +775,84 @@ pub extern "C" fn rust_get_session_key(
             enc_sessionkey_len,
         )
     };
+
+    match result {
+        sgx_status_t::SGX_SUCCESS => {}
+        _ => {
+            eprintln!("[-] ECALL Enclave Failed {}!", result.as_str());
+            // unsafe{ *success = 0; }
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                "ecall failed",
+            ));
+        }
+    }
+    match retval {
+        sgx_status_t::SGX_SUCCESS => {}
+        e => {
+            eprintln!("[-] ECALL Enclave Failed {}!", retval.as_str());
+            // unsafe{ *success = 0; }
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                e.to_string(),
+            ));
+        }
+    }
+
     Ok(())
 }
 
 //============================================================
 
 
+#[no_mangle]
+pub extern "C" fn rust_test() -> Result<(), std::io::Error>{
+    let enclave = match &*SGX_ENCLAVE {
+        Ok(r) => {
+            println!("[+] rust_delete_index");
+            r
+        }
+        Err(x) => {
+            eprintln!("[-] Init Enclave Failed {}!", x.as_str());
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                "init enclave failed",
+            ));
+        }
+    };
+    let enclave_id = enclave.geteid();
+    let mut retval = sgx_status_t::SGX_SUCCESS;
 
+    let result = unsafe {
+        enclave_test(
+            enclave_id,
+            &mut retval,
+        )
+    };
+
+    match result {
+        sgx_status_t::SGX_SUCCESS => {}
+        _ => {
+            eprintln!("[-] test Enclave Failed {}!", result.as_str());
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                "test failed",
+            ));
+        }
+    }
+    match retval {
+        sgx_status_t::SGX_SUCCESS => {}
+        e => {
+            eprintln!("[-] ECALL Enclave Failed {}!", retval.as_str());
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                e.to_string(),
+            ));
+        }
+    }
+    println!("sucess!");
+    Ok(())
+}
 
 
 

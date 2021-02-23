@@ -119,7 +119,10 @@ func main() {
 	// fmt.Println("Welcome:")
 	// fmt.Println(public_key)
 	// fmt.Println(certificate)
-	C.rust_test()
+	// astring := "enc_data"
+	// user, enc_pswd := user_register(astring)
+	// fmt.Println(user)
+	// fmt.Println(enc_pswd)
 
 }
 
@@ -171,7 +174,8 @@ func user_register(enc_user_pswd string) (string, string) {
 		user, &user_len, enc_pswd, &enc_pswd_len, &success, STRING_LIMIT)
 
 	if success == 0 {
-		return "error", "error"
+		fmt.Println("Register Failed!")
+		return "", ""
 	}
 	user_str := C.GoStringN(user, (C.int)(user_len))
 	enc_pswd_str := C.GoStringN(enc_pswd, (C.int)(enc_pswd_len))

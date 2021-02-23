@@ -589,9 +589,9 @@ pub extern "C" fn rust_server_hello(
             string_limit,
         )
     };
-    println!("a----{}",len_tmp_pk_n);
-    println!("b----{}",len_tmp_pk_e);
-    println!("c----{}",len_tmp_certificate);
+    // println!("a----{}",len_tmp_pk_n);
+    // println!("b----{}",len_tmp_pk_e);
+    // println!("c----{}",len_tmp_certificate);
 
     match result {
         sgx_status_t::SGX_SUCCESS => {}
@@ -732,6 +732,7 @@ pub extern "C" fn rust_register(
             enc_pswd,
             *enc_pswd_len,
         );
+        *success = 1;
     }
 
     Ok(())

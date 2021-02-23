@@ -61,7 +61,9 @@ from "sgx_tprotected_fs.edl" import *;
         );                             
         public sgx_status_t get_session_key([in, size=user_len] const uint8_t* user, size_t user_len, 
                                         [in, size=enc_sessionkey_len] const uint8_t* enc_sessionkey, 
-                                        size_t enc_sessionkey_len );                                 
+                                        size_t enc_sessionkey_len );    
+        public sgx_status_t enclave_test();
+
                             
     };
 };

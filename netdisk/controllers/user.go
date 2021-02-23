@@ -71,10 +71,10 @@ func (c *RegController) RegGet() {
 	enc_uname_pwd_base64 := c.GetString("enc_uname_pwd")
 	email := c.GetString("email")
 
-	user_str, enc_pswd_str := register(enc_uname_pwd_base64)
+	_, enc_pswd_str := register(enc_uname_pwd_base64)
 
-	fmt.Println(user_str)
-	fmt.Println(enc_pswd_str)
+	// fmt.Println(user_str)
+	// fmt.Println(enc_pswd_str)
 
 	enc_pswd_base64 := base64.StdEncoding.EncodeToString([]byte(enc_pswd_str))
 
@@ -85,13 +85,9 @@ func (c *RegController) RegGet() {
 	var hashtable = make(map[string]string)
 	IsValid(userName, enc_pswd_base64, email, hashtable)
 
-	fmt.Println(1)
-
 	for key, value := range hashtable {
 		ReturnData[key] = value
 	}
-
-	fmt.Println(2)
 
 	errMsg, flag := CheckReg(userName, enc_pswd_base64, email)
 	if !flag {
@@ -104,8 +100,6 @@ func (c *RegController) RegGet() {
 	ReturnData["res"] = "1"
 	ReturnData["message"] = "0"
 
-	fmt.Println(3)
-	fmt.Println(ReturnData)
 
 	c.Data["json"] = ReturnData
 	c.ServeJSON() //响应前端
@@ -195,8 +189,8 @@ func CheckReg(userName string, passWd string, email string) (errMsg string, flag
 		user.Email = email
 		user.Passwd = passWd[0:255]
 		user.Passwd_more = passWd[255:]
-		fmt.Println(user.Passwd)
-		fmt.Println(user.Passwd_more)
+		// fmt.Println(user.Passwd)
+		// fmt.Println(user.Passwd_more)
 		user.Isactive = true
 		user.Isdelete = false
 		_, err = o.Insert(&user)
@@ -206,8 +200,6 @@ func CheckReg(userName string, passWd string, email string) (errMsg string, flag
 			flag = false
 		}
 	}
-	fmt.Println(errMsg)
-	fmt.Println(flag)
 	return errMsg, flag
 }
 

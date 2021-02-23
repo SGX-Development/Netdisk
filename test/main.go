@@ -14,6 +14,7 @@ package main
 //extern void rust_register(char* enc_user_pswd, size_t enc_user_pswd_len, char* user, size_t* user_len, char* enc_pswd, size_t* enc_pswd_len, size_t* result_string_size, size_t string_limit);
 //extern void go_encrypt(size_t limit_length, char* plaintext, size_t plainlength, char* ciphertext, size_t* cipherlength);
 //extern void go_decrypt(size_t limit_length, char* ciphertext, size_t cipherlength, char* plaintext, size_t* plainlength);
+//extern void rust_test();
 import "C"
 
 // import "log"
@@ -114,10 +115,14 @@ func main() {
 	// pack_get := string_to_Package(pack_string)
 	// fmt.Println("%+v", pack_get)
 
-	public_key, certificate := server_hello()
-	fmt.Println("Welcome:")
-	fmt.Println(public_key)
-	fmt.Println(certificate)
+	// public_key, certificate := server_hello()
+	// fmt.Println("Welcome:")
+	// fmt.Println(public_key)
+	// fmt.Println(certificate)
+	// astring := "enc_data"
+	// user, enc_pswd := user_register(astring)
+	// fmt.Println(user)
+	// fmt.Println(enc_pswd)
 
 }
 
@@ -156,7 +161,7 @@ func server_hello() (string, string) {
 	return string(publickey), Certificate_str
 }
 
-func register(enc_user_pswd string) (string, string) {
+func user_register(enc_user_pswd string) (string, string) {
 	enc_pswd := (*C.char)(C.malloc(STRING_LIMIT))
 	enc_pswd_len := (C.ulong)(0)
 
@@ -169,7 +174,8 @@ func register(enc_user_pswd string) (string, string) {
 		user, &user_len, enc_pswd, &enc_pswd_len, &success, STRING_LIMIT)
 
 	if success == 0 {
-		return "error", "error"
+		fmt.Println("Register Failed!")
+		return "", ""
 	}
 	user_str := C.GoStringN(user, (C.int)(user_len))
 	enc_pswd_str := C.GoStringN(enc_pswd, (C.int)(enc_pswd_len))

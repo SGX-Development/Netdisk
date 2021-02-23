@@ -119,6 +119,13 @@ struct UserInfo {
     password: String,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+struct SessionKeyPackage {
+    user: String,
+    password: String,
+    key: [u8; 32],
+}
+
 struct SessionKey {
     user: i32,
     key: [u8; 32],
@@ -880,44 +887,76 @@ pub extern "C" fn user_register(
 
 #[no_mangle]
 pub extern "C" fn get_session_key(
-    user: *const u8, 
-    user_len: usize,
-    enc_sessionkey: *const u8, 
-    enc_sessionkey_len: usize,
+    enc_pswd_from_db: *const u8, //enc_pswd from db
+    enc_pswd_from_db_len: usize,
+    enc_data: *const u8, //contains user, password and session key from user.
+    enc_data_len: usize,
 ) -> sgx_status_t {
-    let user_v: &[u8] = unsafe { std::slice::from_raw_parts(user, user_len) };
-    let user_line = String::from_utf8(user_v.to_vec()).unwrap();  
+    let enc_db_pswd_u8: &[u8] = unsafe { std::slice::from_raw_parts(enc_pswd_from_db, enc_pswd_from_db_len) };
 
-    let enc_sessionkey_v: &[u8] = unsafe { std::slice::from_raw_parts(enc_sessionkey, enc_sessionkey_len) };
-    println!("user: {}", &user_line);
-    println!("sk_v: {:?}", &enc_sessionkey_v);
+    let enc_data_u8: &[u8] = unsafe { std::slice::from_raw_parts(enc_data, enc_data_len) };
+    // println!("user: {}", &user_line);
+    // println!("sk_v: {:?}", &enc_sessionkey_v);
 
-    let padding = PaddingScheme::new_pkcs1v15_encrypt();
-    let sessionkey_v = match (*private_key).decrypt(padding, enc_sessionkey_v){
+    let db_pswd = match (*private_key).decrypt(PaddingScheme::new_pkcs1v15_encrypt(), enc_db_pswd_u8){
         Ok(r) => {
-            println!("[+] session key decrypt SUCCESS!");
+            println!("[+] password from database decrypt SUCCESS!");
             r
         }
         _ => {
-            println!("[-] session key decrypt ERROR!");
+            println!("[-] password from database decrypt ERROR!");
             return sgx_status_t::SGX_ERROR_UNEXPECTED;
         }
     };
-  
-    let mut sk:[u8;32];
-    match slice_to_array_32(sessionkey_v){
+
+    let sk_data = match (*private_key).decrypt(PaddingScheme::new_pkcs1v15_encrypt(), enc_data_u8){
         Ok(r) => {
-            println!("[+] session key SUCCESS!");
-            sk = r.clone();
-            println!("sk: {:?}", sk);
+            println!("[+] session key package decrypt SUCCESS!");
+            r
         }
-        _ =>{
-            println!("[-] session key ERROR!");
+        _ => {
+            println!("[-] session key package decrypt ERROR!");
             return sgx_status_t::SGX_ERROR_UNEXPECTED;
         }
+    };
+
+    let data_str = String::from_utf8(sk_data.to_vec()).unwrap();
+    let db_pswd_str = String::from_utf8(db_pswd.to_vec()).unwrap();
+
+
+    let data_struct: SessionKeyPackage  = match serde_json::from_str(&data_str){
+        Ok(r) => {
+            println!("[+]  package serde SUCCESS!");
+            r
+        }
+        _ => {
+            println!("[-] package serde ERROR!");
+            return sgx_status_t::SGX_ERROR_UNEXPECTED;
+        }
+    };
+
+    if db_pswd_str != data_struct.password {
+        println!("[-] password ERROR!");
+        return sgx_status_t::SGX_ERROR_UNEXPECTED;
     }
 
-    (*keymap).lock().insert(user_line, sk);
+    
+    // let enc_data = String::from_utf8(enc_vec.to_vec()).unwrap();  
+  
+    // let mut sk:[u8;32];
+    // match slice_to_array_32(data_struct.key){
+    //     Ok(r) => {
+    //         println!("[+] session key SUCCESS!");
+    //         sk = r.clone();
+    //         println!("sk: {:?}", sk);
+    //     }
+    //     _ =>{
+    //         println!("[-] session key ERROR!");
+    //         return sgx_status_t::SGX_ERROR_UNEXPECTED;
+    //     }
+    // }
+
+    (*keymap).lock().insert(data_struct.user, data_struct.key);
     println!("map: {:?}", &*keymap);
 
 

@@ -834,14 +834,21 @@ pub extern "C" fn user_register(
     let enc_vec: &[u8] = unsafe { std::slice::from_raw_parts(enc_user_pswd, enc_user_pswd_len) };
     // let enc_data = String::from_utf8(enc_vec.to_vec()).unwrap();  
 
+    let w: &[u8] = &base64::decode(enc_vec).unwrap();
+
     let padding = PaddingScheme::new_pkcs1v15_encrypt();
-    let user_data_vec= (*private_key).decrypt(padding, enc_vec).expect("failed to decrypt");
-    let user_data_string = String::from_utf8(user_data_vec.to_vec()).unwrap();  
+    let user_data_vec= (*private_key).decrypt(padding, w).expect("failed to decrypt");
+    let user_data_string = String::from_utf8(user_data_vec.to_vec()).unwrap();
+    
+    println!("{:?}", user_data_string);
 
 
     let user_data: UserInfo = serde_json::from_str(&user_data_string).unwrap();
     let tmp_user = user_data.user;
     let tmp_pswd = user_data.password;
+
+    println!("{:?}", tmp_user);
+    println!("{:?}", tmp_pswd);
 
     let mut rng = rand::rngs::StdRng::seed_from_u64(0);
     let padding = PaddingScheme::new_pkcs1v15_encrypt();

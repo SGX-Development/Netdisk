@@ -45,7 +45,7 @@ func (c *SessionKeyController) SkPost() {
 	encrypted_session_key,_ := base64.StdEncoding.DecodeString(date)
 
 	fmt.Println(encrypted_session_key)
-	fmt.Println([]byte(encrypted_session_key))
+	// fmt.Println([]byte(encrypted_session_key))
 
 	get_session_key("1", string(encrypted_session_key[:]))
 

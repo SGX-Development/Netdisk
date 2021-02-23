@@ -47,38 +47,142 @@
             <strong><a href="/login">Login</a></strong>.-
         </p>
         <br>
-        <form class="form-horizontal" action="register.html" method="post">
-            <p>
-                Username <input type="test" name="userName">
-            </p>
-            <p>
-                Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="email" name="email">
-            </p>
-            <p>
-                Password&nbsp; <input type="password" name="passWd">
-            </p>
-            <p>
-                Comfirm&nbsp;&nbsp;&nbsp; <input type="password" name="passWd_2">
-            </p>
-            <p>
-                {{.message}}
-            </p>
-            <p>
-            <div class="btn-group btn-group-sm">
-                <a href="">
-                    <button type="submit" class="btn btn-primary"
-                        style="background-color: #203643;border-color: #cccccc"> Register </button>
-                </a>
-            </div>
-            </p>
-        </form>
+        <!-- <form class="form-horizontal" action="register.html" method="post"> -->
+        <p>
+            Username <input type="test" id="userName" name="userName">
+        </p>
+        <p>
+            Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="email" id="email" name="email">
+        </p>
+        <p>
+            Password&nbsp; <input type="password" id="passWd" name="passWd">
+        </p>
+        <p>
+            Comfirm&nbsp;&nbsp;&nbsp; <input type="password" id="passWd_2" name="passWd_2">
+        </p>
+        <!-- <p>
+            {{.message}}
+        </p> -->
+        <p>
+        <div class="btn-group btn-group-sm">
+            <!-- <a href=""> -->
+                <button type="button" onclick="Handle_Register()" class="btn btn-primary"
+                    style="background-color: #203643;border-color: #cccccc">
+                    Register </button>
+            <!-- </a> -->
+        </div>
+        </p>
+        <!-- </form> -->
         <br>
         <br>
+        <!-- <button type="button" onclick="aaa()">click</button> -->
     </div>
+    
+    <!-- <script>
+        function aaa(){
+            window.location.href = '/personalcenter';
+        }
+    </script> -->
 
 
     <script src="/static/js/jquery.js"></script>
     <script src="/static/js/bootstrap.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/node-forge@0.7.0/dist/forge.min.js"></script>
+
+    <script>
+        function Handle_Register() {
+            'use strict';
+            // window.location.href = '/personalcenter';
+            // document.location.href = '/personalcenter',true;
+            // window.location.replace("/personalcenter");
+
+            $.ajax({
+                url: "/session_key",
+                async: false,
+                success: function (msg) {
+                    console.log(msg);
+                    console.log(msg.pk_n);
+                    console.log(msg.pk_e);
+                    console.log(msg.certificate);
+
+                    var rsa = forge.pki.rsa;
+
+                    var rsaPublicKey = rsa.setPublicKey(new forge.jsbn.BigInteger(msg.pk_n), new forge.jsbn.BigInteger(msg.pk_e));
+                    console.log(rsaPublicKey);
+
+                    // =============对证书内容进行检验===============
+
+
+
+                    var result = true;
+                    // =============end of 检验证书内容==============
+                    if (result === false) {
+                        alert("证书验证失败!")
+                        window.location.href = '/register';
+                    }
+                    var uname = document.getElementById('userName').value;
+                    var email = document.getElementById('email').value;
+                    var pwd = document.getElementById('passWd').value;
+                    var pwd_2 = document.getElementById('passWd_2').value;
+
+                    var user_pswd = {
+                        user: uname,
+                        password: pwd
+                    }
+                    var user_pswd_json = JSON.stringify(user_pswd);
+                    console.log(user_pswd_json);
+                    console.log(typeof user_pswd_json);
+
+                    var enc_uname_pwd = rsaPublicKey.encrypt(user_pswd_json, 'RSAES-PKCS1-V1_5');
+                    console.log(enc_uname_pwd);
+                    // var enc_uname_pwd_2 = rsaPublicKey.encrypt(uname_pwd_2, 'RSAES-PKCS1-V1_5');
+                    // console.log(enc_uname_pwd_2);
+                    console.log(string2Bin(enc_uname_pwd));
+
+                    $.ajax({
+                        url: "/reg",
+                        async: false,
+                        data: { "userName": uname, "enc_uname_pwd": btoa(enc_uname_pwd), "email": email },
+                        success: function (data) {
+
+                            // data = JSON.parse(data)
+
+                            console.log(data);
+                            console.log(data.res);
+                            console.log(data.message);
+                            if (data.res === "1") {
+                                // window.location.href = '/login';
+                                // alert("success");
+                                // window.location.href = '/personalcenter.html';
+                                // $(location).attr('href', 'http://58.196.135.54:10004/introduction');
+                                // window.location.replace("http://58.196.135.54:10004/introduction");
+                                window.location.assign("introduction.html");
+                            } else {
+                                alert("注册信息有误，请重新注册");
+                                window.location.href = '/register';
+                            }
+                        }
+
+                    });
+                }
+            })
+            // return false;
+        }
+
+        function bin2String(array) {
+            return String.fromCharCode.apply(String, array);
+        }
+
+        function string2Bin(str) {
+            var result = [];
+            for (var i = 0; i < str.length; i++) {
+                result.push(str.charCodeAt(i));
+            }
+            return result;
+        }
+
+    </script>
+
 
 </body>
 

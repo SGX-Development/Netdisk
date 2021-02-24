@@ -123,7 +123,7 @@ struct UserInfo {
 struct SessionKeyPackage {
     user: String,
     password: String,
-    key: [u8; 32],
+    key: String, //string should match[u8; 32],
 }
 
 struct SessionKey {
@@ -941,23 +941,27 @@ pub extern "C" fn get_session_key(
         return sgx_status_t::SGX_ERROR_UNEXPECTED;
     }
 
-    
-    // let enc_data = String::from_utf8(enc_vec.to_vec()).unwrap();  
-  
-    // let mut sk:[u8;32];
-    // match slice_to_array_32(data_struct.key){
-    //     Ok(r) => {
-    //         println!("[+] session key SUCCESS!");
-    //         sk = r.clone();
-    //         println!("sk: {:?}", sk);
-    //     }
-    //     _ =>{
-    //         println!("[-] session key ERROR!");
-    //         return sgx_status_t::SGX_ERROR_UNEXPECTED;
-    //     }
-    // }
+    let session_key = data_struct.key;
+    if session_key.len() != 32 {
+        println!("[-] session key length ERROR!");
+        return sgx_status_t::SGX_ERROR_UNEXPECTED;
+    }
 
-    (*keymap).lock().insert(data_struct.user, data_struct.key);
+      
+    let mut sk:[u8;32];
+    match slice_to_array_32(session_key.as_bytes().to_vec()){
+        Ok(r) => {
+            println!("[+] session key SUCCESS!");
+            sk = r.clone();
+            println!("sk: {:?}", sk);
+        }
+        _ =>{
+            println!("[-] session key ERROR!");
+            return sgx_status_t::SGX_ERROR_UNEXPECTED;
+        }
+    }
+
+    (*keymap).lock().insert(data_struct.user, sk);
     println!("map: {:?}", &*keymap);
 
 

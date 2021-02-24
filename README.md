@@ -114,7 +114,7 @@ fn func_name(passwd_session_key, passwd_sgx)
 ### Login
 
 ```rust
-fn func_name(passwd_session_key, passwd_sgx, success)
+fn func_name(encrypted_password_from_db, encrpyted_data, success)
 ```
 
 功能：后端得到用会话密钥加密过的用户口令以及用SGX公钥加密过的用户口令，SGX内用私钥解密得到正确的用户口令，用会话密钥解密得到用户输入的口令，判断两者是否一致，通过success将结果返回给后端

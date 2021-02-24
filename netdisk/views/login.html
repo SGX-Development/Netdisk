@@ -47,25 +47,19 @@
             <strong><a href="/register">Register</a></strong>.-
         </p>
         <br>
-        <form class="form-horizontal" action="login.html" method="post">
-            <p>
-                Username <input type="test" name="userName">
-            </p>
-            <p>
-                Password&nbsp; <input type="password" name="passWd">
-            </p>
-            <p>
-                {{.message}}
-            </p>
-            <p>
-            <div class="btn-group btn-group-sm">
-                <a href="">
-                    <button type="submit" class="btn btn-primary"
-                        style="background-color: #203643;border-color: #cccccc"> login </button>
-                </a>
-            </div>
-            </p>
-        </form>
+        <p>
+            Username <input type="test" id="userName" name="userName">
+        </p>
+        <p>
+            Password&nbsp; <input type="password" id="passWd" name="passWd">
+        </p>
+        <p>
+        <div class="btn-group btn-group-sm">
+            <button type="button" onclick="Handle_Login()" class="btn btn-primary"
+                style="background-color: #203643;border-color: #cccccc"> login
+            </button>
+        </div>
+        </p>
         <br>
         <br>
     </div>
@@ -76,13 +70,28 @@
     <script src="https://cdn.jsdelivr.net/npm/node-forge@0.7.0/dist/forge.min.js"></script>
 
     <script>
+        function Handle_Login() {
+            'use strict';
 
-        $(function () {
+            var uname = document.getElementById('userName').value;
+            var pwd = document.getElementById('passWd').value;
+
+            if (typeof uname == "undefined" || uname == null || uname == "") {
+                alert("用户名不能为空！");
+                window.location.href = '/login';
+                return;
+            }
+            if (typeof pwd == "undefined" || pwd == null || pwd == "") {
+                alert("密码不能为空！");
+                window.location.href = '/login';
+                return;
+            }
 
             $.ajax({
-                // ajax默认是get请求
-                url: "/session_key",  //待载入页面的URL地址
+                url: "/session_key",
+                async: false,
                 success: function (msg) {
+                    console.log(msg);
                     console.log(msg.pk_n);
                     console.log(msg.pk_e);
                     console.log(msg.certificate);
@@ -91,73 +100,65 @@
 
                     var rsaPublicKey = rsa.setPublicKey(new forge.jsbn.BigInteger(msg.pk_n), new forge.jsbn.BigInteger(msg.pk_e));
                     console.log(rsaPublicKey);
-                    // console.log(forge.pki.publicKeyToPem(rsaPublicKey));
 
                     // =============对证书内容进行检验===============
-
-
-
-
-
 
 
 
                     var result = true;
                     // =============end of 检验证书内容==============
                     if (result === false) {
-                        $.ajax({
-                            url: "/login",
-                            success: function (msg) {
-                                alert("证书验证失败，请刷新页面！")
-                            }
-                        })
-                    } else {
-                        alert("证书验证成功！");
-                        var session_key_arr = [];
-                        for (let i = 0; i < 32; i++) {
-                            session_key_arr.push(randomNum(0, 256));
-                        }
-                        // console.log(session_key_arr);
-                        var session_key_u8 = Uint8Array.from(session_key_arr);
-                        console.log(session_key_u8);
-                        // var session_key = Uint8ArrayToString(session_key_u8);
-                        // console.log(session_key);
-
-                        // 存储会话密钥
-                        sessionStorage.setItem('session_key', session_key_u8);
-                        // console.log(rsaPublicKey);
-
-                        var encrypted_session_key = rsaPublicKey.encrypt(bin2String(session_key_u8), 'RSAES-PKCS1-V1_5');
-                        console.log(encrypted_session_key);
-                        // console.log(typeof(encrypted_session_key));
-
-                        // var test = rsaPublicKey.encrypt(session_key_u8);
-                        // console.log(test);
-
-                        // var test1 = rsaPublicKey.encrypt(String.fromCharCode.apply(String, session_key_u8));
-                        // console.log(test1);
-
-                        // console.log(stringToUint8Array(encrypted_session_key));
-
-                        $.ajax({
-                            url: "/session_key",
-                            method: "POST",
-                            data: { "encrypted_session_key": btoa(encrypted_session_key) },
-                            success: function (msg) {
-                                // console.log(msg.result);
-                                if (msg.result === true) {
-                                    alert("会话密钥生成成功！");
-                                } else {
-                                    alert("会话密钥生成失败，请刷新页面！");
-                                }
-                            }
-
-                        })
+                        alert("证书验证失败!")
+                        window.location.href = '/login';
+                        return;
                     }
+
+                    var session_key_arr = [];
+                    for (let i = 0; i < 32; i++) {
+                        session_key_arr.push(randomNum(0, 256));
+                    }
+
+                    var session_key_u8 = Uint8Array.from(session_key_arr);
+                    console.log(session_key_u8);
+
+                    sessionStorage.setItem('session_key', session_key_u8);
+                    var session_key_str = bin2String(session_key_u8);
+
+                    console.log(session_key_str);
+
+                    var session_package = {
+                        user: uname,
+                        password: pwd,
+                        key: session_key_str
+                    }
+                    var session_package_json = JSON.stringify(session_package);
+                    console.log(session_package_json);
+
+                    var enc_session_package = rsaPublicKey.encrypt(session_package_json, 'RSAES-PKCS1-V1_5');
+
+                    $.ajax({
+                        url: "/login",
+                        method: "POST",
+                        async: false,
+                        data: { "userName": uname, "enc_session_package": btoa(enc_session_package) },
+                        success: function (data) {
+                            console.log(data);
+                            console.log(data.res);
+                            console.log(data.message);
+                            if (data.res === "1") {
+                                alert("success");
+                                window.location.assign("introduction.html");
+                                return;
+                            } else {
+                                alert(data.message);
+                                window.location.href = '/login';
+                                return;
+                            }
+                        }
+                    });
                 }
             })
         }
-        );
 
         //生成从minNum到maxNum的随机数
         function randomNum(minNum, maxNum) {

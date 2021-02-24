@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"netdisk/models"
+
 	// "errors"
 	// "os"
 
@@ -22,32 +23,56 @@ func (c *MainController) Showlogin() {
 }
 
 func (c *MainController) Handlelogin() {
+	ReturnData := make(map[string]interface{})
+
 	userName := c.GetString("userName")
-	passWd := c.GetString("passWd")
+	enc_session_package_base64 := c.GetString("enc_session_package")
 
-	var hashtable = make(map[string]string)
-	IsValid(userName, passWd, "1111@qq.com", hashtable)
-	for key, value := range hashtable {
-		c.Data[key] = value
+	enc_session_package, _ := base64.StdEncoding.DecodeString(enc_session_package_base64)
+
+	fmt.Println(enc_session_package)
+
+	errMsg := ""
+	id := -1
+	o := orm.NewOrm()
+	user := models.User{}
+	user.Name = userName
+	err := o.Read(&user, "Name")
+	if err != nil {
+		errMsg = "用户名不存在！"
+	} else if user.Isdelete {
+		errMsg = "用户已注销！"
+	} else {
+		id = user.Id
 	}
 
-	if userName == "" || passWd == "" {
-		c.Data["message"] = "用户名和密码不能为空"
-		c.TplName = "login.html"
-		return
+	fmt.Println(errMsg)
+	fmt.Println(id)
+
+	pswd_base64 := user.Passwd + user.Passwd_more
+	fmt.Println(pswd_base64)
+
+	pswd, _ := base64.StdEncoding.DecodeString(pswd_base64)
+	fmt.Println("hi")
+	if errMsg == "" {
+		if !get_session_key(string(pswd[:]), string(enc_session_package[:])) {
+			errMsg = "密码错误！"
+		}
 	}
 
-	errMsg, flag, id := CheckAct(userName, passWd)
-	if !flag {
-		c.Data["message"] = errMsg
-		c.TplName = "login.html"
-		return
-	}
 	status := UserStatus{userName, id, true}
 	c.SetSession("status", status)
 
-	//successfully login
-	c.Ctx.Redirect(302, "/introduction")
+	if errMsg == "" {
+		ReturnData["res"] = "1"
+		ReturnData["message"] = "0"
+	} else {
+		ReturnData["res"] = "0"
+		ReturnData["message"] = errMsg
+	}
+
+	c.Data["json"] = ReturnData
+	c.ServeJSON()
 }
 
 // 处理注册
@@ -112,8 +137,8 @@ func (c *MainController) DelAcc() {
 
 func IsValid(userName string, passWd string, email string, hashtable map[string]string) {
 	valid := validation.Validation{}
-	valid.Required(userName, "userName") //userName can't be blank
-	valid.Required(passWd, "passWd")     //passWd can't be blank
+	valid.Required(userName, "userName")    //userName can't be blank
+	valid.Required(passWd, "passWd")        //passWd can't be blank
 	valid.Required(email, "email")          //email can't be blank
 	valid.MaxSize(userName, 15, "userName") //userName MaxSize is 15
 	valid.MinSize(userName, 3, "userName")  //userName MinSize is 3

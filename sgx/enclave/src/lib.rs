@@ -123,7 +123,7 @@ struct UserInfo {
 struct SessionKeyPackage {
     user: String,
     password: String,
-    key: [u8; 32],
+    key: String,
 }
 
 struct SessionKey {
@@ -920,10 +920,15 @@ pub extern "C" fn get_session_key(
             return sgx_status_t::SGX_ERROR_UNEXPECTED;
         }
     };
+    let data_str;
+    let db_pswd_str;
+    unsafe{
+        data_str = String::from_utf8_unchecked(sk_data.to_vec());
+        db_pswd_str = String::from_utf8_unchecked(db_pswd.to_vec());
+    };
 
-    let data_str = String::from_utf8(sk_data.to_vec()).unwrap();
-    let db_pswd_str = String::from_utf8(db_pswd.to_vec()).unwrap();
-
+    println!("data_str: {}", data_str);
+    println!("db_pswd_str: {}", db_pswd_str);
 
     let data_struct: SessionKeyPackage  = match serde_json::from_str(&data_str){
         Ok(r) => {
@@ -941,24 +946,40 @@ pub extern "C" fn get_session_key(
         return sgx_status_t::SGX_ERROR_UNEXPECTED;
     }
 
-    
-    // let enc_data = String::from_utf8(enc_vec.to_vec()).unwrap();  
-  
-    // let mut sk:[u8;32];
-    // match slice_to_array_32(data_struct.key){
-    //     Ok(r) => {
-    //         println!("[+] session key SUCCESS!");
-    //         sk = r.clone();
-    //         println!("sk: {:?}", sk);
-    //     }
-    //     _ =>{
-    //         println!("[-] session key ERROR!");
-    //         return sgx_status_t::SGX_ERROR_UNEXPECTED;
-    //     }
-    // }
+    let session_key = data_struct.key;
+    if session_key.len() != 32 {
+        println!("[-] session key length ERROR!");
+        return sgx_status_t::SGX_ERROR_UNEXPECTED;
+    }
 
-    (*keymap).lock().insert(data_struct.user, data_struct.key);
+    let sk_u8_vec: Vec<u8> = session_key.as_bytes().to_vec();
+
+    let mut sk:[u8;32];
+
+    println!("{:?}", sk_u8_vec);
+
+    match slice_to_array_32(sk_u8_vec){
+        Ok(r) => {
+            println!("[+] session key SUCCESS!");
+            sk = r.clone();
+            println!("sk: {:?}", sk);
+        }
+        _ =>{
+            println!("[-] session key ERROR!");
+            return sgx_status_t::SGX_ERROR_UNEXPECTED;
+        }
+    }
+
+    (*keymap).lock().insert(data_struct.user, sk);
     println!("map: {:?}", &*keymap);
+
+    // let key_u8: &[u8] = unsafe { std::slice::from_raw_parts(data_struct.key.as_ptr() as *const u8, data_struct.key.len()) };
+    // println!("key_u8: {:?}", key_u8);
+
+    // // let a:[u8; 32] = std::convert::TryFrom::try_from(key_u8);
+
+    // // (*keymap).lock().insert(data_struct.user, a);
+    // // println!("map: {:?}", &*keymap);
 
 
     return sgx_status_t::SGX_SUCCESS;

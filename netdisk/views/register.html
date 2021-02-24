@@ -59,9 +59,6 @@
         <p>
             Comfirm&nbsp;&nbsp;&nbsp; <input type="password" id="passWd_2" name="passWd_2">
         </p>
-        <!-- <p>
-            {{.message}}
-        </p> -->
         <p>
         <div class="btn-group btn-group-sm">
             <button type="button" onclick="Handle_Register()" class="btn btn-primary"
@@ -93,6 +90,16 @@
             }
             if (typeof email == "undefined" || email == null || email == "") {
                 alert("邮箱不能为空！");
+                window.location.href = '/register';
+                return;
+            }
+            if (typeof pwd == "undefined" || pwd == null || pwd == "") {
+                alert("密码不能为空！");
+                window.location.href = '/register';
+                return;
+            }
+            if (pwd.length < 8) {
+                alert("密码长度至少8位！");
                 window.location.href = '/register';
                 return;
             }
@@ -146,7 +153,7 @@
                             console.log(data.message);
                             if (data.res === "1") {
                                 alert("success");
-                                window.location.assign("introduction.html");
+                                window.location.assign("login.html");
                                 return;
                             } else {
                                 alert(data.message);

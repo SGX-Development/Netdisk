@@ -18,10 +18,12 @@ package main
 import "C"
 
 // import "log"
-import "encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 // import "unsafe"
-import "fmt"
 
 type RawInput struct {
 	Id   string `json:"id"`
@@ -197,6 +199,7 @@ func get_session_key(enc_pswd_from_db string, enc_data string) bool {
 		fmt.Println("session key process SUCCESS!")
 		return true
 	}
+	return false
 }
 
 // ============================================

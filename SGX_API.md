@@ -1,7 +1,7 @@
-interface of sgx in golang
+# interface of sgx in golang
 
 
-enclave大致步骤
+## enclave大致步骤
 1. server hello: send public key and certification
 2. register: get encrpyted package which contains user and password. and output user and encrpyted password.
 3. login: get encrypted package, which contains user, password and session key, from user. get corresponding encrypted password from database.

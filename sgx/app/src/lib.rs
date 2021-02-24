@@ -668,7 +668,6 @@ pub extern "C" fn rust_register(
             ));
         }
     };
-
     let mut user_vec: Vec<u8> = vec![0; string_limit];
     let mut enc_pswd_vec: Vec<u8> = vec![0; string_limit];
 
@@ -695,12 +694,13 @@ pub extern "C" fn rust_register(
             string_limit,
         )
     };
-
     match result {
         sgx_status_t::SGX_SUCCESS => {}
         _ => {
             eprintln!("[-] ECALL Enclave Failed {}!", result.as_str());
-            unsafe{ *success = 0; }
+            unsafe {
+                *success = 0;
+            }
             return Err(std::io::Error::new(
                 std::io::ErrorKind::Other,
                 "ecall failed",
@@ -711,13 +711,16 @@ pub extern "C" fn rust_register(
         sgx_status_t::SGX_SUCCESS => {}
         e => {
             eprintln!("[-] ECALL Enclave Failed {}!", retval.as_str());
-            unsafe{ *success = 0; }
+            unsafe {
+                *success = 0;
+            }
             return Err(std::io::Error::new(
                 std::io::ErrorKind::Other,
                 e.to_string(),
             ));
         }
     }
+
 
     unsafe {
         *user_len = tmp_user_len;
@@ -735,6 +738,9 @@ pub extern "C" fn rust_register(
         *success = 1;
     }
 
+    unsafe {
+        *success = 1;
+    }
     Ok(())
 
 }

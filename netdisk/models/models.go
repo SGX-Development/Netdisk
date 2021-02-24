@@ -8,7 +8,8 @@ import (
 type User struct {
 	Id int `json:"id"`
 	Name string `json:"name" gorm:"type:varchar(45) not null;unique"`
-	Passwd string `json:"password" gorm:"type:varchar(255)"`
+	Passwd string `json:"password" gorm:"type:varchar(2000)"`
+	Passwd_more string `json:"password" gorm:"type:varchar(2000)"`
 	Email string `json:"email" orm:"unique"`
 	Iconpath string  `json:"iconpath" gorm:"type:varchar(512);null"`
 	Isactive bool  `json:"isactive" gorm:"default:true"`

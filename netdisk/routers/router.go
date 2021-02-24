@@ -12,7 +12,7 @@ func init() {
 	beego.Router("/introduction", &controllers.IntroController{}, "get:ShowIntro") //INTRODUCTION界面
 
 	beego.Router("/login", &controllers.MainController{}, "get:Showlogin;post:Handlelogin")          //登录界面
-	beego.Router("/register", &controllers.MainController{}, "get:ShowRegister;post:HandleRegister") //注册界面
+	beego.Router("/register", &controllers.MainController{}, "get:ShowRegister") //注册界面
 	beego.Router("/logout", &controllers.MainController{}, "get:Logout")
 
 	beego.Router("/personalcenter", &controllers.PersonalCenterController{}, "get:Show") //PERSONAL CENTER界面
@@ -24,4 +24,6 @@ func init() {
 	beego.Router("/download", &controllers.MainController{}, "get:Download")
 
 	beego.Router("/session_key", &controllers.SessionKeyController{}, "get:SkGet;post:SkPost")
+
+	beego.Router("/reg", &controllers.RegController{}, "get:RegGet")
 }

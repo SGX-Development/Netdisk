@@ -1,14 +1,20 @@
 package controllers
 
 import (
-	"crypto/md5"
+	// "crypto/md5"
+	"encoding/base64"
 	"fmt"
 	"netdisk/models"
-	"os"
+	// "os"
 
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/validation"
+	beego "github.com/beego/beego/v2/server/web"
 )
+
+type RegController struct {
+	beego.Controller
+}
 
 // 处理登录
 func (c *MainController) Showlogin() {
@@ -20,7 +26,7 @@ func (c *MainController) Handlelogin() {
 	passWd := c.GetString("passWd")
 
 	var hashtable = make(map[string]string)
-	IsValid(userName, passWd, passWd, "1111@qq.com", hashtable)
+	IsValid(userName, passWd, "1111@qq.com", hashtable)
 	for key, value := range hashtable {
 		c.Data[key] = value
 	}
@@ -49,33 +55,54 @@ func (c *MainController) ShowRegister() {
 	c.TplName = "register.html"
 }
 
-func (c *MainController) HandleRegister() {
-	if c.Islogin() {
-		c.Data["message"] = "登录状态下不允许注册！"
-		c.TplName = "register.html"
-		return
-	}
+func (c *RegController) RegGet() {
+
+	ReturnData := make(map[string]interface{})
+
+	// if c.Islogin() {
+	// 	ReturnData["message"] = "登录状态下不允许注册！"
+	// 	ReturnData["res"] = "0"
+	// 	// c.Data["json"] = ReturnData
+	// 	// c.ServeJSON() //响应前端
+	// 	// c.StopRun()
+	// }
 
 	userName := c.GetString("userName")
-	passWd := c.GetString("passWd")
-	passWd_2 := c.GetString("passWd_2")
+	enc_uname_pwd_base64 := c.GetString("enc_uname_pwd")
 	email := c.GetString("email")
 
+	_, enc_pswd_str := register(enc_uname_pwd_base64)
+
+	// fmt.Println(user_str)
+	// fmt.Println(enc_pswd_str)
+
+	enc_pswd_base64 := base64.StdEncoding.EncodeToString([]byte(enc_pswd_str))
+
+	fmt.Println(enc_pswd_base64)
+
+	// enc_pswd_base64 = enc_pswd_base64[0:255]
+
 	var hashtable = make(map[string]string)
-	IsValid(userName, passWd, passWd_2, email, hashtable)
+	IsValid(userName, enc_pswd_base64, email, hashtable)
+
 	for key, value := range hashtable {
-		c.Data[key] = value
+		ReturnData[key] = value
 	}
 
-	errMsg, flag := CheckReg(userName, passWd, passWd_2, email)
+	errMsg, flag := CheckReg(userName, enc_pswd_base64, email)
 	if !flag {
-		c.Data["message"] = errMsg
-		c.TplName = "register.html"
-		return
+		ReturnData["message"] = errMsg
+		ReturnData["res"] = "0"
+		c.Data["json"] = ReturnData
+		c.ServeJSON() //响应前端
 	}
-	os.Mkdir("fileStorage/"+userName, 0777)
-	//successfully register
-	c.Ctx.Redirect(302, "/login")
+
+	ReturnData["res"] = "1"
+	ReturnData["message"] = "0"
+
+
+	c.Data["json"] = ReturnData
+	c.ServeJSON() //响应前端
 }
 
 func (c *MainController) DelAcc() {
@@ -90,33 +117,34 @@ func (c *MainController) DelAcc() {
 	return
 }
 
-func IsValid(userName string, passWd string, passWd2 string, email string, hashtable map[string]string) {
+func IsValid(userName string, passWd string, email string, hashtable map[string]string) {
 	valid := validation.Validation{}
 	valid.Required(userName, "userName") //userName can't be blank
 	valid.Required(passWd, "passWd")     //passWd can't be blank
-	valid.Required(passWd2, "passWd2")
+	// valid.Required(passWd2, "passWd2")
 	valid.Required(email, "email")          //email can't be blank
 	valid.MaxSize(userName, 15, "userName") //userName MaxSize is 15
 	valid.MinSize(userName, 3, "userName")  //userName MinSize is 3
-	valid.MaxSize(passWd, 15, "passWd")     //passWd Maxsize is 15
-	valid.MinSize(passWd, 6, "passWd")      //passWd Minsize is 6
+	// valid.MaxSize(passWd, 15, "passWd")     //passWd Maxsize is 15
+	// valid.MinSize(passWd, 6, "passWd")      //passWd Minsize is 6
 
 	//var hashtable = make(map[string]string)
 
 	if valid.HasErrors() {
+		fmt.Println("valid.HasErrors")
 		for _, err := range valid.Errors {
 			hashtable["Verify"+err.Key] = err.Message
 		}
 	}
 }
 
-func PassWord(passWd string) (pwmd5 string) {
-	var pwByte []byte = []byte(passWd)
-	pw := md5.New()
-	pw.Write(pwByte)
-	cipherStr := pw.Sum(nil)
-	return fmt.Sprintf("%x", cipherStr)
-}
+// func PassWord(passWd string) (pwmd5 string) {
+// 	var pwByte []byte = []byte(passWd)
+// 	pw := md5.New()
+// 	pw.Write(pwByte)
+// 	cipherStr := pw.Sum(nil)
+// 	return fmt.Sprintf("%x", cipherStr)
+// }
 
 func CheckAct(userName string, passWd string) (errMsg string, flag bool, id int) {
 	errMsg = ""
@@ -132,23 +160,24 @@ func CheckAct(userName string, passWd string) (errMsg string, flag bool, id int)
 	} else if user.Isdelete {
 		flag = false
 		errMsg = "用户不存在！"
-	} else if user.Passwd != PassWord(passWd) {
+	} else if user.Passwd != passWd {
 		flag = false
 		errMsg = "用户名或密码错误！"
 	} else {
 		id = user.Id
 	}
+
 	return errMsg, flag, id
 }
 
-func CheckReg(userName string, passWd string, passWd_2 string, email string) (errMsg string, flag bool) {
+func CheckReg(userName string, passWd string, email string) (errMsg string, flag bool) {
 	errMsg = ""
 	flag = true
-	if passWd != passWd_2 {
-		errMsg = "两次输入的密码不一致"
-		flag = false
-		return errMsg, flag
-	}
+	// if passWd != passWd_2 {
+	// 	errMsg = "两次输入的密码不一致"
+	// 	flag = false
+	// 	return errMsg, flag
+	// }
 	o := orm.NewOrm()
 	user := models.User{}
 	user.Name = userName
@@ -158,10 +187,14 @@ func CheckReg(userName string, passWd string, passWd_2 string, email string) (er
 		flag = false
 	} else {
 		user.Email = email
-		user.Passwd = PassWord(passWd)
+		user.Passwd = passWd[0:255]
+		user.Passwd_more = passWd[255:]
+		// fmt.Println(user.Passwd)
+		// fmt.Println(user.Passwd_more)
 		user.Isactive = true
 		user.Isdelete = false
 		_, err = o.Insert(&user)
+		fmt.Println(err)
 		if err != nil {
 			errMsg = "Error!"
 			flag = false

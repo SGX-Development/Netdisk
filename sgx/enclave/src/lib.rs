@@ -824,11 +824,12 @@ pub extern "C" fn user_register(
     let enc_vec: &[u8] = unsafe { std::slice::from_raw_parts(enc_user_pswd, enc_user_pswd_len) };
     // let enc_data = String::from_utf8(enc_vec.to_vec()).unwrap();  
 
+    let w: &[u8] = &base64::decode(enc_vec).unwrap();
     // let enc_vec = [138, 57, 30, 230, 34, 195, 199, 159, 215, 38, 5, 169, 181, 106, 21, 203, 41, 14, 54, 76, 80, 38, 151, 11, 101, 68, 254, 221, 172, 165, 133, 231, 29, 49, 246, 73, 31, 51, 180, 221, 130, 96, 184, 40, 45, 136, 252, 246, 54, 108, 100, 248, 14, 18, 5, 158, 106, 113, 201, 26, 191, 224, 98, 159, 200, 94, 38, 176, 238, 129, 168, 211, 42, 235, 118, 119, 169, 79, 10, 51, 245, 199, 212, 190, 216, 39, 39, 206, 14, 66, 72, 171, 64, 157, 231, 84, 111, 246, 164, 0, 211, 139, 150, 204, 77, 55, 207, 186, 203, 81, 28, 6, 209, 106, 213, 196, 166, 160, 250, 88, 85, 167, 116, 113, 35, 186, 84, 170, 237, 91, 51, 199, 20, 62, 242, 176, 151, 54, 218, 79, 69, 70, 157, 83, 28, 72, 37, 155, 98, 62, 165, 106, 185, 0, 203, 245, 190, 130, 124, 207, 143, 134, 192, 8, 121, 61, 85, 71, 73, 174, 252, 219, 223, 61, 59, 188, 254, 239, 210, 57, 221, 174, 25, 247, 136, 152, 112, 118, 196, 236, 157, 219, 70, 234, 126, 168, 81, 185, 188, 63, 117, 2, 124, 36, 91, 74, 130, 217, 203, 102, 216, 167, 189, 39, 129, 150, 101, 44, 214, 138, 135, 100, 119, 140, 222, 152, 218, 226, 54, 27, 35, 161, 47, 98, 26, 28, 64, 102, 236, 245, 176, 7, 94, 185, 57, 37, 0, 255, 197, 226, 190, 227, 168, 184, 180, 200];
 
     let padding = PaddingScheme::new_pkcs1v15_encrypt();
     // let user_data_vec= (*private_key).decrypt(padding, enc_vec).expect("failed to decrypt");
-    let user_data_vec= match (*private_key).decrypt(padding, enc_vec) {
+    let user_data_vec= match (*private_key).decrypt(padding, w) {
         Ok(r) => {
             println!("[+] session key decrypt SUCCESS!");
             r
@@ -839,7 +840,7 @@ pub extern "C" fn user_register(
         }
     };
 
-    let user_data_string = String::from_utf8(user_data_vec.to_vec()).unwrap();  
+    let user_data_string = String::from_utf8(user_data_vec.to_vec()).unwrap();
 
 
     let user_data: UserInfo = serde_json::from_str(&user_data_string).unwrap();

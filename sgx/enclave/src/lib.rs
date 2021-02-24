@@ -123,7 +123,11 @@ struct UserInfo {
 struct SessionKeyPackage {
     user: String,
     password: String,
+<<<<<<< HEAD
     key: String,
+=======
+    key: String, //string should match[u8; 32],
+>>>>>>> faa36de33d59324f847bb72fc290909fcbae2c93
 }
 
 struct SessionKey {
@@ -951,7 +955,7 @@ pub extern "C" fn get_session_key(
         println!("[-] session key length ERROR!");
         return sgx_status_t::SGX_ERROR_UNEXPECTED;
     }
-
+    
     let sk_u8_vec: Vec<u8> = session_key.as_bytes().to_vec();
 
     let mut sk:[u8;32];

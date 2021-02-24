@@ -954,21 +954,29 @@ pub extern "C" fn get_session_key(
 
     let sk_u8_vec: Vec<u8> = session_key.as_bytes().to_vec();
 
-    let mut sk:[u8;32];
+    // let mut sk:[u8;32];
 
-    println!("{:?}", &sk_u8_vec);
+    println!("sk1 {:?}", &sk_u8_vec);
 
-    match slice_to_array_32(sk_u8_vec){
-        Ok(r) => {
-            println!("[+] session key SUCCESS!");
-            sk = r.clone();
-            println!("sk: {:?}", sk);
-        }
-        _ =>{
-            println!("[-] session key ERROR!");
-            return sgx_status_t::SGX_ERROR_UNEXPECTED;
-        }
-    }
+    let sk_ptr = sk_u8_vec.as_ptr() as *const [u8;32];
+    let sk = unsafe {&*sk_ptr};
+    let sk:[u8;32] = sk.clone();
+
+    // match slice_to_array_32(sk_u8_vec){
+    //     Ok(r) => {
+    //         println!("[+] session key SUCCESS!");
+    //         sk = r.clone();
+    //         println!("sk: {:?}", sk);
+    //     }
+    //     _ =>{
+    //         println!("[-] session key ERROR!");
+    //         return sgx_status_t::SGX_ERROR_UNEXPECTED;
+    //     }
+    // }
+    
+    println!("[+] session key SUCCESS!");
+    println!("sk2 {:?}", &sk);
+    
 
     (*keymap).lock().insert(data_struct.user, sk);
     println!("map: {:?}", &*keymap);
@@ -1020,25 +1028,47 @@ pub extern "C" fn enclave_test() -> sgx_status_t {
 
     // println!("user enc: {:?}", &enc_data);
 
-    let enc_data = [138, 57, 30, 230, 34, 195, 199, 159, 215, 38, 5, 169, 181, 106, 21, 203, 41, 14, 54, 76, 80, 38, 151, 11, 101, 68, 254, 221, 172, 165, 133, 231, 29, 49, 246, 73, 31, 51, 180, 221, 130, 96, 184, 40, 45, 136, 252, 246, 54, 108, 100, 248, 14, 18, 5, 158, 106, 113, 201, 26, 191, 224, 98, 159, 200, 94, 38, 176, 238, 129, 168, 211, 42, 235, 118, 119, 169, 79, 10, 51, 245, 199, 212, 190, 216, 39, 39, 206, 14, 66, 72, 171, 64, 157, 231, 84, 111, 246, 164, 0, 211, 139, 150, 204, 77, 55, 207, 186, 203, 81, 28, 6, 209, 106, 213, 196, 166, 160, 250, 88, 85, 167, 116, 113, 35, 186, 84, 170, 237, 91, 51, 199, 20, 62, 242, 176, 151, 54, 218, 79, 69, 70, 157, 83, 28, 72, 37, 155, 98, 62, 165, 106, 185, 0, 203, 245, 190, 130, 124, 207, 143, 134, 192, 8, 121, 61, 85, 71, 73, 174, 252, 219, 223, 61, 59, 188, 254, 239, 210, 57, 221, 174, 25, 247, 136, 152, 112, 118, 196, 236, 157, 219, 70, 234, 126, 168, 81, 185, 188, 63, 117, 2, 124, 36, 91, 74, 130, 217, 203, 102, 216, 167, 189, 39, 129, 150, 101, 44, 214, 138, 135, 100, 119, 140, 222, 152, 218, 226, 54, 27, 35, 161, 47, 98, 26, 28, 64, 102, 236, 245, 176, 7, 94, 185, 57, 37, 0, 255, 197, 226, 190, 227, 168, 184, 180, 200];
+    // let enc_data = [138, 57, 30, 230, 34, 195, 199, 159, 215, 38, 5, 169, 181, 106, 21, 203, 41, 14, 54, 76, 80, 38, 151, 11, 101, 68, 254, 221, 172, 165, 133, 231, 29, 49, 246, 73, 31, 51, 180, 221, 130, 96, 184, 40, 45, 136, 252, 246, 54, 108, 100, 248, 14, 18, 5, 158, 106, 113, 201, 26, 191, 224, 98, 159, 200, 94, 38, 176, 238, 129, 168, 211, 42, 235, 118, 119, 169, 79, 10, 51, 245, 199, 212, 190, 216, 39, 39, 206, 14, 66, 72, 171, 64, 157, 231, 84, 111, 246, 164, 0, 211, 139, 150, 204, 77, 55, 207, 186, 203, 81, 28, 6, 209, 106, 213, 196, 166, 160, 250, 88, 85, 167, 116, 113, 35, 186, 84, 170, 237, 91, 51, 199, 20, 62, 242, 176, 151, 54, 218, 79, 69, 70, 157, 83, 28, 72, 37, 155, 98, 62, 165, 106, 185, 0, 203, 245, 190, 130, 124, 207, 143, 134, 192, 8, 121, 61, 85, 71, 73, 174, 252, 219, 223, 61, 59, 188, 254, 239, 210, 57, 221, 174, 25, 247, 136, 152, 112, 118, 196, 236, 157, 219, 70, 234, 126, 168, 81, 185, 188, 63, 117, 2, 124, 36, 91, 74, 130, 217, 203, 102, 216, 167, 189, 39, 129, 150, 101, 44, 214, 138, 135, 100, 119, 140, 222, 152, 218, 226, 54, 27, 35, 161, 47, 98, 26, 28, 64, 102, 236, 245, 176, 7, 94, 185, 57, 37, 0, 255, 197, 226, 190, 227, 168, 184, 180, 200];
     // let enc_data =  String::from_utf8(enc_vec).unwrap();
 
     // decryption
-    let padding = PaddingScheme::new_pkcs1v15_encrypt();
-    let raw_data = match (*private_key).decrypt(padding, &enc_data){
+    // let padding = PaddingScheme::new_pkcs1v15_encrypt();
+    // let raw_data = match (*private_key).decrypt(padding, &enc_data){
+    //     Ok(r) => {
+    //         println!("[+] session key decrypt SUCCESS!");
+    //         r
+    //     }
+    //     _ => {
+    //         println!("[-] session key decrypt ERROR!");
+    //         return sgx_status_t::SGX_ERROR_UNEXPECTED;
+    //     }
+    // };
+
+    // let raw_string =  String::from_utf8(raw_data.to_vec()).unwrap();
+
+    // println!("user enc: {}", raw_string);
+
+    let session_key = String::from("abcdefghijklmnopqrstuvwxyzABCDEF");
+
+    let sk_u8_vec: Vec<u8> = session_key.as_bytes().to_vec();
+
+    let mut sk:[u8;32];
+
+    println!("{:?}", &sk_u8_vec);
+
+    sk = match slice_to_array_32(sk_u8_vec){
         Ok(r) => {
-            println!("[+] session key decrypt SUCCESS!");
-            r
+            println!("[+] session key SUCCESS!");
+            println!("sk: {:?}", r.clone());
+            *r
         }
-        _ => {
-            println!("[-] session key decrypt ERROR!");
+        _ =>{
+            println!("[-] session key ERROR!");
             return sgx_status_t::SGX_ERROR_UNEXPECTED;
         }
     };
+    println!("sk: {:?}", sk.clone());
 
-    let raw_string =  String::from_utf8(raw_data.to_vec()).unwrap();
-
-    println!("user enc: {}", raw_string);
 
 
     return sgx_status_t::SGX_SUCCESS;

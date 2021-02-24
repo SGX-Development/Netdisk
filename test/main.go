@@ -125,6 +125,7 @@ func main() {
 	// user, enc_pswd := user_register(astring)
 	// fmt.Println(user)
 	// fmt.Println(enc_pswd)
+	C.rust_test()
 
 }
 

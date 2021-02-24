@@ -59,9 +59,12 @@ from "sgx_tprotected_fs.edl" import *;
             size_t enc_pswd_len, 
             size_t result_max_len
         );                             
-        public sgx_status_t get_session_key([in, size=user_len] const uint8_t* user, size_t user_len, 
-                                        [in, size=enc_sessionkey_len] const uint8_t* enc_sessionkey, 
-                                        size_t enc_sessionkey_len );    
+        public sgx_status_t get_session_key(
+            [in, size=enc_pswd_from_db_len] const uint8_t* enc_pswd_from_db, 
+            size_t enc_pswd_from_db_len, 
+            [in, size=enc_data_len] const uint8_t* enc_data, 
+            size_t enc_data_len 
+        );    
         public sgx_status_t enclave_test();
 
                             

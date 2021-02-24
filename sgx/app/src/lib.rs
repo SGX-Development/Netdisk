@@ -96,10 +96,10 @@ extern "C" {
     fn get_session_key(
         eid: sgx_enclave_id_t,
         retval: *mut sgx_status_t,
-        user: *const u8,
-        user_len: usize,
-        enc_sessionkey: *const u8,
-        enc_sessionkey_len: usize,
+        enc_pswd_from_db: *const u8,
+        enc_pswd_from_db_len: usize,
+        enc_data: *const u8,
+        enc_data_len: usize,
     ) -> sgx_status_t;
 
     fn enclave_test(
@@ -743,10 +743,11 @@ pub extern "C" fn rust_register(
 
 #[no_mangle]
 pub extern "C" fn rust_get_session_key(
-    user: *const u8,
-    user_len: usize,
-    enc_sessionkey: *const u8,
-    enc_sessionkey_len: usize,
+    enc_pswd_from_db: *const u8,
+    enc_pswd_from_db_len: usize,
+    enc_data: *const u8,
+    enc_data_len: usize,
+    success: *mut usize,
 ) -> Result<(), std::io::Error> {
 
     let enclave = match &*SGX_ENCLAVE {
@@ -756,6 +757,7 @@ pub extern "C" fn rust_get_session_key(
         }
         Err(x) => {
             eprintln!("[-] Init Enclave Failed {}!", x.as_str());
+            unsafe{ *success = 0; }
             return Err(std::io::Error::new(
                 std::io::ErrorKind::Other,
                 "init enclave failed",
@@ -770,10 +772,10 @@ pub extern "C" fn rust_get_session_key(
         get_session_key(
             enclave_id,
             &mut retval,
-            user,
-            user_len,
-            enc_sessionkey,
-            enc_sessionkey_len,
+            enc_pswd_from_db,
+            enc_pswd_from_db_len,
+            enc_data,
+            enc_data_len,
         )
     };
 
@@ -781,7 +783,7 @@ pub extern "C" fn rust_get_session_key(
         sgx_status_t::SGX_SUCCESS => {}
         _ => {
             eprintln!("[-] ECALL Enclave Failed {}!", result.as_str());
-            // unsafe{ *success = 0; }
+            unsafe{ *success = 0; }
             return Err(std::io::Error::new(
                 std::io::ErrorKind::Other,
                 "ecall failed",
@@ -792,13 +794,14 @@ pub extern "C" fn rust_get_session_key(
         sgx_status_t::SGX_SUCCESS => {}
         e => {
             eprintln!("[-] ECALL Enclave Failed {}!", retval.as_str());
-            // unsafe{ *success = 0; }
+            unsafe{ *success = 0; }
             return Err(std::io::Error::new(
                 std::io::ErrorKind::Other,
                 e.to_string(),
             ));
         }
     }
+    unsafe{ *success = 1; }
 
     Ok(())
 }
@@ -851,7 +854,7 @@ pub extern "C" fn rust_test() -> Result<(), std::io::Error>{
             ));
         }
     }
-    println!("sucess!");
+    println!("success!");
     Ok(())
 }
 

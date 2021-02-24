@@ -1,10 +1,10 @@
 package controllers
 
 import (
-	// "crypto/md5"
 	"encoding/base64"
 	"fmt"
 	"netdisk/models"
+	// "errors"
 	// "os"
 
 	"github.com/beego/beego/v2/client/orm"
@@ -62,9 +62,8 @@ func (c *RegController) RegGet() {
 	// if c.Islogin() {
 	// 	ReturnData["message"] = "登录状态下不允许注册！"
 	// 	ReturnData["res"] = "0"
-	// 	// c.Data["json"] = ReturnData
-	// 	// c.ServeJSON() //响应前端
-	// 	// c.StopRun()
+	// 	c.Data["json"] = ReturnData
+	// 	c.ServeJSON()
 	// }
 
 	userName := c.GetString("userName")
@@ -72,37 +71,31 @@ func (c *RegController) RegGet() {
 	email := c.GetString("email")
 
 	_, enc_pswd_str := register(enc_uname_pwd_base64)
-
-	// fmt.Println(user_str)
-	// fmt.Println(enc_pswd_str)
+	fmt.Println("enc_pswd_str: ", enc_pswd_str)
 
 	enc_pswd_base64 := base64.StdEncoding.EncodeToString([]byte(enc_pswd_str))
+	fmt.Println("enc_pswd_base64: ", enc_pswd_base64)
 
-	fmt.Println(enc_pswd_base64)
+	// var hashtable = make(map[string]string)
+	// IsValid(userName, enc_pswd_base64, email, hashtable)
 
-	// enc_pswd_base64 = enc_pswd_base64[0:255]
-
-	var hashtable = make(map[string]string)
-	IsValid(userName, enc_pswd_base64, email, hashtable)
-
-	for key, value := range hashtable {
-		ReturnData[key] = value
-	}
+	// for key, value := range hashtable {
+	// 	ReturnData[key] = value
+	// }
 
 	errMsg, flag := CheckReg(userName, enc_pswd_base64, email)
 	if !flag {
 		ReturnData["message"] = errMsg
 		ReturnData["res"] = "0"
 		c.Data["json"] = ReturnData
-		c.ServeJSON() //响应前端
+		c.ServeJSON()
 	}
 
 	ReturnData["res"] = "1"
 	ReturnData["message"] = "0"
 
-
 	c.Data["json"] = ReturnData
-	c.ServeJSON() //响应前端
+	c.ServeJSON()
 }
 
 func (c *MainController) DelAcc() {
@@ -121,7 +114,6 @@ func IsValid(userName string, passWd string, email string, hashtable map[string]
 	valid := validation.Validation{}
 	valid.Required(userName, "userName") //userName can't be blank
 	valid.Required(passWd, "passWd")     //passWd can't be blank
-	// valid.Required(passWd2, "passWd2")
 	valid.Required(email, "email")          //email can't be blank
 	valid.MaxSize(userName, 15, "userName") //userName MaxSize is 15
 	valid.MinSize(userName, 3, "userName")  //userName MinSize is 3
@@ -173,11 +165,7 @@ func CheckAct(userName string, passWd string) (errMsg string, flag bool, id int)
 func CheckReg(userName string, passWd string, email string) (errMsg string, flag bool) {
 	errMsg = ""
 	flag = true
-	// if passWd != passWd_2 {
-	// 	errMsg = "两次输入的密码不一致"
-	// 	flag = false
-	// 	return errMsg, flag
-	// }
+
 	o := orm.NewOrm()
 	user := models.User{}
 	user.Name = userName
@@ -196,7 +184,7 @@ func CheckReg(userName string, passWd string, email string) (errMsg string, flag
 		_, err = o.Insert(&user)
 		fmt.Println(err)
 		if err != nil {
-			errMsg = "Error!"
+			errMsg = fmt.Sprint(err)
 			flag = false
 		}
 	}

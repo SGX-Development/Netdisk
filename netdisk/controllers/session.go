@@ -22,3 +22,11 @@ func (c *MainController) UserName() string {
 	}
 	return status.(UserStatus).userName
 }
+
+func (c *RegController) Islogin() bool {
+	status := c.GetSession("status")
+	if status == nil {
+		c.Redirect("/login", 302)
+	}
+	return !(status == nil || (status != nil && !status.(UserStatus).islogin))
+}

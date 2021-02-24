@@ -47,7 +47,6 @@
             <strong><a href="/login">Login</a></strong>.-
         </p>
         <br>
-        <!-- <form class="form-horizontal" action="register.html" method="post"> -->
         <p>
             Username <input type="test" id="userName" name="userName">
         </p>
@@ -65,25 +64,14 @@
         </p> -->
         <p>
         <div class="btn-group btn-group-sm">
-            <!-- <a href=""> -->
-                <button type="button" onclick="Handle_Register()" class="btn btn-primary"
-                    style="background-color: #203643;border-color: #cccccc">
-                    Register </button>
-            <!-- </a> -->
+            <button type="button" onclick="Handle_Register()" class="btn btn-primary"
+                style="background-color: #203643;border-color: #cccccc">
+                Register </button>
         </div>
         </p>
-        <!-- </form> -->
         <br>
         <br>
-        <!-- <button type="button" onclick="aaa()">click</button> -->
     </div>
-    
-    <!-- <script>
-        function aaa(){
-            window.location.href = '/personalcenter';
-        }
-    </script> -->
-
 
     <script src="/static/js/jquery.js"></script>
     <script src="/static/js/bootstrap.js"></script>
@@ -92,9 +80,27 @@
     <script>
         function Handle_Register() {
             'use strict';
-            // window.location.href = '/personalcenter';
-            // document.location.href = '/personalcenter',true;
-            // window.location.replace("/personalcenter");
+
+            var uname = document.getElementById('userName').value;
+            var email = document.getElementById('email').value;
+            var pwd = document.getElementById('passWd').value;
+            var pwd_2 = document.getElementById('passWd_2').value;
+
+            if (typeof uname == "undefined" || uname == null || uname == "") {
+                alert("用户名不能为空！");
+                window.location.href = '/register';
+                return;
+            }
+            if (typeof email == "undefined" || email == null || email == "") {
+                alert("邮箱不能为空！");
+                window.location.href = '/register';
+                return;
+            }
+            if (pwd !== pwd_2) {
+                alert("两次密码输入不一致！");
+                window.location.href = '/register';
+                return;
+            }
 
             $.ajax({
                 url: "/session_key",
@@ -119,54 +125,38 @@
                     if (result === false) {
                         alert("证书验证失败!")
                         window.location.href = '/register';
+                        return;
                     }
-                    var uname = document.getElementById('userName').value;
-                    var email = document.getElementById('email').value;
-                    var pwd = document.getElementById('passWd').value;
-                    var pwd_2 = document.getElementById('passWd_2').value;
 
                     var user_pswd = {
                         user: uname,
                         password: pwd
                     }
                     var user_pswd_json = JSON.stringify(user_pswd);
-                    console.log(user_pswd_json);
-                    console.log(typeof user_pswd_json);
 
                     var enc_uname_pwd = rsaPublicKey.encrypt(user_pswd_json, 'RSAES-PKCS1-V1_5');
-                    console.log(enc_uname_pwd);
-                    // var enc_uname_pwd_2 = rsaPublicKey.encrypt(uname_pwd_2, 'RSAES-PKCS1-V1_5');
-                    // console.log(enc_uname_pwd_2);
-                    console.log(string2Bin(enc_uname_pwd));
 
                     $.ajax({
                         url: "/reg",
                         async: false,
                         data: { "userName": uname, "enc_uname_pwd": btoa(enc_uname_pwd), "email": email },
                         success: function (data) {
-
-                            // data = JSON.parse(data)
-
                             console.log(data);
                             console.log(data.res);
                             console.log(data.message);
                             if (data.res === "1") {
-                                // window.location.href = '/login';
-                                // alert("success");
-                                // window.location.href = '/personalcenter.html';
-                                // $(location).attr('href', 'http://58.196.135.54:10004/introduction');
-                                // window.location.replace("http://58.196.135.54:10004/introduction");
+                                alert("success");
                                 window.location.assign("introduction.html");
+                                return;
                             } else {
-                                alert("注册信息有误，请重新注册");
+                                alert(data.message);
                                 window.location.href = '/register';
+                                return;
                             }
                         }
-
                     });
                 }
             })
-            // return false;
         }
 
         function bin2String(array) {

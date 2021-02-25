@@ -66,7 +66,7 @@ func get_session_key(enc_pswd_from_db string, enc_data string) bool
 struct SessionKeyPackage {
     user: String,
     password: String,
-    key: [u8; 32],
+    key: String, //should match form [u8; 32],
 }
 ```
 
@@ -76,7 +76,7 @@ struct SessionKeyPackage {
 
 bool类型，true为登陆成功，false为登陆失败
 
-## 5 article
+## 5 article operation
 
 ### 5.1 build_index_and_commit
 
@@ -119,7 +119,13 @@ func build_index_and_commit(user_name string, enc string) bool
 #### 5.2.1 input
 
 * user_name：用户名(非user_id)，明文
-* enc：用session key加密的文章标题，E~p~("Poetry")
+* enc：用session key加密的搜索pattern
+
+```go
+// Example
+// user_id = 1, 删除标题 = "hello"
+// 搜索pattern = "1 hello"
+```
 
 #### 5.2.2 output
 
@@ -162,11 +168,17 @@ func search_title(user_name string, enc string) string
 #### 5.4.1 input
 
 * user_name：用户名(非user_id)，明文
-* enc：用session key加密的文章Title
+* enc：用session key加密的搜索pattern
+
+```go
+// Example
+// user_id = 1, 标题 = "hello"
+// 搜索pattern = "1 hello"
+```
 
 #### 5.4.2 output
 
-* 用session key加密的结果，返回的是文章的具体内容
+* 用session key加密的结果，返回的是文章的具体内容，若无对应文章则返回字符串none。
 
 ## 6 others
 

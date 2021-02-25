@@ -88,7 +88,7 @@ func build_index_and_commit(user_name string, enc string) bool
 
 * user_name：用户名(非user_id)，明文
 
-* Enc：用session key加密的，json格式
+* enc：用session key加密的，json格式
 
   ```go
   type RawInput struct {
@@ -123,7 +123,7 @@ func build_index_and_commit(user_name string, enc string) bool
 
 #### 5.2.2 output
 
-* bool类型，上传是否成功
+* bool类型，删除是否成功
 
 ### 5.3 do_query
 
@@ -168,11 +168,11 @@ func search_title(user_name string, enc string) string
 
 * 用session key加密的结果，返回的是文章的具体内容
 
-## others
+## 6 others
 
 * 注意user_name与user_id的不同
 
-* 在SGX中的AES加密有格式转换
+* 在SGX中现有的AES加密有格式转换
 
   ```rust
   // Example
@@ -180,4 +180,14 @@ func search_title(user_name string, enc string) string
   // 对于"{"A": "hello"}"，解密得到的结果是"hello"
   ```
 
-  
+* SGX对传入数据的AES解密，使用原始解密
+
+  ```go
+  // 前端加密"hello"，SGX解密得到"hello"
+  ```
+
+* SGX对传出数据的AES加密，使用现有加密
+
+  ```go
+  // SGX加密"hello"，实际为对于"{"A": "hello"}"的加密，即为现有的加密形式
+  ```

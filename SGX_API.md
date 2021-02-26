@@ -180,7 +180,17 @@ func search_title(user_name string, enc string) string
 
 * 用session key加密的结果，返回的是文章的具体内容，若无对应文章则返回字符串none。
 
-## 6 others
+## 6 logout
+```go
+func user_logout(input string) bool
+```
+### 6.1 input
+input：user name + 'space' + 用session key加密的user name
+
+### 6.2 output
+bool 成功返回true，否则为false。
+
+## 7 others
 
 * 注意user_name与user_id的不同
 

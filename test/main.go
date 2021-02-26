@@ -12,6 +12,7 @@ package main
 //extern void rust_server_hello( char* pk_n, size_t* pk_n_len, char* pk_e, size_t* pk_e_len, char* certificate, size_t* certificate_len, size_t string_limit);
 //extern void rust_get_session_key(char* enc_pswd_from_db, size_t enc_pswd_from_db_len, char* enc_data, size_t enc_data_len, size_t* result_string_size);
 //extern void rust_register(char* enc_user_pswd, size_t enc_user_pswd_len, char* user, size_t* user_len, char* enc_pswd, size_t* enc_pswd_len, size_t* result_string_size, size_t string_limit);
+//extern void rust_user_logout( char* some_string, size_t some_len,size_t* result_string_size);
 //extern void go_encrypt(size_t limit_length, char* plaintext, size_t plainlength, char* ciphertext, size_t* cipherlength);
 //extern void go_decrypt(size_t limit_length, char* ciphertext, size_t cipherlength, char* plaintext, size_t* plainlength);
 //extern void rust_test();
@@ -201,6 +202,20 @@ func get_session_key(enc_pswd_from_db string, enc_data string) bool {
 		return true
 	}
 	return false
+}
+
+func user_logout(input string) bool {
+
+	success := (C.ulong)(0)
+	C.rust_delete_index(C.CString(input), C.ulong(len(input)), &success)
+
+	// fmt.Printf("logout return %d\n", success)
+	if success == 1 {
+		return true
+	} else {
+		return false
+	}
+
 }
 
 // ============================================

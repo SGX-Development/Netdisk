@@ -109,7 +109,7 @@ struct DBInput {
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Package {
-    user: i32,
+    user: String,
     data: String,
 }
 
@@ -240,7 +240,7 @@ pub extern "C" fn build_index(some_string: *const u8, some_len: usize) -> sgx_st
     let raw_input: RawInput = serde_json::from_str(&line).unwrap();
 
     // find if user == request user in package
-    let op_user = raw_input.user.clone().parse::<i32>().unwrap();
+    let op_user = raw_input.user.clone();
     if op_user != requester {
         eprintln!("package error");
         return sgx_status_t::SGX_ERROR_UNEXPECTED;
@@ -366,7 +366,7 @@ pub extern "C" fn do_query(
     let pattern = String::from_utf8(pattern.to_vec()).unwrap();
     // println!("{}", user);
     // println!("{}", pattern);
-    let uid =user_id.clone().parse::<i32>().unwrap();
+    let uid =user_id.clone();
 
     if uid != requester {
         let error_msg = String::from("request package error");
@@ -602,7 +602,7 @@ fn decrypt(
     Ok(final_result)
 }
 
-extern "C" fn sgx_decrypt(ciphertext: *const u8, ciphertext_len: usize, requester: &i32) -> Result<String, String> {
+extern "C" fn sgx_decrypt(ciphertext: *const u8, ciphertext_len: usize, requester: &String) -> Result<String, String> {
     let ciphertext_slice = unsafe { slice::from_raw_parts(ciphertext, ciphertext_len) };
     // println!("{:?}", ciphertext_slice);
     let key: [u8; 32] = [0; 32];
@@ -696,7 +696,7 @@ fn encrypt(
     Ok(final_result)
 }
 
-pub fn str2aes2base64(message: &str, requester: &i32) -> String {
+pub fn str2aes2base64(message: &str, requester: &String) -> String {
     let g: G = G {
         A: message.to_string(),
     };
@@ -711,7 +711,7 @@ pub fn str2aes2base64(message: &str, requester: &i32) -> String {
 }
 
 
-fn get_id_from_data(data: String) -> i32 {
+fn get_id_from_data(data: String) -> String {
     let string_slice: &[u8] = unsafe { slice::from_raw_parts(data.as_ptr() as *const u8, data.len()) };
     let mut i = 0;
     for s in string_slice {
@@ -719,8 +719,7 @@ fn get_id_from_data(data: String) -> i32 {
         i += 1;
     }
     let user_id = &string_slice[0..i];
-    let user_id = String::from_utf8(user_id.to_vec()).unwrap();
-    let uid =user_id.parse::<i32>().unwrap();
+    let uid = String::from_utf8(user_id.to_vec()).unwrap();
     uid
 }
 
@@ -1001,6 +1000,36 @@ fn slice_to_array_32<T>(slice: Vec<T>) -> Result<&'static [T; 32], TryFromSliceE
     } else {
         Err(TryFromSliceError(()))
     }
+}
+
+
+
+//----------logout
+#[no_mangle]
+pub extern "C" fn user_logout(some_string: *const u8, some_len: usize) -> sgx_status_t {
+
+    let v: &[u8] = unsafe { std::slice::from_raw_parts(some_string, some_len) };
+    let vraw = String::from_utf8(v.to_vec()).unwrap();  
+    let package_input: Package = serde_json::from_str(&vraw).unwrap();
+    let requester = package_input.user;
+    let enc_data = package_input.data;
+
+    let x = sgx_decrypt(enc_data.as_ptr() as *const u8, enc_data.len(), &requester);
+
+    if let Err(y) = x {
+        eprintln!("sgx_decrypt failed: {:?}", y);
+        return sgx_status_t::SGX_ERROR_UNEXPECTED;
+    }
+    let user_name: String = x.unwrap();
+    if !(*keymap).lock().contains_key(&user_name) {
+        eprintln!("user '{}' does not login", &user_name);
+        return sgx_status_t::SGX_ERROR_UNEXPECTED;
+    }
+ 
+    (*keymap).lock().remove(&user_name);
+    println!("[+] {} logout SUCCESS!", user_name);
+    
+    sgx_status_t::SGX_SUCCESS
 }
 
 

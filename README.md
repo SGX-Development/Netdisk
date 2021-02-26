@@ -263,6 +263,8 @@ output: None
 
 * [x] search title 在搜无符合条件下有bug（未处理sgx返回值）
 
+* [ ] SGX中keymap读取session_key未进行错误处理
+
 
 
 ## 7 其它

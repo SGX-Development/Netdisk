@@ -218,13 +218,35 @@ func CheckReg(userName string, passWd string, email string) (errMsg string, flag
 
 // 处理退出
 func (c *MainController) Logout() {
+	ReturnData := make(map[string]interface{})
+
+	package_str := c.GetString("package_str")
+	fmt.Println(package_str)
+
+	// fmt.Println(user_logout(package_str))
+
 	if c.Islogin() {
 		status := c.GetSession("status").(UserStatus)
 		status.islogin = false
 		c.SetSession("status", status)
+		if user_logout(package_str) {
+			ReturnData["res"] = "1"
+			ReturnData["message"] = "logout success"
+		} else {
+			ReturnData["res"] = "0"
+			ReturnData["message"] = "logout faliure"
+		}
 	} else {
-		c.Data["message"] = "未登录！"
+		ReturnData["res"] = "0"
+		ReturnData["message"] = "未登录！"
 	}
 
-	c.Redirect("/login", 302)
+	// if user_logout(package_str) {
+	// 	ReturnData["res"] = "1"
+	// } else {
+	// 	ReturnData["res"] = "0"
+	// }
+
+	c.Data["json"] = ReturnData
+	c.ServeJSON()
 }

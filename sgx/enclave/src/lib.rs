@@ -605,7 +605,10 @@ fn decrypt(
 extern "C" fn sgx_decrypt(ciphertext: *const u8, ciphertext_len: usize, requester: &String) -> Result<String, String> {
     let ciphertext_slice = unsafe { slice::from_raw_parts(ciphertext, ciphertext_len) };
     // println!("{:?}", ciphertext_slice);
-    let key: [u8; 32] = [0; 32];
+    let key: [u8; 32] = (*keymap).lock().get(requester).unwrap().clone();
+
+    println!("key: {:?}", &key);
+
     let iv: [u8; 16] = [0; 16];
     let w = base64::decode(ciphertext_slice);
     match w {
@@ -702,7 +705,8 @@ pub fn str2aes2base64(message: &str, requester: &String) -> String {
     };
     let y = serde_json::to_string(&g).unwrap();
 
-    let mut key: [u8; 32] = [0; 32];
+    // let mut key: [u8; 32] = [0; 32];
+    let mut key: [u8; 32] = (*keymap).lock().get(requester).unwrap().clone();
     let mut iv: [u8; 16] = [0; 16];
 
     let x: Vec<u8> = encrypt(y.as_bytes(), &key, &iv).ok().unwrap();
@@ -1008,11 +1012,16 @@ fn slice_to_array_32<T>(slice: Vec<T>) -> Result<&'static [T; 32], TryFromSliceE
 #[no_mangle]
 pub extern "C" fn user_logout(some_string: *const u8, some_len: usize) -> sgx_status_t {
 
+    // println!("map: {:?}", &*keymap);
+
     let v: &[u8] = unsafe { std::slice::from_raw_parts(some_string, some_len) };
     let vraw = String::from_utf8(v.to_vec()).unwrap();  
     let package_input: Package = serde_json::from_str(&vraw).unwrap();
     let requester = package_input.user;
     let enc_data = package_input.data;
+
+    // println!("{:?}", &requester);
+    // println!("{:?}", &enc_data);
 
     let x = sgx_decrypt(enc_data.as_ptr() as *const u8, enc_data.len(), &requester);
 
@@ -1021,6 +1030,9 @@ pub extern "C" fn user_logout(some_string: *const u8, some_len: usize) -> sgx_st
         return sgx_status_t::SGX_ERROR_UNEXPECTED;
     }
     let user_name: String = x.unwrap();
+
+    println!("{:?}", user_name);
+
     if !(*keymap).lock().contains_key(&user_name) {
         eprintln!("user '{}' does not login", &user_name);
         return sgx_status_t::SGX_ERROR_UNEXPECTED;
@@ -1028,6 +1040,8 @@ pub extern "C" fn user_logout(some_string: *const u8, some_len: usize) -> sgx_st
  
     (*keymap).lock().remove(&user_name);
     println!("[+] {} logout SUCCESS!", user_name);
+
+    println!("map: {:?}", &*keymap);
     
     sgx_status_t::SGX_SUCCESS
 }

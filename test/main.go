@@ -207,7 +207,7 @@ func get_session_key(enc_pswd_from_db string, enc_data string) bool {
 func user_logout(input string) bool {
 
 	success := (C.ulong)(0)
-	C.rust_delete_index(C.CString(input), C.ulong(len(input)), &success)
+	C.rust_user_logout(C.CString(input), C.ulong(len(input)), &success)
 
 	// fmt.Printf("logout return %d\n", success)
 	if success == 1 {

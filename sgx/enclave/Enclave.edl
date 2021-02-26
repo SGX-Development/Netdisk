@@ -39,6 +39,7 @@ from "sgx_tprotected_fs.edl" import *;
 
         public sgx_status_t build_index([in, size=len] const uint8_t* some_string, size_t len);
         public sgx_status_t delete_index([in, size=len] const uint8_t* some_string, size_t len);
+        public sgx_status_t user_logout([in, size=len] const uint8_t* some_string, size_t len);
         public sgx_status_t commit();
         public sgx_status_t do_query([in, size=len] const uint8_t* some_string, size_t len, 
                                         [out, size=result_max_len]uint8_t * encrypted_result_string, 

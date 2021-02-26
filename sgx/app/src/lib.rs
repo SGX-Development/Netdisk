@@ -845,7 +845,7 @@ pub extern "C" fn rust_user_logout(
     let mut retval = sgx_status_t::SGX_SUCCESS;
 
     let result = unsafe {
-        delete_index(
+        user_logout(
             enclave_id,
             &mut retval,
             line.as_ptr() as *const u8,

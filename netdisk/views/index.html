@@ -45,11 +45,11 @@
                 <div class="col-xs-7 col-md-6"></div>
                 <div class="col-xs-5 col-md-6 text-right">
                     <span class="signin" data-toggle="modal" data-target="#myModal"><span class="hidden-xs"><a
-                                href="/login">Login</a></span><i class="fa fa-sign-in visible-xs-block"
+                               id="userName"></a></span><i class="fa fa-sign-in visible-xs-block"
                             aria-hidden="true"></i> </span>
-                    <span class="signin" data-toggle="modal" data-target="#myModal"><span class="hidden-xs"><a
-                                href="/register">Register</a></span><i class="fa fa-user-plus visible-xs-block"
-                            aria-hidden="true"></i></span>
+
+
+
                     <span class="signin" data-toggle="modal" data-target="#myModal"><span class="hidden-xs"><a
                                 href="/logout">Logout</a></span><i class="fa fa-user-plus visible-xs-block"
                             aria-hidden="true"></i></span>
@@ -107,6 +107,7 @@
     <script src="https://cdn.jsdelivr.net/npm/node-forge@0.7.0/dist/forge.min.js"></script>
 
     <script type="text/javascript">
+        document.getElementById("userName").innerHTML = window.sessionStorage.getItem("userName")
         function uploadFile() {
             var files = document.getElementById("file").files;
             var file = files[0];

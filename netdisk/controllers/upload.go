@@ -29,13 +29,14 @@ func (c *MainController) Upload() {
 	package_str := c.GetString("package_str")
 	filename := c.GetString("title")
 	username := c.GetString("username")
+	date := c.GetString("date")
 	fmt.Println(package_str)
 	fmt.Println(filename)
 	fmt.Println(username)
 
 	if CheckFile(filename, c.UserName()) {
 		if build_index_and_commit(package_str) {
-			if InsertFile(filename, username) {
+			if InsertFile(filename, username, date) {
 				ReturnData["res"] = "1"
 				ReturnData["message"] = "0"
 			} else {
@@ -67,11 +68,12 @@ func CheckFile(filename string, userName string) bool {
 	return err == nil && num == 0
 }
 
-func InsertFile(filename string, userName string) bool {
+func InsertFile(filename string, userName string, date string) bool {
 	o := orm.NewOrm()
 	file := models.File{}
 	file.FileName = filename
 	file.UserName = userName
+	file.Date = date
 	_, err := o.Insert(&file)
 
 	return err == nil

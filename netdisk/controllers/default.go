@@ -2,6 +2,8 @@ package controllers
 
 import (
 	// "log"
+	"fmt"
+	"netdisk/models"
 
 	"github.com/beego/beego/v2/client/orm"
 	beego "github.com/beego/beego/v2/server/web"
@@ -21,7 +23,20 @@ func (c *MainController) ShowIndex() {
 		c.Redirect("/login", 302)
 	}
 
-	c.Data["filename"], c.Data["message"] = Query(c.UserName())
+	var map1 = make(map[string]string)
+
+	o := orm.NewOrm()
+	var files []models.File
+	o.QueryTable("file").Filter("UserName", c.UserName()).All(&files, "date", "filename")
+	// o.QueryTable("file").Filter("UserName", "Emison").All(&files, "date", "filename")
+
+	for _, file := range files {
+		fmt.Println(file.FileName)
+		fmt.Println(file.Date)
+		map1[file.FileName] = file.Date
+	}
+	fmt.Println(map1)
+	c.Data["data"] = map1
 
 	c.TplName = "index.html"
 }

@@ -646,6 +646,7 @@ extern "C" fn sgx_decrypt(ciphertext: *const u8, ciphertext_len: usize, requeste
     let mut x = decrypt(&z[..], &key, &iv).unwrap();
     for i in 0..(x.len()) {
         if x[i] < 32 {
+            println!("======={:?}", x[i]);
             x[i] = 32;
         }
     }

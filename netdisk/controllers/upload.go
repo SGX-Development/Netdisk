@@ -33,17 +33,22 @@ func (c *MainController) Upload() {
 	fmt.Println(filename)
 	fmt.Println(username)
 
-	if build_index_and_commit(filename){
-		if CheckFile(filename, c.UserName()) {
-			ReturnData["res"] = "1"
-			ReturnData["message"] = "0"
+	if CheckFile(filename, c.UserName()) {
+		if build_index_and_commit(package_str) {
+			if InsertFile(filename, username) {
+				ReturnData["res"] = "1"
+				ReturnData["message"] = "0"
+			} else {
+				ReturnData["res"] = "0"
+				ReturnData["message"] = "文件上传失败"
+			}
 		} else {
 			ReturnData["res"] = "0"
-			ReturnData["message"] = "文件已存在, 请删除后重试"
+			ReturnData["message"] = "文件上传失败"
 		}
 	} else {
 		ReturnData["res"] = "0"
-		ReturnData["message"] = "文件上传失败"
+		ReturnData["message"] = "文件已存在, 请删除后重试"
 	}
 
 	c.Data["json"] = ReturnData

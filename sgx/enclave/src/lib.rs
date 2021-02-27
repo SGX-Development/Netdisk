@@ -229,6 +229,9 @@ pub extern "C" fn build_index(some_string: *const u8, some_len: usize) -> sgx_st
     let requester = package_input.user;
     let enc_data = package_input.data;
 
+    println!("{:?}", &requester);
+    println!("{:?}", &enc_data);
+
     let x = sgx_decrypt(enc_data.as_ptr() as *const u8, enc_data.len(), &requester);
 
     if let Err(y) = x {
@@ -236,8 +239,21 @@ pub extern "C" fn build_index(some_string: *const u8, some_len: usize) -> sgx_st
         return sgx_status_t::SGX_ERROR_UNEXPECTED;
     }
 
-    let line: String = x.unwrap();
+    let line1: String = x.unwrap();
+
+    // let line1 = line.clone();
+    let v: &[u8] = unsafe { std::slice::from_raw_parts(line1.as_ptr() as *const u8, line1.len()) };
+    let mut v_vec = v.to_vec();
+    for i in &mut v_vec {
+        if *i < 32{
+            *i = 32;
+        }
+    }
+
+    let line = String::from_utf8(v_vec).unwrap();
+
     let raw_input: RawInput = serde_json::from_str(&line).unwrap();
+    println!("{:?}", &raw_input);
 
     // find if user == request user in package
     let op_user = raw_input.user.clone();
@@ -627,11 +643,17 @@ extern "C" fn sgx_decrypt(ciphertext: *const u8, ciphertext_len: usize, requeste
         Ok(_) => {}
     }
     let z = w.unwrap();
-    let x = decrypt(&z[..], &key, &iv).unwrap();
+    let mut x = decrypt(&z[..], &key, &iv).unwrap();
+    for i in 0..(x.len()) {
+        if x[i] < 32 {
+            x[i] = 32;
+        }
+    }
     let y: &str = std::str::from_utf8(&x).unwrap();
     let g: G = serde_json::from_str(&y).unwrap();
     Ok(g.A)
 }
+
 
 // Encrypt a buffer with the given key and iv using
 // AES-256/CBC/Pkcs encryption.

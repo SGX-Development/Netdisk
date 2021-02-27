@@ -198,7 +198,7 @@ func search_title(title string) {
 }
 
 //实际上就是上传一条数据
-func build_index_and_commit(input string) {
+func build_index_and_commit(input string) bool {
 
 	success := (C.ulong)(0)
 
@@ -206,13 +206,19 @@ func build_index_and_commit(input string) {
 
 	fmt.Printf("build_index return %d\n", success)
 
-	// if success == 0 {
-	// 	return
-	// }
+	if success == 0 {
+		return false
+	}
 
 	C.rust_commit(&success)
 
 	fmt.Printf("commit return %d\n", success)
+
+	if success == 1 {
+		return true
+	} else {
+		return false
+	}
 }
 
 //--------------------------------------------------

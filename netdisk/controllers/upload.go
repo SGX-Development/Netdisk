@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"fmt"
-	"log"
-	"strings"
+	// "log"
+	// "strings"
 
 	// "bufio"
 	// "io"
@@ -24,72 +24,30 @@ func (c *MainController) ShowUpload() {
 	c.TplName = "index.html"
 }
 func (c *MainController) Upload() {
-	file, head, err := c.GetFile("file")
-	if err != nil {
-		c.Ctx.WriteString("获取文件失败")
-		fmt.Println("获取文件失败")
-		return
-	}
-	defer file.Close()
+	ReturnData := make(map[string]interface{})
 
-	filename := head.Filename
+	package_str := c.GetString("package_str")
+	filename := c.GetString("title")
+	username := c.GetString("username")
+	fmt.Println(package_str)
+	fmt.Println(filename)
+	fmt.Println(username)
 
-	length := strings.Count(filename, "")
-
-	if !CheckType(filename[length-5 : length-1]) {
-		c.Ctx.WriteString("上传失败, 仅支持上传txt类型的文件")
-		return
-	} else if !CheckFile(filename, c.UserName()) {
-		c.Ctx.WriteString("文件已存在, 请删除后重试")
-		return
-	}
-	// ========================将文件内容存储至SGX中======================
-
-	// // 读取文件内容
-    // reader := bufio.NewReader(file)
-	// Text := ""
-    // for {
-    //     str, err := reader.ReadString('\n') //读到一个换行就结束
-	// 	Text = Text + str
-    //     if err == io.EOF {                  //io.EOF 表示文件的末尾
-    //         break
-    //     }
-    // }
-	// fmt.Println(Text)
-
-	// // 读取当前用户ID
-	// o := orm.NewOrm()
-	// user := models.User{Name: c.UserName()}
-	// err = o.Read(&user, "Name")
-	// if err != nil {
-	// 	c.Redirect("/login", 302)
-	// 	return
-	// }
-	// userId := strconv.Itoa(user.Id)
-	// fmt.Println(userId)
-
-	// // 获取文章标题，并转换成userId + ' ' + Title的形式
-	// filenameId := filename[0 : length-5]
-	// filenameId = userId + " " + filenameId
-	// fmt.Println(filenameId)
-
-	// // 组织RawInput
-	// file_update := RawInput{
-	// 	Id: filenameId,
-	// 	User: userId,
-	// 	Text: Text,
-	// }
-
-	// build_index_and_commit(aes_encrypt(json_to_string(file_update)))
-	// ========================end of 将文件内容存储至SGX中======================
-
-	err = c.SaveToFile("file", "fileStorage/"+c.UserName()+"/"+filename)
-	log.Println(err)
-	if err != nil || !InsertFile(filename, c.UserName()) {
-		c.Ctx.WriteString("上传失败")
+	if build_index_and_commit(filename){
+		if CheckFile(filename, c.UserName()) {
+			ReturnData["res"] = "1"
+			ReturnData["message"] = "0"
+		} else {
+			ReturnData["res"] = "0"
+			ReturnData["message"] = "文件已存在, 请删除后重试"
+		}
 	} else {
-		c.Ctx.Redirect(302, "/")
+		ReturnData["res"] = "0"
+		ReturnData["message"] = "文件上传失败"
 	}
+
+	c.Data["json"] = ReturnData
+	c.ServeJSON()
 }
 
 func CheckType(filename string) bool {

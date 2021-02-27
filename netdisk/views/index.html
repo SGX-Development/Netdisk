@@ -89,7 +89,8 @@
     </header>
 
     <!--------------Body Section Start------------->
-    <input type='file' id='file' accept='text/plain' onchange='uploadFile()'>
+    <input type='file' id='file' accept='text/plain'>
+    <input type="submit" value="上传" onclick="uploadFile()">
     <div align='center' id='article'>
         {{range $a, $b := .data}}
         <a href="">{{$a}}</a>

@@ -168,7 +168,7 @@
                                 article_list[i].Id + '</a>\n' + '<a href="" name=' +
                                 article_list[i].Id + ' onclick="delete_data(this);return false;">删除</a>\n' +
                                 '</a>\n' + '<a href="" name=' +
-                                article_list[i].Id + ' onclick="download(this);return false;">下载</a>\n' +
+                                article_list[i].Id + ' onclick="download_article(this);return false;">下载</a>\n' +
                                 '<p>time</p>\n'
                         }
                         html_str = html_str + '</div>'
@@ -192,7 +192,7 @@
             {{range $a, $b := .data}}
             <a href="" name={{$a}} onclick="showArticle(this);return false;">{{$a}}</a>
             <a href="" name={{$a}} onclick="delete_data(this);return false;">删除</a>
-            <a href="" name={{$a}} onclick="download(this);return false;">下载</a>
+            <a href="" name={{$a}} onclick="download_article(this);return false;">下载</a>
             <p>{{$b}}</p>
             {{end}}
         </div>
@@ -277,6 +277,97 @@
                     }
                 }
             });
+        }
+    </script>
+
+    <script>
+        function download_article(a) {
+            'use strict';
+            var title = a.name;
+            console.log(title);
+
+            var username = window.sessionStorage.getItem("userName");
+            var key = window.sessionStorage.getItem("session_key");
+            console.log(key);
+
+            var key_str_arr = key.split(",");
+
+            var key_arr = [];
+            for (let i = 0; i < 32; i++) {
+                key_arr.push(parseInt(key_str_arr[i]))
+            }
+            console.log(key_arr);
+
+            var key_str = bin2String(key_arr);
+            console.log(key_str);
+            var iv = Uint8Array.from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+            console.log(iv);
+            var iv_str = bin2String(iv);
+            console.log(iv_str);
+
+            var title_struct = {
+                A: username + ' ' + title
+            }
+            var title_str = JSON.stringify(title_struct);
+            console.log(title_str);
+
+            var cipher = forge.cipher.createCipher('AES-CBC', key_str);
+            cipher.start({ iv: iv_str });
+            cipher.update(forge.util.createBuffer(title_str));
+            cipher.finish();
+            var encrypted = cipher.output;
+            console.log(encrypted.data);
+
+            var package_struct = {
+                user: username,
+                data: btoa(encrypted.data)
+            }
+
+            var package_str = JSON.stringify(package_struct);
+            console.log(package_str);
+
+            $.ajax({
+                url: "/show",
+                async: false,
+                data: { "package_str": package_str, "title": title, "username": username },
+                success: function (data) {
+                    console.log(data);
+                    console.log(data.res);
+                    console.log(data.message);
+                    if (data.res === "1") {
+                        alert("show success");
+
+                        var decipher = forge.cipher.createDecipher('AES-CBC', key_str);
+                        decipher.start({ iv: iv_str });
+                        decipher.update(forge.util.createBuffer(atob(data.message)));
+                        var result = decipher.finish();
+                        console.log(decipher.output.data);
+                        var article_show = JSON.parse(decipher.output.data);
+                        console.log(article_show);
+
+                        download_txt(title + '.txt', article_show.A);
+
+                        return;
+                    } else {
+                        alert(data.message);
+                        window.location.href = '/';
+                        return;
+                    }
+                }
+            });
+        }
+
+        function download_txt(filename, text) {
+            var pom = document.createElement('a');
+            pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+            pom.setAttribute('download', filename);
+            if (document.createEvent) {
+                var event = document.createEvent('MouseEvents');
+                event.initEvent('click', true, true);
+                pom.dispatchEvent(event);
+            } else {
+                pom.click();
+            }
         }
     </script>
 

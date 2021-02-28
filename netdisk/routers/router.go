@@ -26,4 +26,6 @@ func init() {
 	beego.Router("/session_key", &controllers.SessionKeyController{}, "get:SkGet;post:SkPost")
 
 	beego.Router("/reg", &controllers.RegController{}, "get:RegGet")
+
+	beego.Router("/delete", &controllers.DeleteController{}, "get:DeleteGet")
 }

@@ -2,7 +2,7 @@ package controllers
 
 import (
 	// "log"
-	"fmt"
+	// "fmt"
 	"netdisk/models"
 
 	"github.com/beego/beego/v2/client/orm"
@@ -31,11 +31,11 @@ func (c *MainController) ShowIndex() {
 	// o.QueryTable("file").Filter("UserName", "Emison").All(&files, "date", "filename")
 
 	for _, file := range files {
-		fmt.Println(file.FileName)
-		fmt.Println(file.Date)
+		// fmt.Println(file.FileName)
+		// fmt.Println(file.Date)
 		map1[file.FileName] = file.Date
 	}
-	fmt.Println(map1)
+	// fmt.Println(map1)
 	c.Data["data"] = map1
 
 	c.TplName = "index.html"

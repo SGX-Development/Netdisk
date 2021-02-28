@@ -90,13 +90,83 @@
 
     <!--------------Body Section Start------------->
     <input type='file' id='file' accept='text/plain' onchange='uploadFile()'>
-    <div align='center' id='article'>
-        {{range $a, $b := .data}}
-        <a href="">{{$a}}</a>
-        <a href="">删除</a>
-        <p>{{$b}}</p>
-        {{end}}
+    <div id='top'>
+        <div align='center' id='article'>
+            {{range $a, $b := .data}}
+            <a href="">{{$a}}</a>
+            <a href="" name={{$a}} onclick="delete_data(this);return false;">删除</a>
+            <p>{{$b}}</p>
+            {{end}}
+        </div>
     </div>
+
+    <script>
+        function delete_data(a) {
+            'use strict';
+            var title = a.name;
+            console.log(title);
+
+            var username = window.sessionStorage.getItem("userName");
+            var key = window.sessionStorage.getItem("session_key");
+            console.log(key);
+
+            var key_str_arr = key.split(",");
+
+            var key_arr = [];
+            for (let i = 0; i < 32; i++) {
+                key_arr.push(parseInt(key_str_arr[i]))
+            }
+            console.log(key_arr);
+
+            var key_str = bin2String(key_arr);
+            console.log(key_str);
+            var iv = Uint8Array.from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+            console.log(iv);
+            var iv_str = bin2String(iv);
+            console.log(iv_str);
+
+            var title_struct = {
+                A: username + ' ' + title
+            }
+            var title_str = JSON.stringify(title_struct);
+            console.log(title_str);
+
+            var cipher = forge.cipher.createCipher('AES-CBC', key_str);
+            cipher.start({ iv: iv_str });
+            cipher.update(forge.util.createBuffer(title_str));
+            cipher.finish();
+            var encrypted = cipher.output;
+            console.log(encrypted.data);
+
+            var package_struct = {
+                user: username,
+                data: btoa(encrypted.data)
+            }
+
+            var package_str = JSON.stringify(package_struct);
+            console.log(package_str);
+
+            $.ajax({
+                url: "/delete",
+                async: false,
+                data: { "package_str": package_str, "title": title, "username": username },
+                success: function (data) {
+                    console.log(data);
+                    console.log(data.res);
+                    console.log(data.message);
+                    if (data.res === "1") {
+                        alert("delete success");
+                        window.location.href = '/';
+                    } else {
+                        alert(data.message);
+                        window.location.href = '/';
+                    }
+                }
+            });
+
+
+        }
+    </script>
 
     <form action="/download" enctype="multipart/form-data" method="get">
         <button>下载</button>
@@ -107,6 +177,8 @@
 
     <script type="text/javascript">
         function uploadFile() {
+            'use strict';
+
             var files = document.getElementById("file").files;
             var file = files[0];
             var title = file.name;

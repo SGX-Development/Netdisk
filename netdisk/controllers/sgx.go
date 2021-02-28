@@ -142,7 +142,7 @@ func user_logout(input string) bool {
 
 // ============================================
 
-func delete_index_and_commit(input string) {
+func delete_index_and_commit(input string) bool{
 
 	success := (C.ulong)(0)
 	fmt.Println("delete_index")
@@ -150,9 +150,19 @@ func delete_index_and_commit(input string) {
 
 	fmt.Printf("delete_index return %d\n", success)
 
+	if success == 0 {
+		return false
+	}
+
 	C.rust_commit(&success)
 
 	fmt.Printf("commit return %d\n", success)
+
+	if success == 1 {
+		return true
+	} else {
+		return false
+	}
 }
 
 // func query_all(input string) {

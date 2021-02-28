@@ -28,4 +28,6 @@ func init() {
 	beego.Router("/reg", &controllers.RegController{}, "get:RegGet")
 
 	beego.Router("/delete", &controllers.DeleteController{}, "get:DeleteGet")
+
+	beego.Router("/show", &controllers.ShowController{}, "get:ShowGet")
 }

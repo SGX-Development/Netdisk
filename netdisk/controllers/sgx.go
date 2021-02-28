@@ -192,7 +192,7 @@ func do_query(input string) {
 
 }
 
-func search_title(title string) {
+func search_title(title string) string{
 
 	const result_string_limit = 4096
 	a := C.CString(title)
@@ -203,7 +203,8 @@ func search_title(title string) {
 	C.rust_search_title(a, C.ulong(len(title)), result_string_limit, c_encrypted, &d_encrypted)
 
 	str_encrypted := C.GoStringN(c_encrypted, (C.int)(d_encrypted))
-	fmt.Println(aes_decrypt(str_encrypted))
+	
+	return str_encrypted
 
 }
 

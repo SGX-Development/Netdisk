@@ -89,13 +89,110 @@
     </header>
 
     <!--------------Body Section Start------------->
+    <input type="text" id="pattern" name="pattern">
+    <button type="button" onclick="query()">查询</button>
+
+    <script>
+        function query() {
+            'use strict';
+            var pattern = document.getElementById("pattern").value;
+            console.log(pattern);
+
+            var username = window.sessionStorage.getItem("userName");
+            var key = window.sessionStorage.getItem("session_key");
+            console.log(key);
+
+            var key_str_arr = key.split(",");
+
+            var key_arr = [];
+            for (let i = 0; i < 32; i++) {
+                key_arr.push(parseInt(key_str_arr[i]))
+            }
+            console.log(key_arr);
+
+            var key_str = bin2String(key_arr);
+            console.log(key_str);
+            var iv = Uint8Array.from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+            console.log(iv);
+            var iv_str = bin2String(iv);
+            console.log(iv_str);
+
+            var pattern_struct = {
+                A: username + ' ' + pattern
+            }
+            var pattern_str = JSON.stringify(pattern_struct);
+            console.log(pattern_str);
+
+            var cipher = forge.cipher.createCipher('AES-CBC', key_str);
+            cipher.start({ iv: iv_str });
+            cipher.update(forge.util.createBuffer(pattern_str));
+            cipher.finish();
+            var encrypted = cipher.output;
+            console.log(encrypted.data);
+
+            var package_struct = {
+                user: username,
+                data: btoa(encrypted.data)
+            }
+
+            var package_str = JSON.stringify(package_struct);
+            console.log(package_str);
+
+            $.ajax({
+                url: "/query",
+                async: false,
+                data: { "package_str": package_str },
+                success: function (data) {
+                    console.log(data);
+                    console.log(data.res);
+                    console.log(data.message);
+                    if (data.res === "1") {
+                        alert("query success");
+
+                        var decipher = forge.cipher.createDecipher('AES-CBC', key_str);
+                        decipher.start({ iv: iv_str });
+                        decipher.update(forge.util.createBuffer(atob(data.message)));
+                        var result = decipher.finish();
+                        console.log(decipher.output.data);
+
+                        var article_list_str = JSON.parse(decipher.output.data).A;
+                        var article_list = JSON.parse(article_list_str).A;
+                        console.log(article_list);
+
+                        $('.article').remove();
+
+                        var html_str = "<div align='center' class='.article'>";
+                        for (let i = 0; i < article_list.length; i++) {
+                            html_str = html_str + '<a href="" name=' +
+                                article_list[i].Id + ' onclick="showArticle(this);return false;">' +
+                                article_list[i].Id + '</a>\n' + '<a href="" name=' +
+                                article_list[i].Id + ' onclick="delete_data(this);return false;">删除</a>\n' +
+                                '</a>\n' + '<a href="" name=' +
+                                article_list[i].Id + ' onclick="download(this);return false;">下载</a>\n' +
+                                '<p>time</p>\n'
+                        }
+                        html_str = html_str + '</div>'
+                        var s = document.getElementById('top');
+                        s.innerHTML = html_str;
+                        return;
+                    } else {
+                        alert(data.message);
+                        window.location.href = '/';
+                        return;
+                    }
+                }
+            });
+        }
+    </script>
+
 
     <input type='file' id='file' accept='text/plain' onchange='uploadFile()'>
     <div id='top'>
-        <div align='center' id='article'>
+        <div align='center' class='article'>
             {{range $a, $b := .data}}
             <a href="" name={{$a}} onclick="showArticle(this);return false;">{{$a}}</a>
             <a href="" name={{$a}} onclick="delete_data(this);return false;">删除</a>
+            <a href="" name={{$a}} onclick="download(this);return false;">下载</a>
             <p>{{$b}}</p>
             {{end}}
         </div>
@@ -163,13 +260,15 @@
                         decipher.update(forge.util.createBuffer(atob(data.message)));
                         var result = decipher.finish();
                         console.log(decipher.output.data);
+                        var article_show = JSON.parse(decipher.output.data);
+                        console.log(article_show);
 
-                        $('article').remove();
+                        $('.article').remove();
 
                         var s = document.getElementById('top');
 
-                        s.innerHTML = '<p align="center">' + decipher.output.data.slice(6,-2) + '</p>'
-                        
+                        s.innerHTML = '<p align="center">' + article_show.A + '</p>'
+
                         return;
                     } else {
                         alert(data.message);

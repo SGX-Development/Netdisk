@@ -30,4 +30,6 @@ func init() {
 	beego.Router("/delete", &controllers.DeleteController{}, "get:DeleteGet")
 
 	beego.Router("/show", &controllers.ShowController{}, "get:ShowGet")
+
+	beego.Router("/query", &controllers.QueryController{}, "get:QueryGet")
 }

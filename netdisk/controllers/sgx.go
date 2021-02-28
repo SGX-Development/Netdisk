@@ -176,7 +176,7 @@ func delete_index_and_commit(input string) bool{
 // 	fmt.Println(aes_decrypt(encrypted_data))
 // }
 
-func do_query(input string) {
+func do_query(input string) string {
 
 	const result_string_limit = 4096
 	a := C.CString(input)
@@ -187,8 +187,8 @@ func do_query(input string) {
 	C.rust_do_query(a, C.ulong(len(input)), result_string_limit, c_encrypted, &d_encrypted)
 
 	str_encrypted := C.GoStringN(c_encrypted, (C.int)(d_encrypted))
-	fmt.Println(aes_decrypt(str_encrypted))
-	fmt.Println("query done!")
+
+	return str_encrypted
 
 }
 

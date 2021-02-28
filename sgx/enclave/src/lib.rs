@@ -262,6 +262,8 @@ pub extern "C" fn build_index(some_string: *const u8, some_len: usize) -> sgx_st
         return sgx_status_t::SGX_ERROR_UNEXPECTED;
     }
 
+    reader.reload().unwrap();
+
     let userid = schema.get_field("user_id").unwrap();
     let input_userid = format!("{} {}", &raw_input.user.clone(), &raw_input.id.clone());
     let userid_field = Term::from_field_text(userid, &input_userid);
@@ -509,6 +511,8 @@ pub extern "C" fn get_origin_by_id(
 
     let user_id = schema.get_field("user_id").unwrap();
     let text = schema.get_field("text").unwrap();
+
+    reader.reload().unwrap();
 
     let frankenstein_isbn = Term::from_field_text(user_id, &line);
     let frankenstein_doc_misspelled = extract_doc_given_id(&reader, &frankenstein_isbn)

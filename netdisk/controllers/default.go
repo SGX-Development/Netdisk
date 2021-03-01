@@ -35,10 +35,11 @@ func (c *MainController) ShowIndex() {
 		// fmt.Println(file.Date)
 		map1[file.FileName] = file.Date
 	}
+	c.Data["userName"] = c.UserName()
 	// fmt.Println(map1)
 	c.Data["data"] = map1
 
-	c.TplName = "index.html"
+	c.TplName = "main.html"
 }
 
 func Query(UserName string) (string, string) {

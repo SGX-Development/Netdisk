@@ -21,7 +21,7 @@ func (c *MainController) ShowUpload() {
 		c.Redirect("/login", 302)
 		return
 	}
-	c.TplName = "index.html"
+	c.TplName = "main.html"
 }
 func (c *MainController) Upload() {
 	ReturnData := make(map[string]interface{})

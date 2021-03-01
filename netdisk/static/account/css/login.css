@@ -35,7 +35,8 @@ h5
     font:italic bold 12px/30px Georgia,serif;
 }
 body {
-    background-image: url("/static/image/tempbackground.jpg");
+    /* background-image: url("/static/image/tempbackground.jpg"); */
+    background-color: rgb(221, 221, 221);
     background-position: center center;
     background-repeat: repeat-y;
     background-attachment: fixed;

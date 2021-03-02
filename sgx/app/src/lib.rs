@@ -151,6 +151,28 @@ pub extern "C" fn init_enclave() -> SgxResult<SgxEnclave> {
 }
 
 #[no_mangle]
+pub extern "C" fn rust_init_enclave(
+    success: *mut usize,
+) -> Result<(), std::io::Error> {
+
+    match &*SGX_ENCLAVE {
+        Ok(r) => {
+        }
+        Err(x) => {
+            unsafe{ *success = 0; }
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                "init enclave failed",
+            ));
+        }
+    };
+
+    unsafe{ *success = 1; }
+
+    Ok(())
+}
+
+#[no_mangle]
 pub extern "C" fn rust_do_query(
     some_string: *const u8,
     some_len: usize,

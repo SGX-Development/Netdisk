@@ -16,6 +16,7 @@ package main
 //extern void go_encrypt(size_t limit_length, char* plaintext, size_t plainlength, char* ciphertext, size_t* cipherlength);
 //extern void go_decrypt(size_t limit_length, char* ciphertext, size_t cipherlength, char* plaintext, size_t* plainlength);
 //extern void rust_test();
+//extern void rust_init_enclave(size_t* result);
 import "C"
 
 // import "log"
@@ -126,11 +127,21 @@ func main() {
 	// user, enc_pswd := user_register(astring)
 	// fmt.Println(user)
 	// fmt.Println(enc_pswd)
-	C.rust_test()
+	enclave_init()
 
 }
 
 //======================================================
+
+func enclave_init() bool {
+	success := (C.ulong)(0)
+	C.rust_init_enclave(&success)
+	if success == 0 {
+		return false
+	} else {
+		return true
+	}
+}
 
 func server_hello() (string, string) {
 	pk_e := (*C.char)(C.malloc(STRING_LIMIT))

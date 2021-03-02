@@ -601,7 +601,7 @@ fn decrypt(
 
     let mut final_result = Vec::<u8>::new();
     let mut read_buffer = buffer::RefReadBuffer::new(encrypted_data);
-    let mut buffer = [0; 4096];
+    let mut buffer = [0; 8192];
     let mut write_buffer = buffer::RefWriteBuffer::new(&mut buffer);
 
     loop {
@@ -679,7 +679,7 @@ fn encrypt(
     // read from or written to them.
     let mut final_result = Vec::<u8>::new();
     let mut read_buffer = buffer::RefReadBuffer::new(data);
-    let mut buffer = [0; 4096];
+    let mut buffer = [0; 8192];
     let mut write_buffer = buffer::RefWriteBuffer::new(&mut buffer);
 
     // Each encryption operation will "make progress". "Making progress"

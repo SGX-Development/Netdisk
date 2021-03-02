@@ -13,9 +13,6 @@ package controllers
 //extern void rust_get_session_key(char* enc_pswd_from_db, size_t enc_pswd_from_db_len, char* enc_data, size_t enc_data_len, size_t* result_string_size);
 //extern void rust_register(char* enc_user_pswd, size_t enc_user_pswd_len, char* user, size_t* user_len, char* enc_pswd, size_t* enc_pswd_len, size_t* result_string_size, size_t string_limit);
 //extern void rust_user_logout( char* some_string, size_t some_len,size_t* result_string_size);
-//extern void go_encrypt(size_t limit_length, char* plaintext, size_t plainlength, char* ciphertext, size_t* cipherlength);
-//extern void go_decrypt(size_t limit_length, char* ciphertext, size_t cipherlength, char* plaintext, size_t* plainlength);
-//extern void rust_test();
 import "C"
 
 // import "log"
@@ -23,8 +20,6 @@ import (
 	"encoding/json"
 	"fmt"
 )
-
-// import "unsafe"
 
 type RawInput struct {
 	Id   string `json:"id"`
@@ -51,7 +46,7 @@ type string_public_key struct {
 	E string `json:"e"`
 }
 
-const STRING_LIMIT = 4096
+const STRING_LIMIT = 8192
 
 //======================================================
 
@@ -142,7 +137,7 @@ func user_logout(input string) bool {
 
 // ============================================
 
-func delete_index_and_commit(input string) bool{
+func delete_index_and_commit(input string) bool {
 
 	success := (C.ulong)(0)
 	fmt.Println("delete_index")
@@ -178,7 +173,7 @@ func delete_index_and_commit(input string) bool{
 
 func do_query(input string) string {
 
-	const result_string_limit = 4096
+	const result_string_limit = 8192
 	a := C.CString(input)
 
 	c_encrypted := (*C.char)(C.malloc(result_string_limit))
@@ -192,9 +187,9 @@ func do_query(input string) string {
 
 }
 
-func search_title(title string) string{
+func search_title(title string) string {
 
-	const result_string_limit = 4096
+	const result_string_limit = 8192
 	a := C.CString(title)
 
 	c_encrypted := (*C.char)(C.malloc(result_string_limit))
@@ -203,7 +198,7 @@ func search_title(title string) string{
 	C.rust_search_title(a, C.ulong(len(title)), result_string_limit, c_encrypted, &d_encrypted)
 
 	str_encrypted := C.GoStringN(c_encrypted, (C.int)(d_encrypted))
-	
+
 	return str_encrypted
 
 }
@@ -266,22 +261,4 @@ func json_to_string(input RawInput) string {
 		panic("marshal failed")
 	}
 	return string(a)
-}
-
-func aes_encrypt(input string) string {
-	cipher_t := (*C.char)(C.malloc(STRING_LIMIT))
-	cipher_l := (C.ulong)(0)
-
-	C.go_encrypt(STRING_LIMIT, C.CString(input), C.ulong(len(input)), cipher_t, &cipher_l)
-	ciphertext := C.GoStringN(cipher_t, (C.int)(cipher_l))
-	return ciphertext
-}
-
-func aes_decrypt(input string) string {
-	plain_t := (*C.char)(C.malloc(STRING_LIMIT))
-	plain_l := (C.ulong)(0)
-
-	C.go_decrypt(STRING_LIMIT, C.CString(input), C.ulong(len(input)), plain_t, &plain_l)
-	plaintext := C.GoStringN(plain_t, (C.int)(plain_l))
-	return plaintext
 }

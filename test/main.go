@@ -52,7 +52,7 @@ type string_public_key struct {
 	E string `json:"e"`
 }
 
-const STRING_LIMIT = 4096
+const STRING_LIMIT = 8192
 
 func main() {
 
@@ -257,7 +257,7 @@ func delete_index_and_commit(input string) {
 
 func do_query(input string) {
 
-	const result_string_limit = 4096
+	const result_string_limit = 8192
 	a := C.CString(input)
 
 	c_encrypted := (*C.char)(C.malloc(result_string_limit))
@@ -273,7 +273,7 @@ func do_query(input string) {
 
 func search_title(title string) {
 
-	const result_string_limit = 4096
+	const result_string_limit = 8192
 	a := C.CString(title)
 
 	c_encrypted := (*C.char)(C.malloc(result_string_limit))

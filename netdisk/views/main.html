@@ -438,7 +438,7 @@
                     console.log(data.res);
                     console.log(data.message);
                     if (data.res === "1") {
-                        alert("query success");
+                        // alert("query success");
 
                         var decipher = forge.cipher.createDecipher('AES-CBC', key_str);
                         decipher.start({ iv: iv_str });
@@ -567,7 +567,7 @@
                     console.log(data.res);
                     console.log(data.message);
                     if (data.res === "1") {
-                        alert("show success");
+                        // alert("show success");
 
                         var decipher = forge.cipher.createDecipher('AES-CBC', key_str);
                         decipher.start({ iv: iv_str });
@@ -660,7 +660,7 @@
                     console.log(data.res);
                     console.log(data.message);
                     if (data.res === "1") {
-                        alert("download success");
+                        // alert("download success");
 
                         var decipher = forge.cipher.createDecipher('AES-CBC', key_str);
                         decipher.start({ iv: iv_str });
@@ -752,7 +752,7 @@
                     console.log(data.res);
                     console.log(data.message);
                     if (data.res === "1") {
-                        alert("delete success");
+                        // alert("delete success");
                         window.location.href = '/';
                     } else {
                         alert(data.message);
@@ -931,7 +931,7 @@
                     if (data.res === "1") {
                         sessionStorage.removeItem('userName');
                         sessionStorage.removeItem('session_key');
-                        alert("logout success");
+                        // alert("logout success");
                         window.location.href = '/';
                         return;
                     } else {

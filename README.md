@@ -10,7 +10,7 @@
 
 `test`：原先sgx部分的main.go目录，可用于sgx部分的测试
 
-![image](https://github.com/SGX-Development/Netdisk/raw/main/image/structure.jpg)
+<img src="https://github.com/SGX-Development/Netdisk/raw/main/image/structure.jpg" alt="image" style="zoom:30%;" />
 
 ## 2 项目运行
 

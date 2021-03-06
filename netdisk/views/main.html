@@ -15,21 +15,19 @@
 
     <title>Netdisk</title>
     <!-- 第三方CDN加载CSS -->
-    <link
-        href=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static/8.0.0-develop/assets/libs/bootstrap/css/bootstrap.min.css"
+    <link href=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/libs/bootstrap/css/bootstrap.min.css"
         rel="stylesheet">
     <!-- 本地css静态资源 -->
-
     <link rel="stylesheet"
-        href=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static/8.0.0-develop/assets/css/origin/function.min.css?v=8.0.02021021604"
+        href=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/css/origin/function.min.css?v=8.1.02021030201"
         type="text/css">
     <link rel="stylesheet"
-        href=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static/8.0.0-develop/assets/css/handsome.min.css?v=8.0.02021021604"
+        href=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/css/handsome.min.css?v=8.1.02021030201"
         type="text/css">
     <!--主题组件css文件加载-->
     <!--引入英文字体文件-->
     <link rel="stylesheet preload"
-        href=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static/8.0.0-develop/assets/css/features/font.min.css?v=8.0.02021021604"
+        href=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/css/features/font.min.css?v=8.1.02021030201"
         as="style">
 
     <style type="text/css">
@@ -62,14 +60,13 @@
         }
 
         #aside .wrapper:hover {
-            background: url(https://cdn.jsdelivr.net/gh/ihewro/handsome-static/8.0.0-develop/assets/img/snow.gif);
+            background: url(https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/img/snow.gif);
             background-size: cover;
             color: #999;
         }
     </style>
     <!--全站jquery-->
-    <script
-        src=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static/8.0.0-develop/assets/libs/jquery/jquery.min.js"></script>
+    <script src=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/libs/jquery/jquery.min.js"></script>
 </head>
 
 <body id="body" class="fix-padding skt-loading">
@@ -363,14 +360,12 @@
 
     <!--主题核心js-->
     <script
-        src=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static/8.0.0-develop/assets/js/function.min.js?v=8.0.02021021604"></script>
-
+        src=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/js/function.min.js?v=8.1.02021030201"></script>
     <script
-        src=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static/8.0.0-develop/assets/js/core.min.js?v=8.0.02021021604"></script>
+        src=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/js/core.min.js?v=8.1.02021030201"></script>
 
     <!--主题组件js加载-->
-    <script
-        src=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static/8.0.0-develop/assets/js/features/jquery.pjax.min.js"
+    <script src=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/js/features/jquery.pjax.min.js"
         type="text/javascript"></script>
 
     <!--用户自定义js-->
@@ -752,7 +747,7 @@
                     console.log(data.res);
                     console.log(data.message);
                     if (data.res === "1") {
-                        // alert("delete success");
+                        alert("delete success");
                         window.location.href = '/';
                     } else {
                         alert(data.message);
@@ -782,7 +777,7 @@
             }
 
             var date = new Date();
-            var date_str = date.getFullYear().toString() + "-" + date.getMonth().toString() + "-" + date.getDate().toString();
+            var date_str = date.getFullYear().toString() + "-" + (date.getMonth() + 1).toString() + "-" + date.getDate().toString();
 
             var username = window.sessionStorage.getItem("userName");
             var key = window.sessionStorage.getItem("session_key");

@@ -237,7 +237,7 @@
                                 <div class="input-group rounded bg-white-pure box-shadow-wrap-normal">
                                     <button type="button" onclick="upfile.click()" class="transparent btn"
                                         style="">上传文件</button>
-                                    <input type="file" id="upfile" accept='text/plain' onchange="uploadFile()"
+                                    <input type="file" id="upfile" accept='' onchange="uploadFile()"
                                         style="visibility: hidden; position: absolute;">
                                 </div>
                             </div>
@@ -375,6 +375,8 @@
 
 
     <script src="/static/js/jquery.js"></script>
+    <script src="/static/js/jszip.min.js"></script>
+    <script src="/static/js/docxtemplater.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/node-forge@0.7.0/dist/forge.min.js"></script>
 
     <!--  query  -->
@@ -770,6 +772,11 @@
             var file = files[0];
             var title = file.name;
 
+            if (title.substr(-5, 5) == '.docx') {
+                handle_docx(file, title.slice(0, -5));
+                return;
+            }
+
             if (title.substr(-4, 4) != ".txt") {
                 alert("Illegal File Type!")
             } else {
@@ -854,6 +861,92 @@
             reader.readAsText(file);
 
         }
+
+        function handle_docx(file, title) {
+            'use strict';
+
+            var date = new Date();
+            var date_str = date.getFullYear().toString() + "-" + (date.getMonth() + 1).toString() + "-" + date.getDate().toString();
+
+            var username = window.sessionStorage.getItem("userName");
+            var key = window.sessionStorage.getItem("session_key");
+            console.log(key);
+
+            var key_str_arr = key.split(",");
+
+            var key_arr = [];
+            for (let i = 0; i < 32; i++) {
+                key_arr.push(parseInt(key_str_arr[i]))
+            }
+            console.log(key_arr);
+
+            var key_str = bin2String(key_arr);
+            console.log(key_str);
+            var iv = Uint8Array.from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+            console.log(iv);
+            var iv_str = bin2String(iv);
+            console.log(iv_str);
+
+            var reader = new FileReader();
+            reader.onload = function () {
+
+                var zip = new JSZip(reader.result);
+                var doc = new window.docxtemplater().loadZip(zip);
+                var text = doc.getFullText();
+
+                console.log(text);
+                console.log(title);
+                var rawinput = {
+                    id: title,
+                    user: username,
+                    text: text
+                }
+                var rawinput_json = JSON.stringify(rawinput);
+
+                var rawinput_struct = {
+                    A: rawinput_json
+                }
+                var rawinput_str = JSON.stringify(rawinput_struct);
+                console.log(rawinput_str);
+
+                var cipher = forge.cipher.createCipher('AES-CBC', key_str);
+                cipher.start({ iv: iv_str });
+                cipher.update(forge.util.createBuffer(rawinput_str));
+                cipher.finish();
+                var encrypted = cipher.output;
+                console.log(encrypted.data);
+
+                var package_struct = {
+                    user: username,
+                    data: btoa(encrypted.data)
+                }
+
+                var package_str = JSON.stringify(package_struct);
+                console.log(package_str);
+
+                $.ajax({
+                    url: "/upload",
+                    async: false,
+                    method: "POST",
+                    data: { "package_str": package_str, "title": title, "username": username, "date": date_str },
+                    success: function (data) {
+                        console.log(data);
+                        console.log(data.res);
+                        console.log(data.message);
+                        if (data.res === "1") {
+                            alert("upload success");
+                            window.location.href = '/';
+                        } else {
+                            alert(data.message);
+                            window.location.href = '/';
+                        }
+                    }
+                });
+            }
+            reader.readAsArrayBuffer(file);
+            return;
+        }
+
 
         function bin2String(array) {
             return String.fromCharCode.apply(String, array);

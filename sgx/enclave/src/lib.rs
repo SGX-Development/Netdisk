@@ -90,6 +90,7 @@ struct G {
 struct Article {
     Id: String,
     Score: f32,
+    Time: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -97,6 +98,7 @@ struct RawInput {
     id: String,
     user: String,
     text: String,
+    time: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -105,6 +107,7 @@ struct DBInput {
     user: String,
     text: String,
     user_id: String,
+    time: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -147,6 +150,7 @@ lazy_static! {
         schema_builder.add_text_field("user", STRING | STORED);
         schema_builder.add_text_field("text", TEXT | STORED);
         schema_builder.add_text_field("user_id", STRING | STORED);
+        schema_builder.add_text_field("time", STRING | STORED);
 
         schema_builder.build()
     };
@@ -283,6 +287,7 @@ pub extern "C" fn build_index(some_string: *const u8, some_len: usize) -> sgx_st
         user: raw_input.user.clone(),
         text: raw_input.text.clone(),
         user_id: input_userid,
+        time: raw_input.time.clone(),
 
     };
     let input_string = serde_json::to_string(&db_input).unwrap();
@@ -422,6 +427,7 @@ pub extern "C" fn do_query(
 
     let id = schema.get_field("id").unwrap();
     let user = schema.get_field("user").unwrap();
+    let time =schema.get_field("time").unwrap();
 
     for (score, doc_address) in top_docs {
         let retrieved_doc = searcher
@@ -434,11 +440,13 @@ pub extern "C" fn do_query(
 
         let id = retrieved_doc.get_first(id).unwrap().text().unwrap();
         let user = retrieved_doc.get_first(user).unwrap().text().unwrap();
+        let time = retrieved_doc.get_first(time).unwrap().text().unwrap();
 
         if user.to_string() == user_id{
             let g = Article {
                 Id: id.to_string(),
                 Score: score,
+                Time: time.to_string(),
             };
             // println!("{:?}", g);
             point.A.push(g);

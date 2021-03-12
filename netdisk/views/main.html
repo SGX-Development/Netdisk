@@ -466,7 +466,7 @@
                                 'class="feather feather-clock">' +
                                 '<circle cx="12" cy="12" r="10"></circle>' +
                                 '<polyline points="12 6 12 12 16 14"></polyline>' +
-                                '</svg></span>time...</li>' +
+                                '</svg></span>' + article_list[i].Time + '</li>' +
                                 '<li><span class="right-small-icons m-r-sm"><svg ' +
                                 'xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"' +
                                 'viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
@@ -814,7 +814,8 @@
                 var rawinput = {
                     id: title,
                     user: username,
-                    text: text
+                    text: text,
+                    time: date_str
                 }
                 var rawinput_json = JSON.stringify(rawinput);
 
@@ -899,7 +900,8 @@
                 var rawinput = {
                     id: title,
                     user: username,
-                    text: text
+                    text: text,
+                    time: date_str
                 }
                 var rawinput_json = JSON.stringify(rawinput);
 

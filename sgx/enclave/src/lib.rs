@@ -108,6 +108,7 @@ struct DBInput {
     text: String,
     user_id: String,
     time: String,
+    isdeleted: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -151,6 +152,8 @@ lazy_static! {
         schema_builder.add_text_field("text", TEXT | STORED);
         schema_builder.add_text_field("user_id", STRING | STORED);
         schema_builder.add_text_field("time", STRING | STORED);
+        schema_builder.add_text_field("isdeleted", STRING | STORED);
+
 
         schema_builder.build()
     };
@@ -288,6 +291,7 @@ pub extern "C" fn build_index(some_string: *const u8, some_len: usize) -> sgx_st
         text: raw_input.text.clone(),
         user_id: input_userid,
         time: raw_input.time.clone(),
+        isdeleted: String::from("False"),
 
     };
     let input_string = serde_json::to_string(&db_input).unwrap();
@@ -302,6 +306,19 @@ pub extern "C" fn build_index(some_string: *const u8, some_len: usize) -> sgx_st
 
     let index_writer_clone_1 = index_writer.clone();
     index_writer_clone_1.read().unwrap().add_document(doc);
+
+    sgx_status_t::SGX_SUCCESS
+}
+
+#[no_mangle]
+pub extern "C" fn empty_bin() -> sgx_status_t {
+
+    let user_id = schema.get_field("isdeleted").unwrap();
+    let delete_file = Term::from_field_text(user_id, "True");
+    // need checking whether it exist?
+
+    let index_writer_clone_4 = index_writer.clone();
+    index_writer_clone_4.read().unwrap().delete_term(delete_file.clone());
 
     sgx_status_t::SGX_SUCCESS
 }
@@ -330,15 +347,161 @@ pub extern "C" fn delete_index(some_string: *const u8, some_len: usize) -> sgx_s
         return sgx_status_t::SGX_ERROR_UNEXPECTED;
     }
 
+    let id = schema.get_field("id").unwrap();
+    let user = schema.get_field("user").unwrap();
     let user_id = schema.get_field("user_id").unwrap();
+    let text = schema.get_field("text").unwrap();
+    let time =schema.get_field("time").unwrap();
+    let isdeleted =schema.get_field("isdeleted").unwrap();
+
+
+    reader.reload().unwrap();
+    let frankenstein_isbn = Term::from_field_text(user_id, &line);
+
+    let frankenstein_doc_misspelled = extract_doc_given_id(&reader, &frankenstein_isbn)
+        .map_err(|e| {
+            panic!(e);
+        })
+        .unwrap();
+
+
+    if frankenstein_doc_misspelled.is_none() {
+        
+        return sgx_status_t::SGX_SUCCESS;
+    }
+
+    let y = frankenstein_doc_misspelled.unwrap();
+
+
     let delete_file = Term::from_field_text(user_id, &line);
-    // need checking whether it exist?
+
+    let articleid = y.get_first(id).unwrap().text().unwrap().to_string();
+    let articleuser = y.get_first(user).unwrap().text().unwrap().to_string();
+    let articleuser_id = y.get_first(user_id).unwrap().text().unwrap().to_string();
+    let articletext = y.get_first(text).unwrap().text().unwrap().to_string();
+    let articletime = y.get_first(time).unwrap().text().unwrap().to_string();
 
     let index_writer_clone_3 = index_writer.clone();
     index_writer_clone_3.read().unwrap().delete_term(delete_file.clone());
 
+
+
+    println!("delete to bin: {}", &articleuser_id);
+
+
+    let db_input = DBInput{
+        id: articleid,
+        user: articleuser,
+        text: articletext,
+        user_id: articleuser_id,
+        time: articletime,
+        isdeleted: String::from("True"),
+
+    };
+    let input_string = serde_json::to_string(&db_input).unwrap();
+
+    let doc = match schema.parse_document(&input_string) {
+        Ok(doc) => doc,
+        _ => {
+            return sgx_status_t::SGX_ERROR_UNEXPECTED;
+        }
+    };
+
+    index_writer_clone_3.read().unwrap().add_document(doc);
+
     sgx_status_t::SGX_SUCCESS
 }
+
+#[no_mangle]
+pub extern "C" fn recover_index(some_string: *const u8, some_len: usize) -> sgx_status_t {
+
+    let v: &[u8] = unsafe { std::slice::from_raw_parts(some_string, some_len) };
+    let vraw = String::from_utf8(v.to_vec()).unwrap();  
+    let package_input: Package = serde_json::from_str(&vraw).unwrap();
+    let requester = package_input.user;
+    let enc_data = package_input.data;
+
+    let x = sgx_decrypt(enc_data.as_ptr() as *const u8, enc_data.len(), &requester);
+
+    if let Err(y) = x {
+        eprintln!("sgx_decrypt failed: {:?}", y);
+        return sgx_status_t::SGX_ERROR_UNEXPECTED;
+    }
+
+    let line: String = x.unwrap();
+
+    let uid = get_id_from_data(line.clone());
+    if uid != requester {
+        eprintln!("package error");
+        return sgx_status_t::SGX_ERROR_UNEXPECTED;
+    }
+
+    let id = schema.get_field("id").unwrap();
+    let user = schema.get_field("user").unwrap();
+    let user_id = schema.get_field("user_id").unwrap();
+    let text = schema.get_field("text").unwrap();
+    let time =schema.get_field("time").unwrap();
+    let isdeleted =schema.get_field("isdeleted").unwrap();
+
+
+    reader.reload().unwrap();
+    let frankenstein_isbn = Term::from_field_text(user_id, &line);
+
+    let frankenstein_doc_misspelled = extract_doc_given_id(&reader, &frankenstein_isbn)
+        .map_err(|e| {
+            panic!(e);
+        })
+        .unwrap();
+
+
+    if frankenstein_doc_misspelled.is_none() {
+        
+        return sgx_status_t::SGX_SUCCESS;
+    }
+
+    let y = frankenstein_doc_misspelled.unwrap();
+
+
+    let delete_file = Term::from_field_text(user_id, &line);
+
+    let articleid = y.get_first(id).unwrap().text().unwrap().to_string();
+    let articleuser = y.get_first(user).unwrap().text().unwrap().to_string();
+    let articleuser_id = y.get_first(user_id).unwrap().text().unwrap().to_string();
+    let articletext = y.get_first(text).unwrap().text().unwrap().to_string();
+    let articletime = y.get_first(time).unwrap().text().unwrap().to_string();
+
+    let index_writer_clone_3 = index_writer.clone();
+    index_writer_clone_3.read().unwrap().delete_term(delete_file.clone());
+
+
+
+    println!("delete to bin: {}", &articleuser_id);
+
+
+    let db_input = DBInput{
+        id: articleid,
+        user: articleuser,
+        text: articletext,
+        user_id: articleuser_id,
+        time: articletime,
+        isdeleted: String::from("False"),
+
+    };
+    let input_string = serde_json::to_string(&db_input).unwrap();
+
+    let doc = match schema.parse_document(&input_string) {
+        Ok(doc) => doc,
+        _ => {
+            return sgx_status_t::SGX_ERROR_UNEXPECTED;
+        }
+    };
+
+    index_writer_clone_3.read().unwrap().add_document(doc);
+
+    sgx_status_t::SGX_SUCCESS
+}
+
+
 
 #[no_mangle]
 pub extern "C" fn commit() -> sgx_status_t {
@@ -428,6 +591,7 @@ pub extern "C" fn do_query(
     let id = schema.get_field("id").unwrap();
     let user = schema.get_field("user").unwrap();
     let time =schema.get_field("time").unwrap();
+    let isdeleted =schema.get_field("isdeleted").unwrap();
 
     for (score, doc_address) in top_docs {
         let retrieved_doc = searcher
@@ -438,11 +602,13 @@ pub extern "C" fn do_query(
             })
             .unwrap();
 
-        let id = retrieved_doc.get_first(id).unwrap().text().unwrap();
         let user = retrieved_doc.get_first(user).unwrap().text().unwrap();
-        let time = retrieved_doc.get_first(time).unwrap().text().unwrap();
+        let isdeleted = retrieved_doc.get_first(isdeleted).unwrap().text().unwrap();
 
-        if user.to_string() == user_id{
+        if user.to_string() == user_id && isdeleted == "False"{
+            let id = retrieved_doc.get_first(id).unwrap().text().unwrap();
+            let time = retrieved_doc.get_first(time).unwrap().text().unwrap();
+
             let g = Article {
                 Id: id.to_string(),
                 Score: score,

@@ -44,7 +44,14 @@ extern "C" {
         len: usize,
         // user: i32,
     ) -> sgx_status_t;
+    fn empty_bin(eid: sgx_enclave_id_t, retval: *mut sgx_status_t) -> sgx_status_t;
     fn delete_index(
+        eid: sgx_enclave_id_t,
+        retval: *mut sgx_status_t,
+        line: *const u8,
+        len: usize,
+    ) -> sgx_status_t;
+    fn recover_index(
         eid: sgx_enclave_id_t,
         retval: *mut sgx_status_t,
         line: *const u8,
@@ -339,6 +346,61 @@ pub extern "C" fn rust_build_index(
     Ok(())
 }
 
+#[no_mangle]
+pub extern "C" fn rust_empty_bin(success: *mut usize) -> Result<(), std::io::Error> {
+    let enclave = match &*SGX_ENCLAVE {
+        Ok(r) => {
+            println!("[+] rust_empty_bin");
+            r
+        }
+        Err(x) => {
+            eprintln!("[-] Init Enclave Failed {}!", x.as_str());
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                "init enclave failed",
+            ));
+        }
+    };
+    let enclave_id = enclave.geteid();
+
+    let mut retval = sgx_status_t::SGX_SUCCESS;
+
+    let result = unsafe { empty_bin(enclave_id, &mut retval) };
+
+    match result {
+        sgx_status_t::SGX_SUCCESS => {}
+        _ => {
+            eprintln!("[-] ECALL Enclave Failed RES {}!", result.as_str());
+            unsafe {
+                *success = 0;
+            }
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                "ecall failed",
+            ));
+        }
+    }
+    match retval {
+        sgx_status_t::SGX_SUCCESS => {}
+        e => {
+            eprintln!("[-] ECALL Enclave Failed RET {}!", retval.as_str());
+            unsafe {
+                *success = 0;
+            }
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                e.to_string(),
+            ));
+        }
+    }
+
+    unsafe {
+        *success = 1;
+    }
+
+    Ok(())
+}
+
 
 #[no_mangle]
 pub extern "C" fn rust_delete_index(
@@ -368,6 +430,75 @@ pub extern "C" fn rust_delete_index(
 
     let result = unsafe {
         delete_index(
+            enclave_id,
+            &mut retval,
+            line.as_ptr() as *const u8,
+            line.len(),
+        )
+    };
+
+    match result {
+        sgx_status_t::SGX_SUCCESS => {}
+        _ => {
+            eprintln!("[-] ECALL Enclave Failed {}!", result.as_str());
+            unsafe {
+                *success = 0;
+            }
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                "ecall failed",
+            ));
+        }
+    }
+    match retval {
+        sgx_status_t::SGX_SUCCESS => {}
+        e => {
+            eprintln!("[-] ECALL Enclave Failed {}!", retval.as_str());
+            unsafe {
+                *success = 0;
+            }
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                e.to_string(),
+            ));
+        }
+    }
+
+    unsafe {
+        *success = 1;
+    }
+
+    Ok(())
+}
+
+#[no_mangle]
+pub extern "C" fn rust_recover_index(
+    some_string: *const u8,
+    some_len: usize,
+    success: *mut usize,
+) -> Result<(), std::io::Error> {
+    let v: &[u8] = unsafe { std::slice::from_raw_parts(some_string, some_len) };
+    let line = String::from_utf8(v.to_vec()).unwrap();
+    
+    let enclave = match &*SGX_ENCLAVE {
+        Ok(r) => {
+            println!("[+] rust_recover_index");
+            r
+        }
+        Err(x) => {
+            eprintln!("[-] Init Enclave Failed {}!", x.as_str());
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                "init enclave failed",
+            ));
+        }
+    };
+    let enclave_id = enclave.geteid();
+
+    let mut retval = sgx_status_t::SGX_SUCCESS;
+
+    let result = unsafe {
+        recover_index(
             enclave_id,
             &mut retval,
             line.as_ptr() as *const u8,

@@ -38,7 +38,9 @@ from "sgx_tprotected_fs.edl" import *;
         /* define ECALLs here. */
 
         public sgx_status_t build_index([in, size=len] const uint8_t* some_string, size_t len);
+        public sgx_status_t empty_bin();
         public sgx_status_t delete_index([in, size=len] const uint8_t* some_string, size_t len);
+        public sgx_status_t recover_index([in, size=len] const uint8_t* some_string, size_t len);
         public sgx_status_t user_logout([in, size=len] const uint8_t* some_string, size_t len);
         public sgx_status_t commit();
         public sgx_status_t do_query([in, size=len] const uint8_t* some_string, size_t len, 

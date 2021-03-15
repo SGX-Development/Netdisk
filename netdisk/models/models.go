@@ -21,6 +21,7 @@ type File struct {
 	FileName string `json:"name" gorm:"type:varchar(45) not null;unique"`
 	UserName string `json:"userName" gorm:"type:varchar(45) not null;"`
 	Date string `json:"date" gorm:"type:varchar(45) not null;"`
+	Isdelete bool  `json:"isdelete" gorm:"default:false"`
 }
 
 func init(){

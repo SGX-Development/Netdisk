@@ -27,7 +27,7 @@ func (c *MainController) ShowIndex() {
 
 	o := orm.NewOrm()
 	var files []models.File
-	o.QueryTable("file").Filter("UserName", c.UserName()).All(&files, "date", "filename")
+	o.QueryTable("file").Filter("UserName", c.UserName()).Filter("Isdelete", false).All(&files, "date", "filename")
 	// o.QueryTable("file").Filter("UserName", "Emison").All(&files, "date", "filename")
 
 	for _, file := range files {

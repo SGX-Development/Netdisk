@@ -26,4 +26,6 @@ func init() {
 	beego.Router("/show", &controllers.ShowController{}, "get:ShowGet")
 
 	beego.Router("/query", &controllers.QueryController{}, "get:QueryGet")
+
+	beego.Router("/bin", &controllers.BinController{}, "get:BinGet")
 }

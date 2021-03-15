@@ -15,7 +15,23 @@ func (c *MainController) Islogin() bool {
 	return !(status == nil || (status != nil && !status.(UserStatus).islogin))
 }
 
+func (c *BinController) Islogin() bool {
+	status := c.GetSession("status")
+	if status == nil {
+		c.Redirect("/login", 302)
+	}
+	return !(status == nil || (status != nil && !status.(UserStatus).islogin))
+}
+
 func (c *MainController) UserName() string {
+	status := c.GetSession("status")
+	if status == nil {
+		c.Redirect("/login", 302)
+	}
+	return status.(UserStatus).userName
+}
+
+func (c *BinController) UserName() string {
 	status := c.GetSession("status")
 	if status == nil {
 		c.Redirect("/login", 302)

@@ -74,6 +74,7 @@ func InsertFile(filename string, userName string, date string) bool {
 	file.FileName = filename
 	file.UserName = userName
 	file.Date = date
+	file.Isdelete = false
 	_, err := o.Insert(&file)
 
 	return err == nil

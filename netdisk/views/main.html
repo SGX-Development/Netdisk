@@ -181,7 +181,7 @@
                                     <span>首页</span>
                                 </a>
                             </li>
-                            <li> <a target="_self" href="#" class="auto"><span class="nav-icon"><svg
+                            <li> <a target="_self" href="/bin" class="auto"><span class="nav-icon"><svg
                                             xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                             stroke-linecap="round" stroke-linejoin="round"
@@ -297,7 +297,7 @@
                                 <div class="single-post panel box-shadow-wrap-normal" style="height: 110px;">
 
                                     <div class="post-meta wrapper-lg" style="padding: 15px;">
-                                        <div class="item-meta-ico bg-ico-chat"></div>
+                                        <div class="item-meta-ico bg-ico-note"></div>
                                         <h2 class="m-t-none text-ellipsis index-post-title text-title"
                                             style="padding-top: 11px;"><a href="" name={{$a}}
                                                 onclick="showArticle(this);return false;">{{$a}}</a></h2>
@@ -453,7 +453,7 @@
                         for (let i = 0; i < article_list.length; i++) {
                             html_str = html_str + '<div class="single-post panel box-shadow-wrap-normal" style="height: 110px;">' +
                                 '<div class="post-meta wrapper-lg" style="padding: 15px;">' +
-                                '<div class="item-meta-ico bg-ico-chat"></div>' +
+                                '<div class="item-meta-ico bg-ico-note"></div>' +
                                 '<h2 class="m-t-none text-ellipsis index-post-title text-title"' +
                                 'style="padding-top: 11px;"><a href="" name=' + article_list[i].Id +
                                 ' onclick="showArticle(this);return false;">' + article_list[i].Id + '</a></h2>' +
@@ -749,7 +749,7 @@
                     console.log(data.res);
                     console.log(data.message);
                     if (data.res === "1") {
-                        alert("delete success");
+                        alert("已放入回收站");
                         window.location.href = '/';
                     } else {
                         alert(data.message);

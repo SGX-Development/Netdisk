@@ -26,7 +26,10 @@ func (c *DeleteController) DeleteGet() {
 
 	if delete_index_and_commit(package_str) {
 		o := orm.NewOrm()
-		o.QueryTable("file").Filter("UserName", username).Filter("FileName", filename).Delete()
+		// file := File{FileName: filename}
+		o.QueryTable("file").Filter("UserName", username).Filter("FileName", filename).Update(orm.Params{
+			"Isdelete": true,
+		})
 		ReturnData["res"] = "1"
 		ReturnData["message"] = "0"
 	} else {

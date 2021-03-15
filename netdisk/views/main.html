@@ -778,7 +778,8 @@
             }
 
             if (title.substr(-4, 4) != ".txt") {
-                alert("Illegal File Type!")
+                alert("Illegal File Type!");
+                return;
             } else {
                 title = title.slice(0, -4);
             }

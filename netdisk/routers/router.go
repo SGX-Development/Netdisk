@@ -28,4 +28,6 @@ func init() {
 	beego.Router("/query", &controllers.QueryController{}, "get:QueryGet")
 
 	beego.Router("/bin", &controllers.BinController{}, "get:BinGet;post:BinPost")
+
+	beego.Router("/recover", &controllers.RecoverController{}, "get:RecoverGet")
 }

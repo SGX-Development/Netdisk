@@ -229,10 +229,10 @@ func build_index_and_commit(input string) bool {
 	}
 }
 
-func empty_bin() bool{
+func empty_bin() bool {
 	success := (C.ulong)(0)
 	C.rust_empty_bin(&success)
-	
+
 	if success == 0 {
 		return false
 	}
@@ -246,12 +246,21 @@ func empty_bin() bool{
 	}
 }
 
-func recover_index_and_commit(input string) {
+func recover_index_and_commit(input string) bool {
 	success := (C.ulong)(0)
 	C.rust_recover_index(C.CString(input), C.ulong(len(input)), &success)
-	fmt.Printf("recover_index return %d\n", success)
+
+	if success == 0 {
+		return false
+	}
+
 	C.rust_commit(&success)
-	fmt.Printf("commit return %d\n", success)
+
+	if success == 1 {
+		return true
+	} else {
+		return false
+	}
 }
 
 //--------------------------------------------------

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html class="small-scroll-bar no-js bg" lang="zh-cmn-Hans">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta charset="UTF-8">
+    <!--IE 8浏览器的页面渲染方式-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <!--默认使用极速内核：针对国内浏览器产商-->
+    <meta name="renderer" content="webkit">
+    <!--chrome Android 地址栏颜色-->
+    <meta name="theme-color" content="#000000">
+
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+
+    <title>Netdisk</title>
+    <!-- 第三方CDN加载CSS -->
+    <link href=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/libs/bootstrap/css/bootstrap.min.css"
+        rel="stylesheet">
+    <!-- 本地css静态资源 -->
+    <link rel="stylesheet"
+        href=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/css/origin/function.min.css?v=8.1.02021030201"
+        type="text/css">
+    <link rel="stylesheet"
+        href=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/css/handsome.min.css?v=8.1.02021030201"
+        type="text/css">
+    <!--主题组件css文件加载-->
+    <!--引入英文字体文件-->
+    <link rel="stylesheet preload"
+        href=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/css/features/font.min.css?v=8.1.02021030201"
+        as="style">
+
+    <style type="text/css">
+        html.bg {
+            background: #EFEFEF
+        }
+
+        .cool-transparent .off-screen+* .app-content-body {
+            background: #EFEFEF
+        }
+
+        @media (max-width:767px) {
+            html.bg {
+                background: #EFEFEF
+            }
+
+            .cool-transparent .off-screen+* .app-content-body {
+                background: #EFEFEF
+            }
+        }
+
+        figcaption.post-img-figcaption:not(.post-img-figcation) {
+            display: none;
+        }
+
+        @media screen and (max-width: 370px) {
+            .album-thumb {
+                width: 100%;
+            }
+        }
+
+        #aside .wrapper:hover {
+            background: url(https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/img/snow.gif);
+            background-size: cover;
+            color: #999;
+        }
+    </style>
+    <!--全站jquery-->
+    <script src=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/libs/jquery/jquery.min.js"></script>
+</head>
+
+<body id="body" class="fix-padding skt-loading">
+    <!-- aside -->
+    <div id="alllayout" class="app app-aside-fix container app-header-fixed">
+        <!-- headnav -->
+        <header id="header" class="app-header navbar box-shadow-bottom-lg" role="menu">
+            <!-- navbar header（交集处） -->
+            <div class="text-ellipsis navbar-header bg-white">
+                <button class="pull-right visible-xs" ui-toggle-class="show animated animated-lento fadeIn"
+                    target=".navbar-collapse">
+                    <span class="menu-icons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg></span>
+                </button>
+                <button class="pull-left visible-xs" ui-toggle-class="off-screen animated" target=".app-aside"
+                    ui-scroll="app">
+                    <span class="menu-icons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg></span>
+                </button>
+                <!-- brand -->
+                <a href="/" class="navbar-brand text-lt">
+                    <span id="navbar-brand-day" style="display: inline;">
+                        <img src="../static/image/a.png" type="image/svg+xml"
+                            style="width: 130px;height: 40px;margin-top: -18px;max-height: 40px;"> </span>
+                    <span id="navbar-brand-dark" class="hide"> <img
+                            src="https://cdn.jsdelivr.net/gh/ihewro/blog_now@master/logo_dark.svg" type="image/svg+xml"
+                            style="width: 130px;height: 40px;margin-top: -18px;max-height: 40px;"></span>
+                </a>
+                <!-- / brand -->
+            </div>
+            <!-- / navbar header -->
+            <!-- navbar collapse（顶部导航栏） -->
+            <div class="collapse pos-rlt navbar-collapse bg-white">
+                <ul class="nav navbar-nav navbar-right">
+
+                    <li class="dropdown hidden-xs hidden-sm"><a href="/login" id="global_player_toggle" class="skPlayer-list-switch dropdown-toggle
+            feathericons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-disc">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg><span class="visible-xs-inline"></span></a></li>
+                    <li class="dropdown hidden-xs hidden-sm"><a href="/register" id="global_player_toggle" class="skPlayer-list-switch dropdown-toggle
+            feathericons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-twitch">
+                                <path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path>
+                            </svg><span class="visible-xs-inline"></span></a></li>
+                    <li class="dropdown hidden-xs hidden-sm"><a href="" onclick="logout();return false;"
+                            id="global_player_toggle" class="skPlayer-list-switch dropdown-toggle
+            feathericons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-twitch">
+                                <path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path>
+                            </svg><span class="visible-xs-inline"></span></a></li>
+                </ul>
+            </div>
+            <!-- / navbar collapse -->
+        </header>
+        <!-- / headnav -->
+
+        <aside id="aside" class="app-aside hidden-xs bg-white">
+            <!--<aside>-->
+            <div class="aside-wrap" layout="column">
+                <div class="navi-wrap scroll-y scroll-hide" flex="">
+                    <!-- user -->
+                    <div class="clearfix hidden-xs text-center hide  show" id="aside-user">
+                        <div class="dropdown wrapper ">
+                            <div ui-nav="">
+                                <a href="/">
+                                    <span class="thumb-lg w-auto-folded avatar m-t-sm  ">
+                                        <img src="../static/image/default_icon.bmp"
+                                            class="img-full img-circle normal-shadow">
+                                    </span>
+                                </a>
+                            </div>
+                            <span class="clear">
+                                <span class="block m-t-sm">
+                                    <strong class="font-bold text-lt">{{.userName}}</strong>
+                                </span>
+                        </div>
+                    </div>
+                    <!-- / user -->
+
+                    <!-- nav -->
+                    <nav ui-nav="" class="navi clearfix">
+                        <ul class="nav">
+                            <!--index-->
+                            <div class="line dk hidden-folded"></div>
+                            <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                                <span>导航</span>
+                            </li>
+                            <!--主页-->
+                            <li>
+                                <a href="/" class="auto">
+                                    <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16px"
+                                            height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="feather feather-home">
+                                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                        </svg></span>
+                                    <span>首页</span>
+                                </a>
+                            </li>
+                            <li> <a target="_self" href="/bin" class="auto"><span class="nav-icon"><svg
+                                            xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="feather feather-archive">
+                                            <polyline points="21 8 21 21 3 21 3 8"></polyline>
+                                            <rect x="1" y="3" width="22" height="5"></rect>
+                                            <line x1="10" y1="12" x2="14" y2="12"></line>
+                                        </svg></span><span>回收站</span></a></li>
+                            <li class="line dk"></li>
+                            <li> <a target="_self" href="/introduce" class="auto"><span class="nav-icon"><svg
+                                            xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="feather feather-github">
+                                            <path
+                                                d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                                            </path>
+                                        </svg></span><span>项目介绍</span></a></li>
+                            <li> <a target="_self" href="/about_us" class="auto"><span class="nav-icon"><svg
+                                            xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="feather feather-heart">
+                                            <path
+                                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                            </path>
+                                        </svg></span><span>关于我们</span></a></li>
+
+                        </ul>
+                    </nav>
+                    <!-- nav -->
+                </div>
+                <!--end of .navi-wrap-->
+
+            </div>
+            <!--.aside-wrap-->
+        </aside>
+        <!-- content -->
+        <div id="content" class="app-content">
+            <!--loading animate-->
+            <div id="loading" class="butterbar active hide">
+                <span class="bar"></span>
+            </div>
+            <!-- / aside -->
+
+            <!-- <div id="content" class="app-content"> -->
+            <a class="off-screen-toggle hide"></a>
+            <main class="app-content-body ">
+                <div class="hbox hbox-auto-xs hbox-auto-sm">
+                    <div class="col center-part">
+                        <header class="bg-light lter wrapper-md" style="padding-bottom: 5px;">
+                            <div class="form-group" style="float: left;margin-right: 20px;">
+                                <div class="input-group rounded bg-white-pure box-shadow-wrap-normal">
+                                    <!-- <button type="button" onclick="empty_bin()" class="transparent btn"
+                                        style="">清空回收站</button> -->
+                                    <!-- <input type="file" id="upfile" accept='' onchange="empty_bin()"
+                                        style="visibility: hidden; position: absolute;"> -->
+                                </div>
+                            </div>
+                            <br>
+                        </header>
+                        <div class="wrapper-md skt-loading" id="post-panel">
+                            <br>
+                            <br>
+                            <br>
+                            <p align="center" style="font-size: 200%">Introduction...</p>
+
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <!-- footer -->
+        </div><!-- /content -->
+        <footer id="footer" class="app-footer" role="footer">
+            <div class="wrapper bg-light">
+                <span class="pull-right hidden-xs text-ellipsis">
+                    SJTU - School of Cyber Science and Engineering
+                </span>
+                <span class="text-ellipsis">&nbsp;&nbsp;</span>
+            </div>
+        </footer>
+    </div>
+    <!--end of .app app-header-fixed-->
+
+    <!--主题核心js-->
+    <script
+        src=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/js/function.min.js?v=8.1.02021030201"></script>
+    <script
+        src=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/js/core.min.js?v=8.1.02021030201"></script>
+
+    <!--主题组件js加载-->
+    <script src=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/js/features/jquery.pjax.min.js"
+        type="text/javascript"></script>
+
+    <!--用户自定义js-->
+    <script type="text/javascript">
+        var _hmt = _hmt || []; (function () { var hm = document.createElement("script"); hm.src = "https://hm.baidu.com/hm.js?3b1f6198215a81b2f56b1387c009c48f"; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(hm, s); })();</script>
+
+</body>
+
+</html>

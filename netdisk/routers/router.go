@@ -30,4 +30,7 @@ func init() {
 	beego.Router("/bin", &controllers.BinController{}, "get:BinGet;post:BinPost")
 
 	beego.Router("/recover", &controllers.RecoverController{}, "get:RecoverGet")
+
+	beego.Router("/introduce", &controllers.IntroController{}, "get:IntroGet")
+	beego.Router("/about_us", &controllers.AboutController{}, "get:AboutGet")
 }

@@ -33,7 +33,6 @@ func (c *BinController) BinGet() {
 	// fmt.Println(map1)
 	c.Data["data"] = map1
 
-	c.TplName = "main.html"
 	c.TplName = "bin.html"
 }
 

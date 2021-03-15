@@ -322,8 +322,29 @@
 
     <script>
         function empty_bin() {
-            alert("hello");
+            'use strict';
+
+            $.ajax({
+                url: "/bin",
+                method: 'POST',
+                async: false,
+                success: function (data) {
+                    console.log(data);
+                    console.log(data.res);
+                    console.log(data.message);
+                    if (data.res === "1") {
+                        alert("empty bin successful");
+                        window.location.href = '/bin';
+                        return;
+                    } else {
+                        alert(data.message);
+                        window.location.href = '/bin';
+                        return;
+                    }
+                }
+            });
         }
+
     </script>
 
     <script>

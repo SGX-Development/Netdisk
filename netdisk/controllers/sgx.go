@@ -13,6 +13,8 @@ package controllers
 //extern void rust_get_session_key(char* enc_pswd_from_db, size_t enc_pswd_from_db_len, char* enc_data, size_t enc_data_len, size_t* result_string_size);
 //extern void rust_register(char* enc_user_pswd, size_t enc_user_pswd_len, char* user, size_t* user_len, char* enc_pswd, size_t* enc_pswd_len, size_t* result_string_size, size_t string_limit);
 //extern void rust_user_logout( char* some_string, size_t some_len,size_t* result_string_size);
+//extern void rust_empty_bin(size_t* result);
+//extern void rust_recover_index( char* some_string, size_t some_len,size_t * result_string_size);
 import "C"
 
 // import "log"
@@ -225,6 +227,31 @@ func build_index_and_commit(input string) bool {
 	} else {
 		return false
 	}
+}
+
+func empty_bin() bool{
+	success := (C.ulong)(0)
+	C.rust_empty_bin(&success)
+	
+	if success == 0 {
+		return false
+	}
+
+	C.rust_commit(&success)
+
+	if success == 1 {
+		return true
+	} else {
+		return false
+	}
+}
+
+func recover_index_and_commit(input string) {
+	success := (C.ulong)(0)
+	C.rust_recover_index(C.CString(input), C.ulong(len(input)), &success)
+	fmt.Printf("recover_index return %d\n", success)
+	C.rust_commit(&success)
+	fmt.Printf("commit return %d\n", success)
 }
 
 //--------------------------------------------------

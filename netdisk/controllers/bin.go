@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	// "fmt"
+	"fmt"
 	"netdisk/models"
 
 	"github.com/beego/beego/v2/client/orm"
@@ -35,4 +35,28 @@ func (c *BinController) BinGet() {
 
 	c.TplName = "main.html"
 	c.TplName = "bin.html"
+}
+
+func(c *BinController) BinPost() {
+	ReturnData := make(map[string]interface{})
+
+	if empty_bin() {
+		o := orm.NewOrm()
+		// file := File{FileName: filename}
+		_, err := o.QueryTable("file").Filter("UserName", c.UserName()).Filter("Isdelete", true).Delete()
+		if err != nil {
+			ReturnData["res"]='0'
+			ReturnData["message"]="db delete failure"
+			fmt.Println(err)
+		} else {
+			ReturnData["res"] = "1"
+			ReturnData["message"] = "0"
+		}
+	} else {
+		ReturnData["res"] = "0"
+		ReturnData["message"] = "empty bin failure"
+	}
+
+	c.Data["json"] = ReturnData
+	c.ServeJSON()
 }

@@ -378,6 +378,9 @@
     <script src="/static/js/jszip.min.js"></script>
     <script src="/static/js/docxtemplater.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/node-forge@0.7.0/dist/forge.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/1.10.100/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.entry.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/1.10.100/pdf.worker.min.js"></script>
 
     <!--  query  -->
     <script>
@@ -777,8 +780,13 @@
                 return;
             }
 
+            if (title.substr(-4, 4) == '.pdf') {
+                handle_pdf(file, title.slice(0, -4));
+                return;
+            }
+
             if (title.substr(-4, 4) != ".txt") {
-                alert("Illegal File Type!");
+                alert("仅支持txt、docx、pdf文件!");
                 return;
             } else {
                 title = title.slice(0, -4);
@@ -863,6 +871,169 @@
             reader.readAsText(file);
 
         }
+
+        function handle_pdf(file, title) {
+            var fReader = new FileReader();
+            fReader.readAsDataURL(file);
+            // console.log(input.files[0]);
+            fReader.onloadend = function (event) {
+                convertDataURIToBinary(event.target.result, title);
+            }
+        }
+
+        var BASE64_MARKER = ';base64,';
+
+        function convertDataURIToBinary(dataURI, title) {
+
+            var base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
+            var base64 = dataURI.substring(base64Index);
+            var raw = window.atob(base64);
+            var rawLength = raw.length;
+            var array = new Uint8Array(new ArrayBuffer(rawLength));
+
+            for (var i = 0; i < rawLength; i++) {
+                array[i] = raw.charCodeAt(i);
+            }
+
+            pdfAsArray(array, title);
+            // return pdfAsArray(array)
+
+        }
+
+        function getPageText(pageNum, PDFDocumentInstance) {
+            // Return a Promise that is solved once the text of the page is retrieven
+            return new Promise(function (resolve, reject) {
+                PDFDocumentInstance.getPage(pageNum).then(function (pdfPage) {
+                    // The main trick to obtain the text of the PDF page, use the getTextContent method
+                    pdfPage.getTextContent().then(function (textContent) {
+                        var textItems = textContent.items;
+                        var finalString = "";
+
+                        // Concatenate the string of the item to the final string
+                        for (var i = 0; i < textItems.length; i++) {
+                            var item = textItems[i];
+
+                            finalString += item.str + " ";
+                        }
+
+                        // Solve promise with the text retrieven from the page
+                        resolve(finalString);
+                    });
+                });
+            });
+        }
+
+        function pdfAsArray(pdfAsArray, title) {
+
+            var outputStr = "";
+
+            PDFJS.getDocument(pdfAsArray).then(function (pdf) {
+
+                var pdfDocument = pdf;
+                // Create an array that will contain our promises
+                var pagesPromises = [];
+
+                for (var i = 0; i < pdf.pdfInfo.numPages; i++) {
+                    // Required to prevent that i is always the total of pages
+                    (function (pageNumber) {
+                        // Store the promise of getPageText that returns the text of a page
+                        pagesPromises.push(getPageText(pageNumber, pdfDocument));
+                    })(i + 1);
+                }
+
+                // Execute all the promises
+                Promise.all(pagesPromises).then(function (pagesText) {
+
+                    // Display text of all the pages in the console
+                    // e.g ["Text content page 1", "Text content page 2", "Text content page 3" ... ]
+                    for (var pageNum = 0; pageNum < pagesText.length; pageNum++) {
+                        console.log(pagesText[pageNum]);
+                        outputStr = outputStr + pagesText[pageNum];
+                    }
+
+                    console.log(outputStr);
+
+                    var date = new Date();
+                    var date_str = date.getFullYear().toString() + "-" + (date.getMonth() + 1).toString() + "-" + date.getDate().toString();
+
+                    var username = window.sessionStorage.getItem("userName");
+                    var key = window.sessionStorage.getItem("session_key");
+                    console.log(key);
+
+                    var key_str_arr = key.split(",");
+
+                    var key_arr = [];
+                    for (let i = 0; i < 32; i++) {
+                        key_arr.push(parseInt(key_str_arr[i]))
+                    }
+                    console.log(key_arr);
+
+                    var key_str = bin2String(key_arr);
+                    console.log(key_str);
+                    var iv = Uint8Array.from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+                    console.log(iv);
+                    var iv_str = bin2String(iv);
+                    console.log(iv_str);
+
+                    var rawinput = {
+                        id: title,
+                        user: username,
+                        text: outputStr,
+                        time: date_str
+                    }
+                    var rawinput_json = JSON.stringify(rawinput);
+
+                    var rawinput_struct = {
+                        A: rawinput_json
+                    }
+                    var rawinput_str = JSON.stringify(rawinput_struct);
+                    console.log(rawinput_str);
+
+                    var cipher = forge.cipher.createCipher('AES-CBC', key_str);
+                    cipher.start({ iv: iv_str });
+                    cipher.update(forge.util.createBuffer(rawinput_str));
+                    cipher.finish();
+                    var encrypted = cipher.output;
+                    console.log(encrypted.data);
+
+                    var package_struct = {
+                        user: username,
+                        data: btoa(encrypted.data)
+                    }
+
+                    var package_str = JSON.stringify(package_struct);
+                    console.log(package_str);
+
+                    $.ajax({
+                        url: "/upload",
+                        async: false,
+                        method: "POST",
+                        data: { "package_str": package_str, "title": title, "username": username, "date": date_str },
+                        success: function (data) {
+                            console.log(data);
+                            console.log(data.res);
+                            console.log(data.message);
+                            if (data.res === "1") {
+                                alert("upload success");
+                                window.location.href = '/';
+                                return;
+                            } else {
+                                alert(data.message);
+                                window.location.href = '/';
+                                return;
+                            }
+                        }
+                    });
+                });
+
+            }, function (reason) {
+                // PDF loading error
+                console.error(reason);
+            });
+
+            return outputStr;
+        }
+
 
         function handle_docx(file, title) {
             'use strict';

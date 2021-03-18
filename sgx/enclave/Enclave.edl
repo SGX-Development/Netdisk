@@ -68,7 +68,7 @@ from "sgx_tprotected_fs.edl" import *;
             [in, size=enc_data_len] const uint8_t* enc_data, 
             size_t enc_data_len 
         );    
-        public sgx_status_t enclave_test();
+        //public sgx_status_t enclave_test();
 
                             
     };

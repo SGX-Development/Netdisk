@@ -665,7 +665,7 @@ pub extern "C" fn get_origin_by_id(
     }
 
     let line: String = x.unwrap();
-    println!("line: {}", &line);
+    // println!("line: {}", &line);
 
     let uid = get_id_from_data(line.clone());
     if uid != requester {

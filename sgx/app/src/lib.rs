@@ -24,11 +24,6 @@ struct G {
     A: String,
 }
 
-// #[derive(Serialize, Deserialize, Debug)]
-// struct Package {
-//     user: String,
-//     data: String,
-// }
 
 
 static ENCLAVE_FILE: &'static str = "enclave.signed.so";
@@ -42,7 +37,6 @@ extern "C" {
         retval: *mut sgx_status_t,
         line: *const u8,
         len: usize,
-        // user: i32,
     ) -> sgx_status_t;
     fn empty_bin(eid: sgx_enclave_id_t, retval: *mut sgx_status_t) -> sgx_status_t;
     fn delete_index(
@@ -109,10 +103,10 @@ extern "C" {
         enc_data_len: usize,
     ) -> sgx_status_t;
 
-    fn enclave_test(
-        eid: sgx_enclave_id_t,
-        retval: *mut sgx_status_t,
-    ) -> sgx_status_t;
+    // fn enclave_test(
+    //     eid: sgx_enclave_id_t,
+    //     retval: *mut sgx_status_t,
+    // ) -> sgx_status_t;
 
     fn user_logout(
         eid: sgx_enclave_id_t,
@@ -184,13 +178,13 @@ pub extern "C" fn rust_do_query(
     some_string: *const u8,
     some_len: usize,
     result_string_limit: usize,
-    // result_string: *mut u8,
     encrypted_result_string: *mut u8,
-    // result_string_size: *mut usize,
     encrypted_result_string_size: *mut usize,
 ) -> Result<(), std::io::Error> {
     let v: &[u8] = unsafe { std::slice::from_raw_parts(some_string, some_len) };
     let line = String::from_utf8(v.to_vec()).unwrap();
+
+    println!("[=] Intercept: {}", &line);
 
     let enclave = match &*SGX_ENCLAVE {
         Ok(r) => {
@@ -209,8 +203,6 @@ pub extern "C" fn rust_do_query(
 
     let mut retval = sgx_status_t::SGX_SUCCESS;
 
-    // let mut result_vec: Vec<u8> = vec![0; result_string_limit];
-    // let result_slice = &mut result_vec[..];
 
     let mut encrypted_result_vec: Vec<u8> = vec![0; result_string_limit];
     let encrypted_result_slice = &mut encrypted_result_vec[..];
@@ -221,7 +213,6 @@ pub extern "C" fn rust_do_query(
             &mut retval,
             line.as_ptr() as *const u8,
             line.len(),
-            // result_slice.as_mut_ptr(),
             encrypted_result_slice.as_mut_ptr(),
             result_string_limit,
         )
@@ -280,6 +271,8 @@ pub extern "C" fn rust_build_index(
     let v: &[u8] = unsafe { std::slice::from_raw_parts(some_string, some_len) };
     let line = String::from_utf8(v.to_vec()).unwrap();
 
+    println!("[=] Intercept: {}", &line);
+
     let enclave = match &*SGX_ENCLAVE {
         Ok(r) => {
             println!("[+] rust_build_index");
@@ -294,10 +287,6 @@ pub extern "C" fn rust_build_index(
         }
     };
 
-    // let raw_package: Package = serde_json::from_str(&line).unwrap();
-    // // let package_user = raw_package.user;
-    // let package_data = raw_package.data;
-    // let package_user = raw_package.user.parse::<i32>().unwrap()
         
     let enclave_id = enclave.geteid();
 
@@ -1061,34 +1050,34 @@ pub extern "C" fn rust_test() -> Result<(), std::io::Error>{
     let enclave_id = enclave.geteid();
     let mut retval = sgx_status_t::SGX_SUCCESS;
 
-    let result = unsafe {
-        enclave_test(
-            enclave_id,
-            &mut retval,
-        )
-    };
+    // let result = unsafe {
+    //     enclave_test(
+    //         enclave_id,
+    //         &mut retval,
+    //     )
+    // };
 
-    match result {
-        sgx_status_t::SGX_SUCCESS => {}
-        _ => {
-            eprintln!("[-] test Enclave Failed {}!", result.as_str());
-            return Err(std::io::Error::new(
-                std::io::ErrorKind::Other,
-                "test failed",
-            ));
-        }
-    }
-    match retval {
-        sgx_status_t::SGX_SUCCESS => {}
-        e => {
-            eprintln!("[-] ECALL Enclave Failed {}!", retval.as_str());
-            return Err(std::io::Error::new(
-                std::io::ErrorKind::Other,
-                e.to_string(),
-            ));
-        }
-    }
-    println!("success!");
+    // match result {
+    //     sgx_status_t::SGX_SUCCESS => {}
+    //     _ => {
+    //         eprintln!("[-] test Enclave Failed {}!", result.as_str());
+    //         return Err(std::io::Error::new(
+    //             std::io::ErrorKind::Other,
+    //             "test failed",
+    //         ));
+    //     }
+    // }
+    // match retval {
+    //     sgx_status_t::SGX_SUCCESS => {}
+    //     e => {
+    //         eprintln!("[-] ECALL Enclave Failed {}!", retval.as_str());
+    //         return Err(std::io::Error::new(
+    //             std::io::ErrorKind::Other,
+    //             e.to_string(),
+    //         ));
+    //     }
+    // }
+    // println!("success!");
     Ok(())
 }
 

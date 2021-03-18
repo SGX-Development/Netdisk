@@ -9,14 +9,14 @@ all:
 
 .PHONY: cleandb
 cleandb:
-	rm -rf test/idx
+	rm -rf test/idx netdisk/idx
 	sync
 
 .PHONY: clean
 clean:
 	$(MAKE) -C sgx clean
 	$(MAKE) -C test clean
-	rm -f enclave.signed.so tantivy-sgx tantivy-sgx-part
-	rm -rf idx
+	rm -f netdisk/enclave.signed.so  netdisk/netdisk
+	rm -rf netdisk/idx
 	sync
 

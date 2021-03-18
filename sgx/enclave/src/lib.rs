@@ -236,8 +236,8 @@ pub extern "C" fn build_index(some_string: *const u8, some_len: usize) -> sgx_st
     let requester = package_input.user;
     let enc_data = package_input.data;
 
-    println!("{:?}", &requester);
-    println!("{:?}", &enc_data);
+    // println!("{:?}", &requester);
+    // println!("{:?}", &enc_data);
 
     let x = sgx_decrypt(enc_data.as_ptr() as *const u8, enc_data.len(), &requester);
 
@@ -260,7 +260,7 @@ pub extern "C" fn build_index(some_string: *const u8, some_len: usize) -> sgx_st
     let line = String::from_utf8(v_vec).unwrap();
 
     let raw_input: RawInput = serde_json::from_str(&line).unwrap();
-    println!("{:?}", &raw_input);
+    // println!("{:?}", &raw_input);
 
     // find if user == request user in package
     let op_user = raw_input.user.clone();
@@ -386,7 +386,7 @@ pub extern "C" fn delete_index(some_string: *const u8, some_len: usize) -> sgx_s
 
 
 
-    println!("delete to bin: {}", &articleuser_id);
+    // println!("delete to bin: {}", &articleuser_id);
 
 
     let db_input = DBInput{
@@ -475,7 +475,7 @@ pub extern "C" fn recover_index(some_string: *const u8, some_len: usize) -> sgx_
 
 
 
-    println!("delete to bin: {}", &articleuser_id);
+    // println!("delete to bin: {}", &articleuser_id);
 
 
     let db_input = DBInput{
@@ -521,7 +521,6 @@ pub extern "C" fn do_query(
     encrypted_result_string: *mut u8,
     result_max_len: usize,
 ) -> sgx_status_t {
-    get_rsa();
 
     let v: &[u8] = unsafe { std::slice::from_raw_parts(some_string, some_len) };
     let vraw = String::from_utf8(v.to_vec()).unwrap();  
@@ -801,7 +800,7 @@ extern "C" fn sgx_decrypt(ciphertext: *const u8, ciphertext_len: usize, requeste
     // println!("{:?}", ciphertext_slice);
     let key: [u8; 32] = (*keymap).lock().get(requester).unwrap().clone();
 
-    println!("key: {:?}", &key);
+    // println!("key: {:?}", &key);
 
     let iv: [u8; 16] = [0; 16];
     let w = base64::decode(ciphertext_slice);
@@ -959,8 +958,8 @@ pub extern "C" fn server_hello(
     //     }
     // }
 
-    println!("pk: {:?}", &*private_key);
-    println!("pk: {:?}", &*public_key);
+    // println!("pk: {:?}", &*private_key);
+    // println!("pk: {:?}", &*public_key);
     // println!("\npkn: {:?}", &*public_key_n);
     // println!("\npke: {:?}", &*public_key_e);
 
@@ -1051,8 +1050,8 @@ pub extern "C" fn user_register(
     let tmp_user = user_data.user;
     let tmp_pswd = user_data.password;
 
-    println!("tmp user: {}", &tmp_user);
-    println!("tmp pswd: {}", &tmp_pswd);
+    // println!("tmp user: {}", &tmp_user);
+    // println!("tmp pswd: {}", &tmp_pswd);
 
     let mut rng = rand::rngs::StdRng::seed_from_u64(0);
     let padding = PaddingScheme::new_pkcs1v15_encrypt();
@@ -1131,8 +1130,8 @@ pub extern "C" fn get_session_key(
         db_pswd_str = String::from_utf8_unchecked(db_pswd.to_vec());
     };
 
-    println!("data_str: {}", data_str);
-    println!("db_pswd_str: {}", db_pswd_str);
+    // println!("data_str: {}", data_str);
+    // println!("db_pswd_str: {}", db_pswd_str);
 
     let data_struct: SessionKeyPackage  = match serde_json::from_str(&data_str){
         Ok(r) => {
@@ -1160,7 +1159,7 @@ pub extern "C" fn get_session_key(
 
     // let mut sk:[u8;32];
 
-    println!("sk1 {:?}", &sk_u8_vec);
+    // println!("sk1 {:?}", &sk_u8_vec);
 
     let sk_ptr = sk_u8_vec.as_ptr() as *const [u8;32];
     let sk = unsafe {&*sk_ptr};
@@ -1179,11 +1178,11 @@ pub extern "C" fn get_session_key(
     // }
     
     println!("[+] session key SUCCESS!");
-    println!("sk2 {:?}", &sk);
+    // println!("sk2 {:?}", &sk);
     
 
     (*keymap).lock().insert(data_struct.user, sk);
-    println!("map: {:?}", &*keymap);
+    // println!("map: {:?}", &*keymap);
 
     // let key_u8: &[u8] = unsafe { std::slice::from_raw_parts(data_struct.key.as_ptr() as *const u8, data_struct.key.len()) };
     // println!("key_u8: {:?}", key_u8);
@@ -1232,17 +1231,17 @@ pub extern "C" fn user_logout(some_string: *const u8, some_len: usize) -> sgx_st
     }
     let user_name: String = x.unwrap();
 
-    println!("{:?}", user_name);
+    // println!("{:?}", user_name);
 
     if !(*keymap).lock().contains_key(&user_name) {
-        eprintln!("user '{}' does not login", &user_name);
+        // eprintln!("user '{}' does not login", &user_name);
         return sgx_status_t::SGX_ERROR_UNEXPECTED;
     }
  
     (*keymap).lock().remove(&user_name);
-    println!("[+] {} logout SUCCESS!", user_name);
+    // println!("[+] {} logout SUCCESS!", user_name);
 
-    println!("map: {:?}", &*keymap);
+    // println!("map: {:?}", &*keymap);
     
     sgx_status_t::SGX_SUCCESS
 }
@@ -1252,113 +1251,5 @@ pub extern "C" fn user_logout(some_string: *const u8, some_len: usize) -> sgx_st
 pub extern "C" fn enclave_test() -> sgx_status_t {
     println!("[=] test SUCCESS!");
 
-    // let test_u8:&[u8] = b"hello!";
-
-    // println!("pk: {:?}", &*private_key);
-    // println!("pk: {:?}", &*public_key);
-
-    let getuser: UserInfo = UserInfo{
-        user: String::from("take"),
-        password: String::from("123456"),
-    };
-
-    // let getstr = serde_json::to_string(&getuser).unwrap();
-
-    // println!("user string: {}", &getstr);
-
-    // let mut rng = rand::rngs::StdRng::seed_from_u64(1);
-    // let padding = PaddingScheme::new_pkcs1v15_encrypt();
-    // let enc_data = (*public_key).encrypt(&mut rng, padding, getstr.as_bytes()).expect("failed to encrypt");
-
-    // println!("user enc: {:?}", &enc_data);
-
-    // let enc_data = [138, 57, 30, 230, 34, 195, 199, 159, 215, 38, 5, 169, 181, 106, 21, 203, 41, 14, 54, 76, 80, 38, 151, 11, 101, 68, 254, 221, 172, 165, 133, 231, 29, 49, 246, 73, 31, 51, 180, 221, 130, 96, 184, 40, 45, 136, 252, 246, 54, 108, 100, 248, 14, 18, 5, 158, 106, 113, 201, 26, 191, 224, 98, 159, 200, 94, 38, 176, 238, 129, 168, 211, 42, 235, 118, 119, 169, 79, 10, 51, 245, 199, 212, 190, 216, 39, 39, 206, 14, 66, 72, 171, 64, 157, 231, 84, 111, 246, 164, 0, 211, 139, 150, 204, 77, 55, 207, 186, 203, 81, 28, 6, 209, 106, 213, 196, 166, 160, 250, 88, 85, 167, 116, 113, 35, 186, 84, 170, 237, 91, 51, 199, 20, 62, 242, 176, 151, 54, 218, 79, 69, 70, 157, 83, 28, 72, 37, 155, 98, 62, 165, 106, 185, 0, 203, 245, 190, 130, 124, 207, 143, 134, 192, 8, 121, 61, 85, 71, 73, 174, 252, 219, 223, 61, 59, 188, 254, 239, 210, 57, 221, 174, 25, 247, 136, 152, 112, 118, 196, 236, 157, 219, 70, 234, 126, 168, 81, 185, 188, 63, 117, 2, 124, 36, 91, 74, 130, 217, 203, 102, 216, 167, 189, 39, 129, 150, 101, 44, 214, 138, 135, 100, 119, 140, 222, 152, 218, 226, 54, 27, 35, 161, 47, 98, 26, 28, 64, 102, 236, 245, 176, 7, 94, 185, 57, 37, 0, 255, 197, 226, 190, 227, 168, 184, 180, 200];
-    // let enc_data =  String::from_utf8(enc_vec).unwrap();
-
-    // decryption
-    // let padding = PaddingScheme::new_pkcs1v15_encrypt();
-    // let raw_data = match (*private_key).decrypt(padding, &enc_data){
-    //     Ok(r) => {
-    //         println!("[+] session key decrypt SUCCESS!");
-    //         r
-    //     }
-    //     _ => {
-    //         println!("[-] session key decrypt ERROR!");
-    //         return sgx_status_t::SGX_ERROR_UNEXPECTED;
-    //     }
-    // };
-
-    // let raw_string =  String::from_utf8(raw_data.to_vec()).unwrap();
-
-    // println!("user enc: {}", raw_string);
-
-    let session_key = String::from("abcdefghijklmnopqrstuvwxyzABCDEF");
-
-    let sk_u8_vec: Vec<u8> = session_key.as_bytes().to_vec();
-
-    let mut sk:[u8;32];
-
-    println!("{:?}", &sk_u8_vec);
-
-    sk = match slice_to_array_32(sk_u8_vec){
-        Ok(r) => {
-            println!("[+] session key SUCCESS!");
-            println!("sk: {:?}", r.clone());
-            *r
-        }
-        _ =>{
-            println!("[-] session key ERROR!");
-            return sgx_status_t::SGX_ERROR_UNEXPECTED;
-        }
-    };
-    println!("sk: {:?}", sk.clone());
-
-
-
     return sgx_status_t::SGX_SUCCESS;
-
-}
-
-
-fn get_rsa(){
-
-    // let timeseed = std::time::SystemTime::now().duration_since(std::time::SystemTime::UNIX_EPOCH).unwrap();
-    // let seed = timeseed.as_secs();
-    // let mut rng = rand::rngs::StdRng::seed_from_u64(seed);
-    // let bits = 2048;
-    // let private_key = RSAPrivateKey::new(&mut rng, bits).expect("failed to generate a key");
-    // // println!("private: {:?}", private_key);
-    // let public_key = RSAPublicKey::from(&private_key);
-    // println!("public: {:?}", public_key);
-    // let nu8 = public_key.n_to_vecu8();
-    // let eu8 = public_key.e_to_vecu8();
-    // // println!("public n: {:?}", &nu8);
-    // // println!("public e: {:?}", &eu8);
-    // println!("public n: {}", nu8.len());
-    // println!("public e: {}", eu8.len());
-
-    // let newkey = RSAPublicKey::u8_form_pk(&nu8,&eu8);
-
-    // // let pk_e = public_key.e().to_byte_be();
-    // // let public_key_string = serde_json::to_string(&public_key).unwrap();
-    // // println!("public: {}", public_key_string);
-
-
-    // rng = rand::rngs::StdRng::seed_from_u64(0);
-
-    // // Encrypt
-    // let data = b"hello world";
-    // // let data = data.unwrap();
-    // let padding = PaddingScheme::new_pkcs1v15_encrypt();
-    // let enc_data = newkey.encrypt(&mut rng, padding, &data[..]).expect("failed to encrypt");
-    // // let enc_string = String::from_utf8(enc_data.clone().to_vec()).unwrap();  
-    // // println!("haoye1: {:?}", enc_data);
-
-    // // Decrypt
-    // let padding = PaddingScheme::new_pkcs1v15_encrypt();
-    // let dec_data = private_key.decrypt(padding, &enc_data).expect("failed to decrypt");
-    // let dec_string = String::from_utf8(dec_data.clone().to_vec()).unwrap();  
-    // println!("haoye2: {}", dec_string);
-
-
 }

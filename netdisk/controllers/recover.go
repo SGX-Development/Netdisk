@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"fmt"
+	// "fmt"
 
 	"github.com/beego/beego/v2/client/orm"
 	beego "github.com/beego/beego/v2/server/web"
@@ -17,9 +17,9 @@ func (c *RecoverController) RecoverGet() {
 	package_str := c.GetString("package_str")
 	filename := c.GetString("title")
 	username := c.GetString("username")
-	fmt.Println(package_str)
-	fmt.Println(filename)
-	fmt.Println(username)
+	// fmt.Println(package_str)
+	// fmt.Println(filename)
+	// fmt.Println(username)
 
 	if recover_index_and_commit(package_str) {
 		o := orm.NewOrm()

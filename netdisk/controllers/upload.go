@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"fmt"
+	// "fmt"
 	// "log"
 	// "strings"
 
@@ -30,9 +30,9 @@ func (c *MainController) Upload() {
 	filename := c.GetString("title")
 	username := c.GetString("username")
 	date := c.GetString("date")
-	fmt.Println(package_str)
-	fmt.Println(filename)
-	fmt.Println(username)
+	// fmt.Println(package_str)
+	// fmt.Println(filename)
+	// fmt.Println(username)
 
 	if CheckFile(filename, c.UserName()) {
 		if build_index_and_commit(package_str) {

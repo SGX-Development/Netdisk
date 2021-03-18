@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"fmt"
+	// "fmt"
 	// "netdisk/models"
 
 	// "errors"
@@ -18,7 +18,7 @@ func (c *QueryController) QueryGet() {
 	ReturnData := make(map[string]interface{})
 
 	package_str := c.GetString("package_str")
-	fmt.Println(package_str)
+	// fmt.Println(package_str)
 
 	ReturnData["res"] = "1"
 	ReturnData["message"] = do_query(package_str)

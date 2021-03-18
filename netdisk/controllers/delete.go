@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"fmt"
+	// "fmt"
 	// "netdisk/models"
 
 	// "errors"
@@ -20,9 +20,9 @@ func (c *DeleteController) DeleteGet() {
 	package_str := c.GetString("package_str")
 	filename := c.GetString("title")
 	username := c.GetString("username")
-	fmt.Println(package_str)
-	fmt.Println(filename)
-	fmt.Println(username)
+	// fmt.Println(package_str)
+	// fmt.Println(filename)
+	// fmt.Println(username)
 
 	if delete_index_and_commit(package_str) {
 		o := orm.NewOrm()

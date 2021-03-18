@@ -20,7 +20,7 @@ import "C"
 // import "log"
 import (
 	"encoding/json"
-	"fmt"
+	// "fmt"
 )
 
 type RawInput struct {
@@ -98,7 +98,7 @@ func register(enc_user_pswd string) (string, string) {
 		user, &user_len, enc_pswd, &enc_pswd_len, &success, STRING_LIMIT)
 
 	if success == 0 {
-		fmt.Println("Register Failed!")
+		// fmt.Println("Register Failed!")
 		return "", ""
 	}
 
@@ -115,10 +115,10 @@ func get_session_key(enc_pswd_from_db string, enc_data string) bool {
 		&success,
 	)
 	if success == 0 {
-		fmt.Println("session key process Failed!")
+		// fmt.Println("session key process Failed!")
 		return false
 	} else {
-		fmt.Println("session key process SUCCESS!")
+		// fmt.Println("session key process SUCCESS!")
 		return true
 	}
 }
@@ -142,10 +142,10 @@ func user_logout(input string) bool {
 func delete_index_and_commit(input string) bool {
 
 	success := (C.ulong)(0)
-	fmt.Println("delete_index")
+	// fmt.Println("delete_index")
 	C.rust_delete_index(C.CString(input), C.ulong(len(input)), &success)
 
-	fmt.Printf("delete_index return %d\n", success)
+	// fmt.Printf("delete_index return %d\n", success)
 
 	if success == 0 {
 		return false
@@ -153,7 +153,7 @@ func delete_index_and_commit(input string) bool {
 
 	C.rust_commit(&success)
 
-	fmt.Printf("commit return %d\n", success)
+	// fmt.Printf("commit return %d\n", success)
 
 	if success == 1 {
 		return true
@@ -212,7 +212,7 @@ func build_index_and_commit(input string) bool {
 
 	C.rust_build_index(C.CString(input), C.ulong(len(input)), &success)
 
-	fmt.Printf("build_index return %d\n", success)
+	// fmt.Printf("build_index return %d\n", success)
 
 	if success == 0 {
 		return false
@@ -220,7 +220,7 @@ func build_index_and_commit(input string) bool {
 
 	C.rust_commit(&success)
 
-	fmt.Printf("commit return %d\n", success)
+	// fmt.Printf("commit return %d\n", success)
 
 	if success == 1 {
 		return true
@@ -277,7 +277,7 @@ func string_to_Package(input string) Package {
 		panic("unmarshal failed")
 	}
 
-	fmt.Println("%+v", pack)
+	// fmt.Println("%+v", pack)
 	return pack
 }
 

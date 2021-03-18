@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"fmt"
+	// "fmt"
 	"netdisk/models"
 
 	"github.com/beego/beego/v2/client/orm"
@@ -46,7 +46,7 @@ func(c *BinController) BinPost() {
 		if err != nil {
 			ReturnData["res"]='0'
 			ReturnData["message"]="db delete failure"
-			fmt.Println(err)
+			// fmt.Println(err)
 		} else {
 			ReturnData["res"] = "1"
 			ReturnData["message"] = "0"

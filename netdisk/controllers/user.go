@@ -30,7 +30,7 @@ func (c *MainController) Handlelogin() {
 
 	enc_session_package, _ := base64.StdEncoding.DecodeString(enc_session_package_base64)
 
-	fmt.Println(enc_session_package)
+	// fmt.Println(enc_session_package)
 
 	errMsg := ""
 	id := -1
@@ -46,14 +46,14 @@ func (c *MainController) Handlelogin() {
 		id = user.Id
 	}
 
-	fmt.Println(errMsg)
-	fmt.Println(id)
+	// fmt.Println(errMsg)
+	// fmt.Println(id)
 
 	pswd_base64 := user.Passwd + user.Passwd_more
-	fmt.Println(pswd_base64)
+	// fmt.Println(pswd_base64)
 
 	pswd, _ := base64.StdEncoding.DecodeString(pswd_base64)
-	fmt.Println("hi")
+	// fmt.Println("hi")
 	if errMsg == "" {
 		if !get_session_key(string(pswd[:]), string(enc_session_package[:])) {
 			errMsg = "密码错误！"
@@ -96,10 +96,10 @@ func (c *RegController) RegGet() {
 	email := c.GetString("email")
 
 	_, enc_pswd_str := register(enc_uname_pwd_base64)
-	fmt.Println("enc_pswd_str: ", enc_pswd_str)
+	// fmt.Println("enc_pswd_str: ", enc_pswd_str)
 
 	enc_pswd_base64 := base64.StdEncoding.EncodeToString([]byte(enc_pswd_str))
-	fmt.Println("enc_pswd_base64: ", enc_pswd_base64)
+	// fmt.Println("enc_pswd_base64: ", enc_pswd_base64)
 
 	// var hashtable = make(map[string]string)
 	// IsValid(userName, enc_pswd_base64, email, hashtable)
@@ -148,7 +148,7 @@ func IsValid(userName string, passWd string, email string, hashtable map[string]
 	//var hashtable = make(map[string]string)
 
 	if valid.HasErrors() {
-		fmt.Println("valid.HasErrors")
+		// fmt.Println("valid.HasErrors")
 		for _, err := range valid.Errors {
 			hashtable["Verify"+err.Key] = err.Message
 		}
@@ -207,7 +207,7 @@ func CheckReg(userName string, passWd string, email string) (errMsg string, flag
 		user.Isactive = true
 		user.Isdelete = false
 		_, err = o.Insert(&user)
-		fmt.Println(err)
+		// fmt.Println(err)
 		if err != nil {
 			errMsg = fmt.Sprint(err)
 			flag = false
@@ -221,7 +221,7 @@ func (c *MainController) Logout() {
 	ReturnData := make(map[string]interface{})
 
 	package_str := c.GetString("package_str")
-	fmt.Println(package_str)
+	// fmt.Println(package_str)
 
 	// fmt.Println(user_logout(package_str))
 

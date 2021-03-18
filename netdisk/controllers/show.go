@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"fmt"
+	// "fmt"
 	// "netdisk/models"
 
 	// "errors"
@@ -18,11 +18,11 @@ func (c *ShowController) ShowGet() {
 	ReturnData := make(map[string]interface{})
 
 	package_str := c.GetString("package_str")
-	filename := c.GetString("title")
-	username := c.GetString("username")
-	fmt.Println(package_str)
-	fmt.Println(filename)
-	fmt.Println(username)
+	// filename := c.GetString("title")
+	// username := c.GetString("username")
+	// fmt.Println(package_str)
+	// fmt.Println(filename)
+	// fmt.Println(username)
 
 	ReturnData["res"] = "1"
 	ReturnData["message"] = search_title(package_str)

@@ -59,6 +59,7 @@ extern "C" {
         len: usize,
         encrypted_result_string: *const u8,
         result_max_len: usize,
+        isFuzzy: usize,
     ) -> sgx_status_t;
 
     fn get_origin_by_id(
@@ -180,11 +181,12 @@ pub extern "C" fn rust_do_query(
     result_string_limit: usize,
     encrypted_result_string: *mut u8,
     encrypted_result_string_size: *mut usize,
+    isFuzzy: usize,
 ) -> Result<(), std::io::Error> {
     let v: &[u8] = unsafe { std::slice::from_raw_parts(some_string, some_len) };
     let line = String::from_utf8(v.to_vec()).unwrap();
 
-    println!("[=] Intercept: {}", &line);
+    alertprint(line.clone(),"query");
 
     let enclave = match &*SGX_ENCLAVE {
         Ok(r) => {
@@ -207,6 +209,8 @@ pub extern "C" fn rust_do_query(
     let mut encrypted_result_vec: Vec<u8> = vec![0; result_string_limit];
     let encrypted_result_slice = &mut encrypted_result_vec[..];
 
+    println!("[~~]test");
+
     let result = unsafe {
         do_query(
             enclave_id,
@@ -215,6 +219,7 @@ pub extern "C" fn rust_do_query(
             line.len(),
             encrypted_result_slice.as_mut_ptr(),
             result_string_limit,
+            isFuzzy,
         )
     };
 
@@ -271,7 +276,8 @@ pub extern "C" fn rust_build_index(
     let v: &[u8] = unsafe { std::slice::from_raw_parts(some_string, some_len) };
     let line = String::from_utf8(v.to_vec()).unwrap();
 
-    println!("[=] Intercept: {}", &line);
+    // println!("[=] Intercept: {}", &line);
+    alertprint(line.clone(), "build");
 
     let enclave = match &*SGX_ENCLAVE {
         Ok(r) => {
@@ -1227,4 +1233,12 @@ fn rust_decrypt(message: String) -> String {
     let g: G = serde_json::from_str(&y).unwrap();
 
     g.A
+}
+
+fn alertprint(message: String, op: &str){
+    println!("==============get message============");
+    println!("operation: {}", op);
+    println!("-------------------------------------\n\n");
+    println!("{}",message);
+    println!("\n\n=====================================");
 }

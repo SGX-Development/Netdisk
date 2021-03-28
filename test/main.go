@@ -4,7 +4,7 @@ package main
 //#include <stdint.h>
 //#include <math.h>
 //extern unsigned long long init_enclave();
-//extern void rust_do_query( char* some_string, size_t some_len,size_t result_string_limit,char * encrypted_result_string,size_t * encrypted_result_string_size);
+//extern void rust_do_query( char* some_string, size_t some_len,size_t result_string_limit,char * encrypted_result_string,size_t * encrypted_result_string_size, size_t isFuzzy);
 //extern void rust_build_index( char* some_string, size_t some_len,size_t * result_string_size);
 //extern void rust_delete_index( char* some_string, size_t some_len,size_t * result_string_size);
 //extern void rust_search_title( char * some_string, size_t some_len,size_t result_string_limit, char * encrypted_result_string,size_t * encrypted_result_string_size);
@@ -263,15 +263,17 @@ func delete_index_and_commit(input string) {
 // 	fmt.Println(aes_decrypt(encrypted_data))
 // }
 
-func do_query(input string) {
+func do_query(input string, isFuzzy int) {
 
 	const result_string_limit = 8192
 	a := C.CString(input)
 
+	isfuzzy := C.ulong(isFuzzy)
+
 	c_encrypted := (*C.char)(C.malloc(result_string_limit))
 	d_encrypted := (C.ulong)(0)
 
-	C.rust_do_query(a, C.ulong(len(input)), result_string_limit, c_encrypted, &d_encrypted)
+	C.rust_do_query(a, C.ulong(len(input)), result_string_limit, c_encrypted, &d_encrypted, isfuzzy)
 
 	str_encrypted := C.GoStringN(c_encrypted, (C.int)(d_encrypted))
 	fmt.Println(aes_decrypt(str_encrypted))

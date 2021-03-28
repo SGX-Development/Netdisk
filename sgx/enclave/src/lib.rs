@@ -30,6 +30,7 @@ use rand::{rngs::StdRng, SeedableRng,Rng};
 use rsa::{PublicKey, RSAPrivateKey, RSAPublicKey, PaddingScheme};
 use num_bigint::BigUint;
 use std::collections::HashMap;
+use tantivy::query::FuzzyTermQuery;
 
 extern crate crypto;
 
@@ -517,9 +518,9 @@ pub extern "C" fn commit() -> sgx_status_t {
 pub extern "C" fn do_query(
     some_string: *const u8,
     some_len: usize,
-    // result_string: *mut u8,
     encrypted_result_string: *mut u8,
     result_max_len: usize,
+    isFuzzy: usize,
 ) -> sgx_status_t {
 
     let v: &[u8] = unsafe { std::slice::from_raw_parts(some_string, some_len) };
@@ -570,22 +571,53 @@ pub extern "C" fn do_query(
     let searcher = reader.searcher();
 
     let mut point = Articles { A: vec![] };
+    println!("[~~]test1: {}",&pattern);
 
-    let query = match query_parser.parse_query(&pattern) {
-        Ok(query) => query,
-        Err(e) => {
-            eprintln!("{}", e);
-            panic!(e);
-        }
-    };
+    
+    let mut top_docs;
+    if isFuzzy==1 {
+        let text = schema.get_field("text").unwrap();
 
-    let top_docs = match searcher.search(&query, &TopDocs::with_limit(100)) {
-        Ok(top_docs) => top_docs,
-        Err(e) => {
-            eprintln!("{}", e);
-            panic!(e);
-        }
-    };
+        let term = Term::from_field_text(text, &pattern);
+        let query = FuzzyTermQuery::new(term, 2, true);
+
+        top_docs = match searcher.search(&query, &TopDocs::with_limit(100)) {
+            Ok(top_docs) => top_docs,
+            Err(e) => {
+                eprintln!("{}", e);
+                panic!(e);
+                return sgx_status_t::SGX_ERROR_UNEXPECTED;
+            }
+        };
+    } else {
+        let query = match query_parser.parse_query(&pattern) {
+            Ok(query) => query,
+            Err(e) => {
+                eprintln!("{}", e);
+                panic!(e);
+                return sgx_status_t::SGX_ERROR_UNEXPECTED;
+            }
+        };
+        top_docs = match searcher.search(&query, &TopDocs::with_limit(100)) {
+            Ok(top_docs) => top_docs,
+            Err(e) => {
+                eprintln!("{}", e);
+                panic!(e);
+                return sgx_status_t::SGX_ERROR_UNEXPECTED;
+            }
+        };
+    }
+    
+    println!("[~~]test2");
+
+    // let top_docs = match searcher.search(&query, &TopDocs::with_limit(100)) {
+    //     Ok(top_docs) => top_docs,
+    //     Err(e) => {
+    //         eprintln!("{}", e);
+    //         panic!(e);
+    //         return sgx_status_t::SGX_ERROR_UNEXPECTED;
+    //     }
+    // };
 
     let id = schema.get_field("id").unwrap();
     let user = schema.get_field("user").unwrap();

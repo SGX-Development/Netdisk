@@ -1,2 +1,3 @@
 enclave.signed.so
 idx
+tmp/*

@@ -62,7 +62,7 @@
         </p>
         <p>
         <div class="btn-group btn-group-sm">
-            <button type="button" onclick="Handle_Register()" class="btn btn-primary"
+            <button type="button" onclick="register()" class="btn btn-primary"
                 style="background-color: #203643;border-color: #cccccc">
                 Register </button>
         </div>
@@ -76,7 +76,7 @@
     <script src="https://cdn.jsdelivr.net/npm/node-forge@0.7.0/dist/forge.min.js"></script>
 
     <script>
-        function Handle_Register() {
+        function register() {
             'use strict';
 
             var uname = document.getElementById('userName').value;
@@ -145,7 +145,7 @@
                     var enc_uname_pwd = rsaPublicKey.encrypt(user_pswd_json, 'RSAES-PKCS1-V1_5');
 
                     $.ajax({
-                        url: "/reg",
+                        url: "/register",
                         async: false,
                         data: { "userName": uname, "enc_uname_pwd": btoa(enc_uname_pwd), "email": email },
                         success: function (data) {

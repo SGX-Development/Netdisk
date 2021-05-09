@@ -255,7 +255,7 @@
                                         <div class="item-meta-ico bg-ico-chat"></div>
                                         <h2 class="m-t-none text-ellipsis index-post-title text-title"
                                             style="padding-top: 11px;"><a href="" name={{$a}}
-                                                onclick="showArticle(this);return false;">{{$a}}</a></h2>
+                                                onclick="show(this);return false;">{{$a}}</a></h2>
                                         <div class="line line-lg b-b b-light"></div>
                                         <div class="text-muted post-item-foot-icon text-ellipsis list-inline">
                                             <li><span class="right-small-icons m-r-sm"><svg
@@ -414,7 +414,7 @@
     </script>
 
     <script>
-        function showArticle(a) {
+        function show(a) {
             'use strict';
             var title = a.name;
             console.log(title);

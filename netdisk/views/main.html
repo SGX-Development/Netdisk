@@ -16,19 +16,19 @@
     <title>Netdisk</title>
     <!-- 第三方CDN加载CSS -->
     <link href=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/libs/bootstrap/css/bootstrap.min.css"
-        rel="stylesheet">
+          rel="stylesheet">
     <!-- 本地css静态资源 -->
     <link rel="stylesheet"
-        href=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/css/origin/function.min.css?v=8.1.02021030201"
-        type="text/css">
+          href=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/css/origin/function.min.css?v=8.1.02021030201"
+          type="text/css">
     <link rel="stylesheet"
-        href=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/css/handsome.min.css?v=8.1.02021030201"
-        type="text/css">
+          href=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/css/handsome.min.css?v=8.1.02021030201"
+          type="text/css">
     <!--主题组件css文件加载-->
     <!--引入英文字体文件-->
     <link rel="stylesheet preload"
-        href=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/css/features/font.min.css?v=8.1.02021030201"
-        as="style">
+          href=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/css/features/font.min.css?v=8.1.02021030201"
+          as="style">
 
     <style type="text/css">
         html.bg {
@@ -66,312 +66,424 @@
         }
     </style>
     <!--全站jquery-->
+
     <script src=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/libs/jquery/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.1.2/dist/echarts.min.js"></script>
 </head>
 
 <body id="body" class="fix-padding skt-loading">
-    <!-- aside -->
-    <div id="alllayout" class="app app-aside-fix container app-header-fixed">
-        <!-- headnav -->
-        <header id="header" class="app-header navbar box-shadow-bottom-lg" role="menu">
-            <!-- navbar header（交集处） -->
-            <div class="text-ellipsis navbar-header bg-white">
-                <button class="pull-right visible-xs" ui-toggle-class="show animated animated-lento fadeIn"
+<!-- aside -->
+<div id="alllayout" class="app app-aside-fix container app-header-fixed">
+    <!-- headnav -->
+    <header id="header" class="app-header navbar box-shadow-bottom-lg" role="menu">
+        <!-- navbar header（交集处） -->
+        <div class="text-ellipsis navbar-header bg-white">
+            <button class="pull-right visible-xs" ui-toggle-class="show animated animated-lento fadeIn"
                     target=".navbar-collapse">
                     <span class="menu-icons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
+                                                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                  stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg></span>
-                </button>
-                <button class="pull-left visible-xs" ui-toggle-class="off-screen animated" target=".app-aside"
+            </button>
+            <button class="pull-left visible-xs" ui-toggle-class="off-screen animated" target=".app-aside"
                     ui-scroll="app">
                     <span class="menu-icons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+                                                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                  stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
                             <line x1="3" y1="12" x2="21" y2="12"></line>
                             <line x1="3" y1="6" x2="21" y2="6"></line>
                             <line x1="3" y1="18" x2="21" y2="18"></line>
                         </svg></span>
-                </button>
-                <!-- brand -->
-                <a href="/" class="navbar-brand text-lt">
+            </button>
+            <!-- brand -->
+            <a href="/" class="navbar-brand text-lt">
                     <span id="navbar-brand-day" style="display: inline;">
                         <img src="../static/image/a.png" type="image/svg+xml"
-                            style="width: 130px;height: 40px;margin-top: -18px;max-height: 40px;"> </span>
-                    <span id="navbar-brand-dark" class="hide"> <img
-                            src="https://cdn.jsdelivr.net/gh/ihewro/blog_now@master/logo_dark.svg" type="image/svg+xml"
-                            style="width: 130px;height: 40px;margin-top: -18px;max-height: 40px;"></span>
-                </a>
-                <!-- / brand -->
-            </div>
-            <!-- / navbar header -->
-            <!-- navbar collapse（顶部导航栏） -->
-            <div class="collapse pos-rlt navbar-collapse bg-white">
-                <ul class="nav navbar-nav navbar-right">
+                             style="width: 130px;height: 40px;margin-top: -18px;max-height: 40px;"> </span>
+                <span id="navbar-brand-dark" class="hide"> <img
+                        src="https://cdn.jsdelivr.net/gh/ihewro/blog_now@master/logo_dark.svg" type="image/svg+xml"
+                        style="width: 130px;height: 40px;margin-top: -18px;max-height: 40px;"></span>
+            </a>
+            <!-- / brand -->
+        </div>
+        <!-- / navbar header -->
+        <!-- navbar collapse（顶部导航栏） -->
+        <div class="collapse pos-rlt navbar-collapse bg-white">
+            <ul class="nav navbar-nav navbar-right">
 
-                    <!-- 用户行为统计 -->
-                    <li class="dropdown pos-stc open">
-                        <a id="statistic_pane" data-status="true" href="#" data-toggle="dropdown" class="dropdown-toggle feathericons dropdown-toggle" aria-expanded="true">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-pie-chart"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
-                            <span class="caret"></span>
-                        </a>
-                        <div class="dropdown-menu wrapper w-full bg-white">
-                            <div class="row">
-                                <div class="col-sm-8 b-l b-light">
-                                    <div class="m-l-xs m-t-xs m-b-sm font-bold">动态日历<span class="info-icons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info" data-toggle="tooltip" title="" data-original-title="统计近10个月的文章和作者评论数目"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                <!-- 用户行为统计 -->
+                <li class="dropdown pos-stc open">
+                    <a id="statistic_pane" data-status="true" href="#" data-toggle="dropdown" class="dropdown-toggle feathericons dropdown-toggle" aria-expanded="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-pie-chart"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="dropdown-menu wrapper w-full bg-white">
+                        <div class="row">
+                            <div class="col-sm-8 b-l b-light">
+                                <div class="m-l-xs m-t-xs m-b-sm font-bold">动态日历<span class="info-icons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info" data-toggle="tooltip" title="" data-original-title="统计近10个月的文章和作者评论数目"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                             </span></div>
-                                    <div class="text-center">
-                                        <nav class="loading-echart text-center m-t-lg m-b-lg hide">
-                                            <p class="infinite-scroll-request"><i class="animate-spin fontello fontello-refresh"></i>Loading...</p>
-                                        </nav>
-                                        <div id="post-calendar" class="top-echart" _echarts_instance_="ec_1626411836253" style="-webkit-tap-highlight-color: transparent; user-select: none; position: relative;"><div style="position: relative; width: 602px; height: 185px; padding: 0px; margin: 0px; border-width: 0px; cursor: default;"><canvas data-zr-dom-id="zr_0" width="602" height="185" style="position: absolute; left: 0px; top: 0px; width: 602px; height: 185px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); padding: 0px; margin: 0px; border-width: 0px;"></canvas></div><div style="position: absolute; display: none; border-style: solid; white-space: nowrap; z-index: 9999999; transition: left 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s, top 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s; background-color: rgb(85, 85, 85); border-width: 1px; border-color: rgb(119, 119, 119); border-radius: 4px; color: rgb(255, 255, 255); font: 14px / 21px &quot;Microsoft YaHei&quot;; padding: 10px; left: 450px; top: 68px; pointer-events: none;"><div style="font-size: 14px;">2021-05-08：1</div></div></div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4 b-l b-light">
-                                    <div class="m-l-xs m-t-xs m-b-sm font-bold">分类雷达图</div>
-                                    <div class="text-center">
-                                        <nav class="loading-echart text-center m-t-lg m-b-lg hide">
-                                            <p class="infinite-scroll-request"><i class="animate-spin fontello fontello-refresh"></i>Loading...</p>
-                                        </nav>
-                                        <div id="category-radar" class="top-echart" _echarts_instance_="ec_1626411836257" style="-webkit-tap-highlight-color: transparent; user-select: none; position: relative;"><div style="position: relative; width: 286px; height: 185px; padding: 0px; margin: 0px; border-width: 0px; cursor: default;"><canvas data-zr-dom-id="zr_0" width="286" height="185" style="position: absolute; left: 0px; top: 0px; width: 286px; height: 185px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); padding: 0px; margin: 0px; border-width: 0px;"></canvas></div><div style="position: absolute; display: none; border-style: solid; white-space: nowrap; z-index: 9999999; transition: left 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s, top 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s; background-color: rgba(50, 50, 50, 0.7); border-width: 0px; border-color: rgb(51, 51, 51); border-radius: 4px; color: rgb(255, 255, 255); font: 14px / 21px &quot;Microsoft YaHei&quot;; padding: 5px; left: 155px; top: -182px; pointer-events: none;">文章分类数量<br>设计作品 : 11<br>技巧杂烩 : 46<br>生活随笔 : 99<br>相册图片 : 7<br>无处安放 : 2<br>日记心事 : 2<br>兴趣爱好 : 17<br>学习笔记 : 53<br>都有明天 : 1<br>分类加密 : 0</div></div>
-                                    </div>
+                                <div class="text-center">
+                                    <nav class="loading-echart text-center m-t-lg m-b-lg hide">
+                                        <p class="infinite-scroll-request"><i class="animate-spin fontello fontello-refresh"></i>Loading...</p>
+                                    </nav>
+                                    <div id="post-calendar" class="top-echart" _echarts_instance_="ec_1626411836253" style="-webkit-tap-highlight-color: transparent; user-select: none; position: relative;"><div style="position: relative; width: 602px; height: 300000px; padding: 0px; margin: 10px; border-width: 0px; cursor: default;"><canvas data-zr-dom-id="zr_0" width="602" height="300" style="position: absolute; left: 0px; top: 0px; width: 602px; height: 300px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); padding: 0px; margin: 0px; border-width: 0px;"></canvas></div><div style="position: absolute; display: none; border-style: solid; white-space: nowrap; z-index: 9999999; transition: left 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s, top 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s; background-color: rgb(85, 85, 85); border-width: 1px; border-color: rgb(119, 119, 119); border-radius: 4px; color: rgb(255, 255, 255); font: 14px / 21px &quot;Microsoft YaHei&quot;; padding: 10px; left: 450px; top: 68px; pointer-events: none;"><div style="font-size: 14px;">2021-05-08：1</div></div></div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-sm-4 b-l b-light">
-                                    <div class="m-l-xs m-t-xs m-b-sm font-bold">发布统计图</div>
-                                    <div class="text-center">
-                                        <nav class="loading-echart text-center m-t-lg m-b-lg hide">
-                                            <p class="infinite-scroll-request"><i class="animate-spin fontello fontello-refresh"></i>Loading...</p>
-                                        </nav>
-                                        <div id="posts-chart" class="top-echart" _echarts_instance_="ec_1626411836254" style="-webkit-tap-highlight-color: transparent; user-select: none; position: relative;"><div style="position: relative; width: 276px; height: 240px; padding: 0px; margin: 0px; border-width: 0px; cursor: default;"><canvas data-zr-dom-id="zr_0" width="276" height="240" style="position: absolute; left: 0px; top: 0px; width: 276px; height: 240px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); padding: 0px; margin: 0px; border-width: 0px;"></canvas></div><div style="position: absolute; display: none; border-style: solid; white-space: nowrap; z-index: 9999999; transition: left 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s, top 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s; background-color: rgba(50, 50, 50, 0.7); border-width: 0px; border-color: rgb(51, 51, 51); border-radius: 4px; color: rgb(255, 255, 255); font: 14px / 21px &quot;Microsoft YaHei&quot;; padding: 5px; left: 76px; top: 129px; pointer-events: none;">2021-02<br><span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#6772e5;"></span>文章篇数: 1</div></div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4 b-l b-light">
-                                    <div class="m-l-xs m-t-xs m-b-sm font-bold">分类统计图</div>
-                                    <div class="text-center">
-                                        <nav class="loading-echart text-center m-t-lg m-b-lg hide">
-                                            <p class="infinite-scroll-request"><i class="animate-spin fontello fontello-refresh"></i>Loading...</p>
-                                        </nav>
-                                        <div id="categories-chart" class="top-echart" _echarts_instance_="ec_1626411836255" style="-webkit-tap-highlight-color: transparent; user-select: none; position: relative;"><div style="position: relative; width: 276px; height: 240px; padding: 0px; margin: 0px; border-width: 0px; cursor: default;"><canvas data-zr-dom-id="zr_0" width="276" height="240" style="position: absolute; left: 0px; top: 0px; width: 276px; height: 240px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); padding: 0px; margin: 0px; border-width: 0px;"></canvas></div><div style="position: absolute; display: none; border-style: solid; white-space: nowrap; z-index: 9999999; transition: left 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s, top 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s; background-color: rgba(50, 50, 50, 0.7); border-width: 0px; border-color: rgb(51, 51, 51); border-radius: 4px; color: rgb(255, 255, 255); font: 14px / 21px &quot;Microsoft YaHei&quot;; padding: 5px; left: -51px; top: 119px; pointer-events: none;">分类 <br>学习笔记 : 53 (22.27%)</div></div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4 b-l b-light">
-                                    <div class="m-l-xs m-t-xs m-b-sm font-bold">标签统计图</div>
-                                    <div class="text-center">
-                                        <nav class="loading-echart text-center m-t-lg m-b-lg hide">
-                                            <p class="infinite-scroll-request"><i class="animate-spin fontello fontello-refresh"></i>Loading...</p>
-                                        </nav>
-                                        <div id="tags-chart" class="top-echart" _echarts_instance_="ec_1626411836256" style="-webkit-tap-highlight-color: transparent; user-select: none; position: relative;"><div style="position: relative; width: 276px; height: 240px; padding: 0px; margin: 0px; border-width: 0px; cursor: default;"><canvas data-zr-dom-id="zr_0" width="276" height="240" style="position: absolute; left: 0px; top: 0px; width: 276px; height: 240px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); padding: 0px; margin: 0px; border-width: 0px;"></canvas></div><div style="position: absolute; display: none; border-style: solid; white-space: nowrap; z-index: 9999999; transition: left 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s, top 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s; background-color: rgba(50, 50, 50, 0.7); border-width: 0px; border-color: rgb(51, 51, 51); border-radius: 4px; color: rgb(255, 255, 255); font: 14px / 21px &quot;Microsoft YaHei&quot;; padding: 5px; left: 97px; top: 189px; pointer-events: none;"><span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#82d3f4;"></span>喜欢: 53</div></div>
-                                    </div>
+
+                            <script type="text/javascript">
+                                // 基于准备好的dom，初始化echarts实例
+                                var myChart = echarts.init(document.getElementById('post-calendar'));
+
+                                function getVirtulData(year) {
+                                    year = year || '2021';
+                                    var date = +echarts.number.parseDate(year + '-01-01');
+
+                                    //修改此处为截至时间
+                                    var end = +echarts.number.parseDate((+year + 1) + '-07-16');
+                                    var dayTime = 3600 * 24 * 1000;
+                                    var data = [];
+                                    for (var time = date; time < end; time += dayTime) {
+                                        data.push([
+                                            echarts.format.formatTime('yyyy-MM-dd', time),
+                                            Math.floor(Math.random() * 20)
+                                        ]);
+                                    }
+                                    return data;
+                                }
+
+                                var option = {
+                                    title: {
+                                        top: 10,
+                                        left: 'center',
+                                        text: '用户操作统计'
+                                    },
+                                    tooltip: {},
+
+                                    visualMap: {
+                                        show:false,
+                                        min: 0,
+                                        max: 20,
+                                        type: 'piecewise',
+                                        orient: 'horizontal',
+                                        left: 'center',
+                                        //top: 65
+                                    },
+                                    calendar: {
+                                        top: 80,
+                                        left: 30,
+                                        right: 30,
+                                        //bottom: '10%',
+                                        cellSize: ['auto', 13],
+                                        range: '2020',
+                                        itemStyle: {
+                                            borderWidth: 0.5,
+                                            color:  '#fff'
+                                        },
+                                        yearLabel: {show: false},
+                                        dayLabel: {
+                                            nameMap: ['日', '一', '二' , '三', '四', '五', '六'],
+                                        },
+                                        splitLine: false,
+                                    },
+
+                                    series: {
+                                        type: 'heatmap',
+                                        coordinateSystem: 'calendar',
+                                        data: getVirtulData(2020)
+                                    }
+                                };
+
+                                // 使用刚指定的配置项和数据显示图表。
+                                myChart.setOption(option);
+                            </script>
+                            <div class="col-sm-4 b-l b-light">
+                                <div class="m-l-xs m-t-xs m-b-sm font-bold">分类雷达图</div>
+                                <div class="text-center">
+                                    <nav class="loading-echart text-center m-t-lg m-b-lg hide">
+                                        <p class="infinite-scroll-request"><i class="animate-spin fontello fontello-refresh"></i>Loading...</p>
+                                    </nav>
+                                    <div id="category-radar" class="top-echart" _echarts_instance_="ec_1626444880188" style="-webkit-tap-highlight-color: transparent; user-select: none; position: relative;"><div style="position: relative; width: 276px; height: 240px; padding: 0px; margin: 0px; border-width: 0px; cursor: default;"><canvas data-zr-dom-id="zr_0" width="552" height="480" style="position: absolute; left: 0px; top: 0px; width: 276px; height: 240px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); padding: 0px; margin: 0px; border-width: 0px;"></canvas></div><div style="position: absolute; display: none; border-style: solid; white-space: nowrap; z-index: 9999999; transition: left 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s, top 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s; background-color: rgba(50, 50, 50, 0.7); border-width: 0px; border-color: rgb(51, 51, 51); border-radius: 4px; color: rgb(255, 255, 255); font: 14px / 21px &quot;Microsoft YaHei&quot;; padding: 5px; left: 80px; top: 87px; pointer-events: none;">2021-06<br><span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#6772e5;"></span>文章篇数: 0</div></div>
                                 </div>
                             </div>
+
+                            <script type="text/javascript">
+                                var myChart = echarts.init(document.getElementById('category-radar'));
+
+                                var option = {
+                                    //backgroundColor: '#FFFFFF',
+
+                                    title: {
+                                        //text: 'Customized Pie',
+                                        left: 'center',
+                                        top: 20,
+                                        textStyle: {
+                                            color: '#000'
+                                        }
+                                    },
+
+                                    tooltip: {
+                                        trigger: 'item'
+                                    },
+
+                                    visualMap: {
+                                        show: false,
+                                        min: 80,
+                                        max: 600,
+                                        inRange: {
+                                            colorLightness: [0, 1]
+                                        }
+                                    },
+                                    series: [
+                                        {
+                                            name: '访问来源',
+                                            type: 'pie',
+                                            radius: '55%',
+                                            center: ['50%', '50%'],
+                                            data: [
+                                                {value: 335, name: '公司邮件'},
+                                                {value: 310, name: '私人邮件'},
+                                                {value: 274, name: '私密日志'},
+                                                {value: 235, name: '加密文档'},
+                                                {value: 400, name: '隐私图片'}
+                                            ].sort(function (a, b) { return a.value - b.value; }),
+                                            roseType: 'radius',
+                                            label: {
+                                                color: 'rgba(0, 0, 0, 1)'
+                                            },
+                                            labelLine: {
+                                                lineStyle: {
+                                                    color: 'rgba(0, 0, 0, 1)'
+                                                },
+                                                smooth: 0.2,
+                                                length: 10,
+                                                length2: 20
+                                            },
+                                            itemStyle: {
+                                                color: '#c23531',
+                                                shadowBlur: 200,
+                                                shadowColor: 'rgba(255, 255, 255, 0.5)'
+                                            },
+
+                                            animationType: 'scale',
+                                            animationEasing: 'elasticOut',
+                                            animationDelay: function (idx) {
+                                                return Math.random() * 200;
+                                            }
+                                        }
+                                    ]
+                                };
+
+                                // 使用刚指定的配置项和数据显示图表。
+                                myChart.setOption(option);
+                            </script>
+
                         </div>
-                    </li>
+
+
+                    </div>
+                </li>
 
 
 
 
-                    
-                    <!--登陆-->
 
-                    <li class="dropdown hidden-xs hidden-sm"><a href="/login" id="global_player_toggle" class="skPlayer-list-switch dropdown-toggle
+                <!--登陆-->
+
+                <li class="dropdown hidden-xs hidden-sm"><a href="/login" id="global_player_toggle" class="skPlayer-list-switch dropdown-toggle
             feathericons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-disc">
-                                <!--<circle cx="12" cy="12" r="10"></circle>
-                                <circle cx="12" cy="12" r="3"></circle>-->
-                                <span><img src="../static/svg/denglu.svg" style="width: 20px;height: 20px;
+                               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                               stroke-linejoin="round" class="feather feather-disc">
+                    <!--<circle cx="12" cy="12" r="10"></circle>
+                    <circle cx="12" cy="12" r="3"></circle>-->
+                    <span><img src="../static/svg/denglu.svg" style="width: 20px;height: 20px;
                                     margin:-3px 0px 0px -15px;"></span>
 
-                            </svg><span class="visible-xs-inline"></span></a></li>
+                </svg><span class="visible-xs-inline"></span></a></li>
 
-                    <!--注册-->
-                    <li class="dropdown hidden-xs hidden-sm"><a href="/register" id="global_player_toggle" class="skPlayer-list-switch dropdown-toggle
+                <!--注册-->
+                <li class="dropdown hidden-xs hidden-sm"><a href="/register" id="global_player_toggle" class="skPlayer-list-switch dropdown-toggle
             feathericons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-twitch">
-                                <!--<path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path>-->
+                               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                               stroke-linejoin="round" class="feather feather-twitch">
+                    <!--<path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path>-->
 
-                                <span><img src="../static/svg/zhuce.svg" style="width: 20px;height: 20px;
+                    <span><img src="../static/svg/zhuce.svg" style="width: 20px;height: 20px;
                                     margin:-3px 0px 0px -15px;"></span>
-                            </svg><span class="visible-xs-inline"></span></a></li>
+                </svg><span class="visible-xs-inline"></span></a></li>
 
-                    <!--退出-->
-                    <li class="dropdown hidden-xs hidden-sm"><a href="" onclick="logout();return false;"
-                            id="global_player_toggle" class="skPlayer-list-switch dropdown-toggle
+                <!--退出-->
+                <li class="dropdown hidden-xs hidden-sm"><a href="" onclick="logout();return false;"
+                                                            id="global_player_toggle" class="skPlayer-list-switch dropdown-toggle
             feathericons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-twitch">
-                                <!--<path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path>-->
-                                <span><img src="../static/svg/tuichu.svg" style="width: 20px;height: 20px;
+                               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                               stroke-linejoin="round" class="feather feather-twitch">
+                    <!--<path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path>-->
+                    <span><img src="../static/svg/tuichu.svg" style="width: 20px;height: 20px;
                                     margin:-3px 0px 0px -15px;"></span>
-                            </svg><span class="visible-xs-inline"> </span></a></li>
-                </ul>
-            </div>
-            <!-- / navbar collapse -->
-        </header>
-        <!-- / headnav -->
+                </svg><span class="visible-xs-inline"> </span></a></li>
+            </ul>
+        </div>
+        <!-- / navbar collapse -->
+    </header>
+    <!-- / headnav -->
 
-        <aside id="aside" class="app-aside hidden-xs bg-white">
-            <!--<aside>-->
-            <div class="aside-wrap" layout="column">
-                <div class="navi-wrap scroll-y scroll-hide" flex="">
-                    <!-- user -->
-                    <div class="clearfix hidden-xs text-center hide  show" id="aside-user">
-                        <div class="dropdown wrapper ">
-                            <div ui-nav="">
-                                <a href="/">
+    <aside id="aside" class="app-aside hidden-xs bg-white">
+        <!--<aside>-->
+        <div class="aside-wrap" layout="column">
+            <div class="navi-wrap scroll-y scroll-hide" flex="">
+                <!-- user -->
+                <div class="clearfix hidden-xs text-center hide  show" id="aside-user">
+                    <div class="dropdown wrapper ">
+                        <div ui-nav="">
+                            <a href="/">
                                     <span class="thumb-lg w-auto-folded avatar m-t-sm  ">
                                         <img src="../static/image/default_icon.bmp"
-                                            class="img-full img-circle normal-shadow">
+                                             class="img-full img-circle normal-shadow">
                                     </span>
-                                </a>
-                            </div>
-                            <span class="clear">
+                            </a>
+                        </div>
+                        <span class="clear">
                                 <span class="block m-t-sm">
                                     <strong class="font-bold text-lt">{{.userName}}</strong>
                                 </span>
-                        </div>
                     </div>
-                    <!-- / user -->
+                </div>
+                <!-- / user -->
 
-                    <!-- nav -->
-                    <nav ui-nav="" class="navi clearfix">
-                        <ul class="nav">
-                            <!--index-->
-                            <div class="line dk hidden-folded"></div>
-                            <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
-                                <span>导航</span>
-                            </li>
-                            <!--主页-->
-                            <li>
-                                <a href="/" class="auto">
+                <!-- nav -->
+                <nav ui-nav="" class="navi clearfix">
+                    <ul class="nav">
+                        <!--index-->
+                        <div class="line dk hidden-folded"></div>
+                        <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                            <span>导航</span>
+                        </li>
+                        <!--主页-->
+                        <li>
+                            <a href="/" class="auto">
                                     <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16px"
-                                            height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            class="feather feather-home">
+                                                                height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                                class="feather feather-home">
                                             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                                             <polyline points="9 22 9 12 15 12 15 22"></polyline>
                                         </svg></span>
-                                    <span>首页</span>
-                                </a>
-                            </li>
-                            <li>
-                                <!--
-                                <img   src="../static/svg/huishouzhan.svg" 
-                                style="width: 16px;height: 16px;
-                                margin:0px 0px 0px 0px;"
-                                >
-                                -->
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li>
+                            <!--
+                            <img   src="../static/svg/huishouzhan.svg"
+                            style="width: 16px;height: 16px;
+                            margin:0px 0px 0px 0px;"
+                            >
+                            -->
 
 
 
-                                <a target="_self" href="/bin" class="auto"><span class="nav-icon"><svg
-                                            xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="feather feather-archive">
+                            <a target="_self" href="/bin" class="auto"><span class="nav-icon"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="feather feather-archive">
 
                                             <span><img src="../static/svg/huishouzhan.svg" style="width: 16px;height: 16px;
                                     margin:-3px 0px 0px -15px;"></span>
 
 
-                                            <!-- <polyline points="21 8 21 21 3 21 3 8"></polyline>
-                                            <rect x="1" y="3" width="22" height="5"></rect>
-                                            <line x1="10" y1="12" x2="14" y2="12"></line>
-                                            -->
+                                <!-- <polyline points="21 8 21 21 3 21 3 8"></polyline>
+                                <rect x="1" y="3" width="22" height="5"></rect>
+                                <line x1="10" y1="12" x2="14" y2="12"></line>
+                                -->
 
 
 
                                         </svg></span> <span>回收站</span></a>
-                            </li>
+                        </li>
 
 
+                        <li class="line dk"></li>
 
-
-                            <li class="line dk"></li>
-
-                            <li> <a target="_self" href="/introduce" class="auto"><span class="nav-icon"><svg
-                                            xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="feather feather-github">
+                        <li> <a target="_self" href="/introduce" class="auto"><span class="nav-icon"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round"
+                                class="feather feather-github">
                                             <path
-                                                d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                                                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
                                             </path>
                                         </svg></span><span>项目介绍</span></a></li>
-                            <li> <a target="_self" href="/about_us" class="auto"><span class="nav-icon"><svg
-                                            xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="feather feather-heart">
+                        <li> <a target="_self" href="/about_us" class="auto"><span class="nav-icon"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round"
+                                class="feather feather-heart">
                                             <path
-                                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
                                             </path>
                                         </svg></span><span>关于我们</span></a></li>
 
-                        </ul>
-                    </nav>
-                    <!-- nav -->
-                </div>
-                <!--end of .navi-wrap-->
-
+                    </ul>
+                </nav>
+                <!-- nav -->
             </div>
-            <!--.aside-wrap-->
-        </aside>
-        <!-- content -->
-        <div id="content" class="app-content">
-            <!--loading animate-->
-            <div id="loading" class="butterbar active hide">
-                <span class="bar"></span>
-            </div>
-            <!-- / aside -->
+            <!--end of .navi-wrap-->
 
-            <!-- <div id="content" class="app-content"> -->
-            <a class="off-screen-toggle hide"></a>
-            <main class="app-content-body ">
-                <div class="hbox hbox-auto-xs hbox-auto-sm">
-                    <div class="col center-part">
-                        <header class="bg-light lter wrapper-md" style="padding-bottom: 30px;">
-                            <div class="form-group" style="float: left;margin-right: 20px;">
-                                <div class="input-group rounded bg-white-pure box-shadow-wrap-normal">
-                                    <button type="button" onclick="upfile.click()" class="transparent btn"
+        </div>
+        <!--.aside-wrap-->
+    </aside>
+    <!-- content -->
+    <div id="content" class="app-content">
+        <!--loading animate-->
+        <div id="loading" class="butterbar active hide">
+            <span class="bar"></span>
+        </div>
+        <!-- / aside -->
+
+        <!-- <div id="content" class="app-content"> -->
+        <a class="off-screen-toggle hide"></a>
+        <main class="app-content-body ">
+            <div class="hbox hbox-auto-xs hbox-auto-sm">
+                <div class="col center-part">
+                    <header class="bg-light lter wrapper-md" style="padding-bottom: 30px;">
+                        <div class="form-group" style="float: left;margin-right: 20px;">
+                            <div class="input-group rounded bg-white-pure box-shadow-wrap-normal">
+                                <button type="button" onclick="upfile.click()" class="transparent btn"
                                         style="">上传文件</button>
-                                    <input type="file" id="upfile" accept='' onchange="uploadFile()"
-                                        style="visibility: hidden; position: absolute;">
-                                </div>
+                                <input type="file" id="upfile" accept='' onchange="uploadFile()"
+                                       style="visibility: hidden; position: absolute;">
                             </div>
-                            <div style="float: left;margin-right: 20px;margin-top: 7px;padding-left: 40px;">
+                        </div>
+                        <div style="float: left;margin-right: 20px;margin-top: 7px;padding-left: 40px;">
 
-                                <!-- <div> -->
-                                <div class="m-b-sm">
-                                    <label class="i-switch bg-info pull-right">
-                                        <input id="fuzzy" type="checkbox" name="aside-folded">
-                                        <i data-original-title="" title=""></i>
-                                    </label>
+                            <!-- <div> -->
+                            <div class="m-b-sm">
+                                <label class="i-switch bg-info pull-right">
+                                    <input id="fuzzy" type="checkbox" name="aside-folded">
+                                    <i data-original-title="" title=""></i>
+                                </label>
 
-                                    <span> 模糊搜索&nbsp;&nbsp;</span>
+                                <span> 模糊搜索&nbsp;&nbsp;</span>
 
-                                </div>
-                                <!-- </div> -->
                             </div>
+                            <!-- </div> -->
+                        </div>
 
-                            <!-- search form -->
-                            <div class="form-group" style="float: left;">
-                                <div class="input-group rounded bg-white-pure box-shadow-wrap-normal">
-                                    <input autocomplete="off" id="search_input" type="search" name="s"
-                                        class="transparent rounded form-control no-borders padder" required=""
-                                        placeholder="输入关键词搜索…">
-                                    <!--搜索提示-->
-                                    <ul id="search_tips_drop"
-                                        class="overflow-y-auto small-scroll-bar dropdown-menu hide" style="display:
+                        <!-- search form -->
+                        <div class="form-group" style="float: left;">
+                            <div class="input-group rounded bg-white-pure box-shadow-wrap-normal">
+                                <input autocomplete="off" id="search_input" type="search" name="s"
+                                       class="transparent rounded form-control no-borders padder" required=""
+                                       placeholder="输入关键词搜索…">
+                                <!--搜索提示-->
+                                <ul id="search_tips_drop"
+                                    class="overflow-y-auto small-scroll-bar dropdown-menu hide" style="display:
                  block;top:
                 30px; left: 0px;">
-                                    </ul>
-                                    <span id="search_submit" class="transparent input-group-btn">
+                                </ul>
+                                <span id="search_submit" class="transparent input-group-btn">
                                         <button type="button" class="transparent btn" onclick="query()">
                                             <span class="feathericons" id="icon-search"><svg
                                                     xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"
@@ -399,909 +511,576 @@
                                             <!--                      <i class="animate-spin  fontello fontello-spinner hide" id="spin-search"></i>-->
                                         </button>
                                     </span>
-                                </div>
                             </div>
-                            <!-- </form> -->
-                            <a href="" style="display: none" id="searchUrl"></a>
-                            <!-- / search form -->
-                            <br>
-                        </header>
-                        <div class="wrapper-md skt-loading" id="post-panel">
+                        </div>
+                        <!-- </form> -->
+                        <a href="" style="display: none" id="searchUrl"></a>
+                        <!-- / search form -->
+                        <br>
+                    </header>
+                    <div class="wrapper-md skt-loading" id="post-panel">
 
-                            <!--首页输出文章-->
+                        <!--首页输出文章-->
 
-                            <div class="blog-post" id="article">
-                                {{range $a, $b := .data}}
-                                <div class="single-post panel box-shadow-wrap-normal" style="height: 110px;">
+                        <div class="blog-post" id="article">
+                            {{range $a, $b := .data}}
+                            <div class="single-post panel box-shadow-wrap-normal" style="height: 110px;">
 
-                                    <div class="post-meta wrapper-lg" style="padding: 15px;">
-                                        <div class="item-meta-ico bg-ico-note"></div>
-                                        <h2 class="m-t-none text-ellipsis index-post-title text-title"
-                                            style="padding-top: 11px;"><a href="" name={{$a}}
-                                                onclick="show(this);return false;">{{$a}}</a></h2>
-                                        <div class="line line-lg b-b b-light"></div>
-                                        <div class="text-muted post-item-foot-icon text-ellipsis list-inline">
-                                            <li><span class="right-small-icons m-r-sm"><svg
-                                                        xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"
-                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                        class="feather feather-clock">
+                                <div class="post-meta wrapper-lg" style="padding: 15px;">
+                                    <div class="item-meta-ico bg-ico-note"></div>
+                                    <h2 class="m-t-none text-ellipsis index-post-title text-title"
+                                        style="padding-top: 11px;"><a href="" name={{$a}}
+                                                                      onclick="show(this);return false;">{{$a}}</a></h2>
+                                    <div class="line line-lg b-b b-light"></div>
+                                    <div class="text-muted post-item-foot-icon text-ellipsis list-inline">
+                                        <li><span class="right-small-icons m-r-sm"><svg
+                                                xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="feather feather-clock">
                                                         <circle cx="12" cy="12" r="10"></circle>
                                                         <polyline points="12 6 12 12 16 14"></polyline>
                                                     </svg></span>{{$b}}</li>
-                                            <li><span class="right-small-icons m-r-sm"><svg
-                                                        xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"
-                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                        class="feather feather-message-square">
+                                        <li><span class="right-small-icons m-r-sm"><svg
+                                                xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="feather feather-message-square">
                                                         <!--<path
                                                             d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z">
                                                         </path>-->
                                                         <span><img src="../static/svg/shanchu.svg" style="width: 16px;height: 16px;
                                                             margin:-3px 0px 0px -15px;"></span>
                                                     </svg></span><a href="" name={{$a}}
-                                                    onclick="delete_data(this);return false;">删除</a></li>
-                                            <li><span class="right-small-icons m-r-sm"><svg
-                                                        xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"
-                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                        class="feather feather-message-square">
+                                                                    onclick="delete_data(this);return false;">删除</a></li>
+                                        <li><span class="right-small-icons m-r-sm"><svg
+                                                xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="feather feather-message-square">
                                                         <!--<path
                                                             d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z">
                                                         </path>-->
                                                         <span><img src="../static/svg/xiazai.svg" style="width: 16px;height: 16px;
                                                             margin:-3px 0px 0px -15px;"></span>
                                                     </svg></span><a href="" name={{$a}}
-                                                    onclick="download_article(this);return false;">下载</a></li>
-                                        </div>
-                                        <!--text-muted-->
+                                                                    onclick="download_article(this);return false;">下载</a></li>
                                     </div>
-                                    <br>
-                                    <br>
-                                    <!--post-meta wrapper-lg-->
-
+                                    <!--text-muted-->
                                 </div>
-                                {{end}}
+                                <br>
+                                <br>
+                                <!--post-meta wrapper-lg-->
+
                             </div>
+                            {{end}}
                         </div>
                     </div>
                 </div>
-            </main>
-            <!-- footer -->
-        </div><!-- /content -->
-        <footer id="footer" class="app-footer" role="footer">
-            <div class="wrapper bg-light">
+            </div>
+        </main>
+        <!-- footer -->
+    </div><!-- /content -->
+    <footer id="footer" class="app-footer" role="footer">
+        <div class="wrapper bg-light">
                 <span class="pull-right hidden-xs text-ellipsis">
                     SJTU - School of Cyber Science and Engineering
                 </span>
-                <span class="text-ellipsis">&nbsp;&nbsp;</span>
-            </div>
-        </footer>
-    </div>
-    <!--end of .app app-header-fixed-->
+            <span class="text-ellipsis">&nbsp;&nbsp;</span>
+        </div>
+    </footer>
+</div>
+<!--end of .app app-header-fixed-->
 
-    <!--主题核心js-->
-    <script
+<!--主题核心js-->
+<script
         src=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/js/function.min.js?v=8.1.02021030201"></script>
-    <script
+<script
         src=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/js/core.min.js?v=8.1.02021030201"></script>
 
-    <!--主题组件js加载-->
-    <script src=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/js/features/jquery.pjax.min.js"
+<!--主题组件js加载-->
+<script src=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/js/features/jquery.pjax.min.js"
         type="text/javascript"></script>
 
-    <!--用户自定义js-->
-    <script type="text/javascript">
-        var _hmt = _hmt || []; (function () { var hm = document.createElement("script"); hm.src = "https://hm.baidu.com/hm.js?3b1f6198215a81b2f56b1387c009c48f"; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(hm, s); })();</script>
+<!--用户自定义js-->
+<script type="text/javascript">
+    var _hmt = _hmt || []; (function () { var hm = document.createElement("script"); hm.src = "https://hm.baidu.com/hm.js?3b1f6198215a81b2f56b1387c009c48f"; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(hm, s); })();</script>
 
 
 
-    <script src="/static/js/jquery.js"></script>
-    <script src="/static/js/jszip.min.js"></script>
-    <script src="/static/js/docxtemplater.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/node-forge@0.7.0/dist/forge.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/1.10.100/pdf.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.entry.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/1.10.100/pdf.worker.min.js"></script>
+<script src="/static/js/jquery.js"></script>
+<script src="/static/js/jszip.min.js"></script>
+<script src="/static/js/docxtemplater.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/node-forge@0.7.0/dist/forge.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/1.10.100/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.entry.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/1.10.100/pdf.worker.min.js"></script>
 
-    <!--  query  -->
-    <script>
-        function query() {
-            'use strict';
-            var pattern = document.getElementById("search_input").value;
-            console.log(pattern);
+<!--  query  -->
+<script>
+    function query() {
+        'use strict';
+        var pattern = document.getElementById("search_input").value;
+        console.log(pattern);
 
-            var username = window.sessionStorage.getItem("userName");
-            var key = window.sessionStorage.getItem("session_key");
-            console.log(key);
+        var username = window.sessionStorage.getItem("userName");
+        var key = window.sessionStorage.getItem("session_key");
+        console.log(key);
 
-            var key_str_arr = key.split(",");
+        var key_str_arr = key.split(",");
 
-            var key_arr = [];
-            for (let i = 0; i < 32; i++) {
-                key_arr.push(parseInt(key_str_arr[i]))
-            }
-            console.log(key_arr);
-
-            var key_str = bin2String(key_arr);
-            console.log(key_str);
-            var iv = Uint8Array.from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-            console.log(iv);
-            var iv_str = bin2String(iv);
-            console.log(iv_str);
-
-            var pattern_struct = {
-                A: username + ' ' + pattern
-            }
-            var pattern_str = JSON.stringify(pattern_struct);
-            console.log(pattern_str);
-
-            var cipher = forge.cipher.createCipher('AES-CBC', key_str);
-            cipher.start({ iv: iv_str });
-            cipher.update(forge.util.createBuffer(pattern_str));
-            cipher.finish();
-            var encrypted = cipher.output;
-            console.log(encrypted.data);
-
-            var package_struct = {
-                user: username,
-                data: btoa(encrypted.data)
-            }
-
-            var package_str = JSON.stringify(package_struct);
-            console.log(package_str);
-
-            var fuzzy = document.getElementById("fuzzy").checked;
-
-            var isfuzzy;
-            if (fuzzy === true) {
-                isfuzzy = '1';
-            } else {
-                isfuzzy = '0';
-            }
-
-
-            $.ajax({
-                url: "/query",
-                async: false,
-                data: { "package_str": package_str, "isfuzzy": isfuzzy },
-                success: function (data) {
-                    console.log(data);
-                    console.log(data.res);
-                    console.log(data.message);
-                    if (data.res === "1") {
-                        // alert("query success");
-
-                        var decipher = forge.cipher.createDecipher('AES-CBC', key_str);
-                        decipher.start({ iv: iv_str });
-                        decipher.update(forge.util.createBuffer(atob(data.message)));
-                        var result = decipher.finish();
-                        console.log(decipher.output.data);
-
-                        var article_list_str = JSON.parse(decipher.output.data).A;
-                        var article_list = JSON.parse(article_list_str).A;
-                        console.log(article_list);
-
-                        $('article').remove();
-
-                        var html_str = '<div class="blog-post" id="article">';
-                        for (let i = 0; i < article_list.length; i++) {
-                            html_str = html_str + '<div class="single-post panel box-shadow-wrap-normal" style="height: 110px;">' +
-                                '<div class="post-meta wrapper-lg" style="padding: 15px;">' +
-                                '<div class="item-meta-ico bg-ico-note"></div>' +
-                                '<h2 class="m-t-none text-ellipsis index-post-title text-title"' +
-                                'style="padding-top: 11px;"><a href="" name=' + article_list[i].Id +
-                                ' onclick="show(this);return false;">' + article_list[i].Id + '</a></h2>' +
-                                '<div class="line line-lg b-b b-light"></div>' +
-                                '<div class="text-muted post-item-foot-icon text-ellipsis list-inline">' +
-                                '<li><span class="right-small-icons m-r-sm"><svg ' +
-                                'xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"' +
-                                'viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
-                                'stroke-width="2" stroke-linecap="round" stroke-linejoin="round"' +
-                                'class="feather feather-clock">' +
-                                '<circle cx="12" cy="12" r="10"></circle>' +
-                                '<polyline points="12 6 12 12 16 14"></polyline>' +
-                                '</svg></span>' + article_list[i].Time + '</li>' +
-                                '<li><span class="right-small-icons m-r-sm"><svg ' +
-                                'xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"' +
-                                'viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
-                                'stroke-width="2" stroke-linecap="round" stroke-linejoin="round"' +
-                                'class="feather feather-message-square">' +
-                                '<path ' +
-                                'd="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z">' +
-                                '</path>' +
-                                '</svg></span><a href="" name=' + article_list[i].Id +
-                                ' onclick="delete_data(this);return false;">删除</a></li>' +
-                                '<li><span class="right-small-icons m-r-sm"><svg ' +
-                                'xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"' +
-                                'viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
-                                'stroke-width="2" stroke-linecap="round" stroke-linejoin="round"' +
-                                'class="feather feather-message-square">' +
-                                '<path ' +
-                                'd="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z">' +
-                                '</path>' +
-                                '</svg></span><a href="" name=' + article_list[i].Id +
-                                ' onclick="download_article(this);return false;">下载</a></li>' +
-                                '</div>' +
-                                '<!--text-muted-->' +
-                                '</div>' +
-                                '<br>' +
-                                '<br>' +
-                                '</div>'
-                        }
-                        html_str = html_str + '</div>'
-                        var s = document.getElementById('post-panel');
-                        s.innerHTML = html_str;
-                        return;
-                    } else {
-                        alert(data.message);
-                        window.location.href = '/';
-                        return;
-                    }
-                }
-            });
+        var key_arr = [];
+        for (let i = 0; i < 32; i++) {
+            key_arr.push(parseInt(key_str_arr[i]))
         }
-    </script>
+        console.log(key_arr);
 
-    <!--  show  -->
-    <script>
-        function show(a) {
-            'use strict';
-            var title = a.name;
-            console.log(title);
+        var key_str = bin2String(key_arr);
+        console.log(key_str);
+        var iv = Uint8Array.from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+        console.log(iv);
+        var iv_str = bin2String(iv);
+        console.log(iv_str);
 
-            var username = window.sessionStorage.getItem("userName");
-            var key = window.sessionStorage.getItem("session_key");
-            console.log(key);
-
-            var key_str_arr = key.split(",");
-
-            var key_arr = [];
-            for (let i = 0; i < 32; i++) {
-                key_arr.push(parseInt(key_str_arr[i]))
-            }
-            console.log(key_arr);
-
-            var key_str = bin2String(key_arr);
-            console.log(key_str);
-            var iv = Uint8Array.from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-            console.log(iv);
-            var iv_str = bin2String(iv);
-            console.log(iv_str);
-
-            var title_struct = {
-                A: username + ' ' + title
-            }
-            var title_str = JSON.stringify(title_struct);
-            console.log(title_str);
-
-            var cipher = forge.cipher.createCipher('AES-CBC', key_str);
-            cipher.start({ iv: iv_str });
-            cipher.update(forge.util.createBuffer(title_str));
-            cipher.finish();
-            var encrypted = cipher.output;
-            console.log(encrypted.data);
-
-            var package_struct = {
-                user: username,
-                data: btoa(encrypted.data)
-            }
-
-            var package_str = JSON.stringify(package_struct);
-            console.log(package_str);
-
-            $.ajax({
-                url: "/show",
-                async: false,
-                data: { "package_str": package_str, "title": title, "username": username },
-                success: function (data) {
-                    console.log(data);
-                    console.log(data.res);
-                    console.log(data.message);
-                    if (data.res === "1") {
-                        // alert("show success");
-
-                        var decipher = forge.cipher.createDecipher('AES-CBC', key_str);
-                        decipher.start({ iv: iv_str });
-                        decipher.update(forge.util.createBuffer(atob(data.message)));
-                        var result = decipher.finish();
-                        console.log(decipher.output.data);
-                        var article_show = JSON.parse(decipher.output.data);
-                        console.log(article_show);
-
-                        $('article').remove();
-
-                        var s = document.getElementById('post-panel');
-
-                        var str_article = '<div class="wrapper-md" id="post-panel">' +
-                            '<ol class="breadcrumb bg-white-pure" itemscope=""><li>' +
-                            '<a href="/" itemprop="breadcrumb" title="" data-toggle="tooltip" data-original-title="返回首页"><span class="home-icons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span>首页</a>' +
-                            '</li><li class="active">正文&nbsp;&nbsp;</li></ol>' +
-                            '<div id="postpage" class="blog-post">' +
-                            '<article class="single-post panel">' +
-                            '<div id="post-content" class="wrapper-lg">' +
-                            '<div class="entry-content l-h-2x" id="md_handsome_origin" click_status="true" style="white-space: pre-wrap;">' +
-                            '<p style="font-weight: bold;font-size:300%;margin:0px">' + title + '</p> <hr style="margin:0px"> <p style="font-size:110%">' +
-                            article_show.A + '</p></div> </div> </article> </div> </div>';
-
-                        s.innerHTML = str_article;
-                        return;
-                    } else {
-                        alert(data.message);
-                        window.location.href = '/';
-                        return;
-                    }
-                }
-            });
+        var pattern_struct = {
+            A: username + ' ' + pattern
         }
-    </script>
+        var pattern_str = JSON.stringify(pattern_struct);
+        console.log(pattern_str);
 
-    <!--  download  -->
-    <script>
-        function download_article(a) {
-            'use strict';
-            var title = a.name;
-            console.log(title);
+        var cipher = forge.cipher.createCipher('AES-CBC', key_str);
+        cipher.start({ iv: iv_str });
+        cipher.update(forge.util.createBuffer(pattern_str));
+        cipher.finish();
+        var encrypted = cipher.output;
+        console.log(encrypted.data);
 
-            var username = window.sessionStorage.getItem("userName");
-            var key = window.sessionStorage.getItem("session_key");
-            console.log(key);
-
-            var key_str_arr = key.split(",");
-
-            var key_arr = [];
-            for (let i = 0; i < 32; i++) {
-                key_arr.push(parseInt(key_str_arr[i]))
-            }
-            console.log(key_arr);
-
-            var key_str = bin2String(key_arr);
-            console.log(key_str);
-            var iv = Uint8Array.from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-            console.log(iv);
-            var iv_str = bin2String(iv);
-            console.log(iv_str);
-
-            var title_struct = {
-                A: username + ' ' + title
-            }
-            var title_str = JSON.stringify(title_struct);
-            console.log(title_str);
-
-            var cipher = forge.cipher.createCipher('AES-CBC', key_str);
-            cipher.start({ iv: iv_str });
-            cipher.update(forge.util.createBuffer(title_str));
-            cipher.finish();
-            var encrypted = cipher.output;
-            console.log(encrypted.data);
-
-            var package_struct = {
-                user: username,
-                data: btoa(encrypted.data)
-            }
-
-            var package_str = JSON.stringify(package_struct);
-            console.log(package_str);
-
-            $.ajax({
-                url: "/show",
-                async: false,
-                data: { "package_str": package_str, "title": title, "username": username },
-                success: function (data) {
-                    console.log(data);
-                    console.log(data.res);
-                    console.log(data.message);
-                    if (data.res === "1") {
-                        // alert("download success");
-
-                        var decipher = forge.cipher.createDecipher('AES-CBC', key_str);
-                        decipher.start({ iv: iv_str });
-                        decipher.update(forge.util.createBuffer(atob(data.message)));
-                        var result = decipher.finish();
-                        console.log(decipher.output.data);
-                        var article_show = JSON.parse(decipher.output.data);
-                        console.log(article_show);
-
-                        download_txt(title + '.txt', article_show.A);
-
-                        return;
-                    } else {
-                        alert(data.message);
-                        window.location.href = '/';
-                        return;
-                    }
-                }
-            });
+        var package_struct = {
+            user: username,
+            data: btoa(encrypted.data)
         }
 
-        function download_txt(filename, text) {
-            var pom = document.createElement('a');
-            pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-            pom.setAttribute('download', filename);
-            if (document.createEvent) {
-                var event = document.createEvent('MouseEvents');
-                event.initEvent('click', true, true);
-                pom.dispatchEvent(event);
-            } else {
-                pom.click();
-            }
-        }
-    </script>
+        var package_str = JSON.stringify(package_struct);
+        console.log(package_str);
 
-    <!--  delete  -->
-    <script>
-        function delete_data(a) {
-            'use strict';
-            var title = a.name;
-            console.log(title);
+        var fuzzy = document.getElementById("fuzzy").checked;
 
-            var username = window.sessionStorage.getItem("userName");
-            var key = window.sessionStorage.getItem("session_key");
-            console.log(key);
-
-            var key_str_arr = key.split(",");
-
-            var key_arr = [];
-            for (let i = 0; i < 32; i++) {
-                key_arr.push(parseInt(key_str_arr[i]))
-            }
-            console.log(key_arr);
-
-            var key_str = bin2String(key_arr);
-            console.log(key_str);
-            var iv = Uint8Array.from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-            console.log(iv);
-            var iv_str = bin2String(iv);
-            console.log(iv_str);
-
-            var title_struct = {
-                A: username + ' ' + title
-            }
-            var title_str = JSON.stringify(title_struct);
-            console.log(title_str);
-
-            var cipher = forge.cipher.createCipher('AES-CBC', key_str);
-            cipher.start({ iv: iv_str });
-            cipher.update(forge.util.createBuffer(title_str));
-            cipher.finish();
-            var encrypted = cipher.output;
-            console.log(encrypted.data);
-
-            var package_struct = {
-                user: username,
-                data: btoa(encrypted.data)
-            }
-
-            var package_str = JSON.stringify(package_struct);
-            console.log(package_str);
-
-            $.ajax({
-                url: "/delete",
-                async: false,
-                data: { "package_str": package_str, "title": title, "username": username },
-                success: function (data) {
-                    console.log(data);
-                    console.log(data.res);
-                    console.log(data.message);
-                    if (data.res === "1") {
-                        alert("已放入回收站");
-                        window.location.href = '/';
-                    } else {
-                        alert(data.message);
-                        window.location.href = '/';
-                    }
-                }
-            });
-
-
-        }
-    </script>
-
-    <!--  upload  -->
-    <script type="text/javascript">
-        // document.getElementById("userName").innerHTML = window.sessionStorage.getItem("userName")
-        function uploadFile() {
-            'use strict';
-
-            var files = document.getElementById("upfile").files;
-            var file = files[0];
-            var title = file.name;
-
-            if (title.substr(-5, 5) == '.docx') {
-                handle_docx(file, title.slice(0, -5));
-                return;
-            }
-
-            if (title.substr(-4, 4) == '.pdf') {
-                handle_pdf(file, title.slice(0, -4));
-                return;
-            }
-
-            if (title.substr(-4, 4) != ".txt") {
-                alert("仅支持txt、docx、pdf文件!");
-                return;
-            } else {
-                title = title.slice(0, -4);
-            }
-
-            var date = new Date();
-            var date_str = date.getFullYear().toString() + "-" + (date.getMonth() + 1).toString() + "-" + date.getDate().toString();
-
-            var username = window.sessionStorage.getItem("userName");
-            var key = window.sessionStorage.getItem("session_key");
-            console.log(key);
-
-            var key_str_arr = key.split(",");
-
-            var key_arr = [];
-            for (let i = 0; i < 32; i++) {
-                key_arr.push(parseInt(key_str_arr[i]))
-            }
-            console.log(key_arr);
-
-            var key_str = bin2String(key_arr);
-            console.log(key_str);
-            var iv = Uint8Array.from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-            console.log(iv);
-            var iv_str = bin2String(iv);
-            console.log(iv_str);
-
-            var reader = new FileReader();
-            reader.onload = function () {
-                var text = this.result;
-                console.log(text);
-                console.log(title);
-
-                var rawinput = {
-                    id: title,
-                    user: username,
-                    text: text,
-                    time: date_str
-                }
-                var rawinput_json = JSON.stringify(rawinput);
-
-                var rawinput_struct = {
-                    A: rawinput_json
-                }
-                var rawinput_str = JSON.stringify(rawinput_struct);
-                console.log(rawinput_str);
-
-                var cipher = forge.cipher.createCipher('AES-CBC', key_str);
-                cipher.start({ iv: iv_str });
-                cipher.update(forge.util.createBuffer(rawinput_str));
-                cipher.finish();
-                var encrypted = cipher.output;
-                console.log(encrypted.data);
-
-                var package_struct = {
-                    user: username,
-                    data: btoa(encrypted.data)
-                }
-
-                var package_str = JSON.stringify(package_struct);
-                console.log(package_str);
-
-                $.ajax({
-                    url: "/upload",
-                    async: false,
-                    method: "POST",
-                    data: { "package_str": package_str, "title": title, "username": username, "date": date_str },
-                    success: function (data) {
-                        console.log(data);
-                        console.log(data.res);
-                        console.log(data.message);
-                        if (data.res === "1") {
-                            alert("upload success");
-                            window.location.href = '/';
-                        } else {
-                            alert(data.message);
-                            window.location.href = '/';
-                        }
-                    }
-                });
-            }
-            reader.readAsText(file);
-
-        }
-
-        function handle_pdf(file, title) {
-            var fReader = new FileReader();
-            fReader.readAsDataURL(file);
-            // console.log(input.files[0]);
-            fReader.onloadend = function (event) {
-                convertDataURIToBinary(event.target.result, title);
-            }
-        }
-
-        var BASE64_MARKER = ';base64,';
-
-        function convertDataURIToBinary(dataURI, title) {
-
-            var base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
-            var base64 = dataURI.substring(base64Index);
-            var raw = window.atob(base64);
-            var rawLength = raw.length;
-            var array = new Uint8Array(new ArrayBuffer(rawLength));
-
-            for (var i = 0; i < rawLength; i++) {
-                array[i] = raw.charCodeAt(i);
-            }
-
-            pdfAsArray(array, title);
-            // return pdfAsArray(array)
-
-        }
-
-        function getPageText(pageNum, PDFDocumentInstance) {
-            // Return a Promise that is solved once the text of the page is retrieven
-            return new Promise(function (resolve, reject) {
-                PDFDocumentInstance.getPage(pageNum).then(function (pdfPage) {
-                    // The main trick to obtain the text of the PDF page, use the getTextContent method
-                    pdfPage.getTextContent().then(function (textContent) {
-                        var textItems = textContent.items;
-                        var finalString = "";
-
-                        // Concatenate the string of the item to the final string
-                        for (var i = 0; i < textItems.length; i++) {
-                            var item = textItems[i];
-
-                            finalString += item.str + " ";
-                        }
-
-                        // Solve promise with the text retrieven from the page
-                        resolve(finalString);
-                    });
-                });
-            });
-        }
-
-        function pdfAsArray(pdfAsArray, title) {
-
-            var outputStr = "";
-
-            PDFJS.getDocument(pdfAsArray).then(function (pdf) {
-
-                var pdfDocument = pdf;
-                // Create an array that will contain our promises
-                var pagesPromises = [];
-
-                for (var i = 0; i < pdf.pdfInfo.numPages; i++) {
-                    // Required to prevent that i is always the total of pages
-                    (function (pageNumber) {
-                        // Store the promise of getPageText that returns the text of a page
-                        pagesPromises.push(getPageText(pageNumber, pdfDocument));
-                    })(i + 1);
-                }
-
-                // Execute all the promises
-                Promise.all(pagesPromises).then(function (pagesText) {
-
-                    // Display text of all the pages in the console
-                    // e.g ["Text content page 1", "Text content page 2", "Text content page 3" ... ]
-                    for (var pageNum = 0; pageNum < pagesText.length; pageNum++) {
-                        console.log(pagesText[pageNum]);
-                        outputStr = outputStr + pagesText[pageNum];
-                    }
-
-                    console.log(outputStr);
-
-                    var date = new Date();
-                    var date_str = date.getFullYear().toString() + "-" + (date.getMonth() + 1).toString() + "-" + date.getDate().toString();
-
-                    var username = window.sessionStorage.getItem("userName");
-                    var key = window.sessionStorage.getItem("session_key");
-                    console.log(key);
-
-                    var key_str_arr = key.split(",");
-
-                    var key_arr = [];
-                    for (let i = 0; i < 32; i++) {
-                        key_arr.push(parseInt(key_str_arr[i]))
-                    }
-                    console.log(key_arr);
-
-                    var key_str = bin2String(key_arr);
-                    console.log(key_str);
-                    var iv = Uint8Array.from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-                    console.log(iv);
-                    var iv_str = bin2String(iv);
-                    console.log(iv_str);
-
-                    var rawinput = {
-                        id: title,
-                        user: username,
-                        text: outputStr,
-                        time: date_str
-                    }
-                    var rawinput_json = JSON.stringify(rawinput);
-
-                    var rawinput_struct = {
-                        A: rawinput_json
-                    }
-                    var rawinput_str = JSON.stringify(rawinput_struct);
-                    console.log(rawinput_str);
-
-                    var cipher = forge.cipher.createCipher('AES-CBC', key_str);
-                    cipher.start({ iv: iv_str });
-                    cipher.update(forge.util.createBuffer(rawinput_str));
-                    cipher.finish();
-                    var encrypted = cipher.output;
-                    console.log(encrypted.data);
-
-                    var package_struct = {
-                        user: username,
-                        data: btoa(encrypted.data)
-                    }
-
-                    var package_str = JSON.stringify(package_struct);
-                    console.log(package_str);
-
-                    $.ajax({
-                        url: "/upload",
-                        async: false,
-                        method: "POST",
-                        data: { "package_str": package_str, "title": title, "username": username, "date": date_str },
-                        success: function (data) {
-                            console.log(data);
-                            console.log(data.res);
-                            console.log(data.message);
-                            if (data.res === "1") {
-                                alert("upload success");
-                                window.location.href = '/';
-                                return;
-                            } else {
-                                alert(data.message);
-                                window.location.href = '/';
-                                return;
-                            }
-                        }
-                    });
-                });
-
-            }, function (reason) {
-                // PDF loading error
-                console.error(reason);
-            });
-
-            return outputStr;
+        var isfuzzy;
+        if (fuzzy === true) {
+            isfuzzy = '1';
+        } else {
+            isfuzzy = '0';
         }
 
 
-        function handle_docx(file, title) {
-            'use strict';
+        $.ajax({
+            url: "/query",
+            async: false,
+            data: { "package_str": package_str, "isfuzzy": isfuzzy },
+            success: function (data) {
+                console.log(data);
+                console.log(data.res);
+                console.log(data.message);
+                if (data.res === "1") {
+                    // alert("query success");
 
-            var date = new Date();
-            var date_str = date.getFullYear().toString() + "-" + (date.getMonth() + 1).toString() + "-" + date.getDate().toString();
+                    var decipher = forge.cipher.createDecipher('AES-CBC', key_str);
+                    decipher.start({ iv: iv_str });
+                    decipher.update(forge.util.createBuffer(atob(data.message)));
+                    var result = decipher.finish();
+                    console.log(decipher.output.data);
 
-            var username = window.sessionStorage.getItem("userName");
-            var key = window.sessionStorage.getItem("session_key");
-            console.log(key);
+                    var article_list_str = JSON.parse(decipher.output.data).A;
+                    var article_list = JSON.parse(article_list_str).A;
+                    console.log(article_list);
 
-            var key_str_arr = key.split(",");
+                    $('article').remove();
 
-            var key_arr = [];
-            for (let i = 0; i < 32; i++) {
-                key_arr.push(parseInt(key_str_arr[i]))
-            }
-            console.log(key_arr);
-
-            var key_str = bin2String(key_arr);
-            console.log(key_str);
-            var iv = Uint8Array.from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-            console.log(iv);
-            var iv_str = bin2String(iv);
-            console.log(iv_str);
-
-            var reader = new FileReader();
-            reader.onload = function () {
-
-                var zip = new JSZip(reader.result);
-                var doc = new window.docxtemplater().loadZip(zip);
-                var text = doc.getFullText();
-
-                console.log(text);
-                console.log(title);
-                var rawinput = {
-                    id: title,
-                    user: username,
-                    text: text,
-                    time: date_str
-                }
-                var rawinput_json = JSON.stringify(rawinput);
-
-                var rawinput_struct = {
-                    A: rawinput_json
-                }
-                var rawinput_str = JSON.stringify(rawinput_struct);
-                console.log(rawinput_str);
-
-                var cipher = forge.cipher.createCipher('AES-CBC', key_str);
-                cipher.start({ iv: iv_str });
-                cipher.update(forge.util.createBuffer(rawinput_str));
-                cipher.finish();
-                var encrypted = cipher.output;
-                console.log(encrypted.data);
-
-                var package_struct = {
-                    user: username,
-                    data: btoa(encrypted.data)
-                }
-
-                var package_str = JSON.stringify(package_struct);
-                console.log(package_str);
-
-                $.ajax({
-                    url: "/upload",
-                    async: false,
-                    method: "POST",
-                    data: { "package_str": package_str, "title": title, "username": username, "date": date_str },
-                    success: function (data) {
-                        console.log(data);
-                        console.log(data.res);
-                        console.log(data.message);
-                        if (data.res === "1") {
-                            alert("upload success");
-                            window.location.href = '/';
-                        } else {
-                            alert(data.message);
-                            window.location.href = '/';
-                        }
+                    var html_str = '<div class="blog-post" id="article">';
+                    for (let i = 0; i < article_list.length; i++) {
+                        html_str = html_str + '<div class="single-post panel box-shadow-wrap-normal" style="height: 110px;">' +
+                            '<div class="post-meta wrapper-lg" style="padding: 15px;">' +
+                            '<div class="item-meta-ico bg-ico-note"></div>' +
+                            '<h2 class="m-t-none text-ellipsis index-post-title text-title"' +
+                            'style="padding-top: 11px;"><a href="" name=' + article_list[i].Id +
+                            ' onclick="show(this);return false;">' + article_list[i].Id + '</a></h2>' +
+                            '<div class="line line-lg b-b b-light"></div>' +
+                            '<div class="text-muted post-item-foot-icon text-ellipsis list-inline">' +
+                            '<li><span class="right-small-icons m-r-sm"><svg ' +
+                            'xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"' +
+                            'viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
+                            'stroke-width="2" stroke-linecap="round" stroke-linejoin="round"' +
+                            'class="feather feather-clock">' +
+                            '<circle cx="12" cy="12" r="10"></circle>' +
+                            '<polyline points="12 6 12 12 16 14"></polyline>' +
+                            '</svg></span>' + article_list[i].Time + '</li>' +
+                            '<li><span class="right-small-icons m-r-sm"><svg ' +
+                            'xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"' +
+                            'viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
+                            'stroke-width="2" stroke-linecap="round" stroke-linejoin="round"' +
+                            'class="feather feather-message-square">' +
+                            '<path ' +
+                            'd="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z">' +
+                            '</path>' +
+                            '</svg></span><a href="" name=' + article_list[i].Id +
+                            ' onclick="delete_data(this);return false;">删除</a></li>' +
+                            '<li><span class="right-small-icons m-r-sm"><svg ' +
+                            'xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"' +
+                            'viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
+                            'stroke-width="2" stroke-linecap="round" stroke-linejoin="round"' +
+                            'class="feather feather-message-square">' +
+                            '<path ' +
+                            'd="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z">' +
+                            '</path>' +
+                            '</svg></span><a href="" name=' + article_list[i].Id +
+                            ' onclick="download_article(this);return false;">下载</a></li>' +
+                            '</div>' +
+                            '<!--text-muted-->' +
+                            '</div>' +
+                            '<br>' +
+                            '<br>' +
+                            '</div>'
                     }
-                });
+                    html_str = html_str + '</div>'
+                    var s = document.getElementById('post-panel');
+                    s.innerHTML = html_str;
+                    return;
+                } else {
+                    alert(data.message);
+                    window.location.href = '/';
+                    return;
+                }
             }
-            reader.readAsArrayBuffer(file);
+        });
+    }
+</script>
+
+<!--  show  -->
+<script>
+    function show(a) {
+        'use strict';
+        var title = a.name;
+        console.log(title);
+
+        var username = window.sessionStorage.getItem("userName");
+        var key = window.sessionStorage.getItem("session_key");
+        console.log(key);
+
+        var key_str_arr = key.split(",");
+
+        var key_arr = [];
+        for (let i = 0; i < 32; i++) {
+            key_arr.push(parseInt(key_str_arr[i]))
+        }
+        console.log(key_arr);
+
+        var key_str = bin2String(key_arr);
+        console.log(key_str);
+        var iv = Uint8Array.from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+        console.log(iv);
+        var iv_str = bin2String(iv);
+        console.log(iv_str);
+
+        var title_struct = {
+            A: username + ' ' + title
+        }
+        var title_str = JSON.stringify(title_struct);
+        console.log(title_str);
+
+        var cipher = forge.cipher.createCipher('AES-CBC', key_str);
+        cipher.start({ iv: iv_str });
+        cipher.update(forge.util.createBuffer(title_str));
+        cipher.finish();
+        var encrypted = cipher.output;
+        console.log(encrypted.data);
+
+        var package_struct = {
+            user: username,
+            data: btoa(encrypted.data)
+        }
+
+        var package_str = JSON.stringify(package_struct);
+        console.log(package_str);
+
+        $.ajax({
+            url: "/show",
+            async: false,
+            data: { "package_str": package_str, "title": title, "username": username },
+            success: function (data) {
+                console.log(data);
+                console.log(data.res);
+                console.log(data.message);
+                if (data.res === "1") {
+                    // alert("show success");
+
+                    var decipher = forge.cipher.createDecipher('AES-CBC', key_str);
+                    decipher.start({ iv: iv_str });
+                    decipher.update(forge.util.createBuffer(atob(data.message)));
+                    var result = decipher.finish();
+                    console.log(decipher.output.data);
+                    var article_show = JSON.parse(decipher.output.data);
+                    console.log(article_show);
+
+                    $('article').remove();
+
+                    var s = document.getElementById('post-panel');
+
+                    var str_article = '<div class="wrapper-md" id="post-panel">' +
+                        '<ol class="breadcrumb bg-white-pure" itemscope=""><li>' +
+                        '<a href="/" itemprop="breadcrumb" title="" data-toggle="tooltip" data-original-title="返回首页"><span class="home-icons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span>首页</a>' +
+                        '</li><li class="active">正文&nbsp;&nbsp;</li></ol>' +
+                        '<div id="postpage" class="blog-post">' +
+                        '<article class="single-post panel">' +
+                        '<div id="post-content" class="wrapper-lg">' +
+                        '<div class="entry-content l-h-2x" id="md_handsome_origin" click_status="true" style="white-space: pre-wrap;">' +
+                        '<p style="font-weight: bold;font-size:300%;margin:0px">' + title + '</p> <hr style="margin:0px"> <p style="font-size:110%">' +
+                        article_show.A + '</p></div> </div> </article> </div> </div>';
+
+                    s.innerHTML = str_article;
+                    return;
+                } else {
+                    alert(data.message);
+                    window.location.href = '/';
+                    return;
+                }
+            }
+        });
+    }
+</script>
+
+<!--  download  -->
+<script>
+    function download_article(a) {
+        'use strict';
+        var title = a.name;
+        console.log(title);
+
+        var username = window.sessionStorage.getItem("userName");
+        var key = window.sessionStorage.getItem("session_key");
+        console.log(key);
+
+        var key_str_arr = key.split(",");
+
+        var key_arr = [];
+        for (let i = 0; i < 32; i++) {
+            key_arr.push(parseInt(key_str_arr[i]))
+        }
+        console.log(key_arr);
+
+        var key_str = bin2String(key_arr);
+        console.log(key_str);
+        var iv = Uint8Array.from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+        console.log(iv);
+        var iv_str = bin2String(iv);
+        console.log(iv_str);
+
+        var title_struct = {
+            A: username + ' ' + title
+        }
+        var title_str = JSON.stringify(title_struct);
+        console.log(title_str);
+
+        var cipher = forge.cipher.createCipher('AES-CBC', key_str);
+        cipher.start({ iv: iv_str });
+        cipher.update(forge.util.createBuffer(title_str));
+        cipher.finish();
+        var encrypted = cipher.output;
+        console.log(encrypted.data);
+
+        var package_struct = {
+            user: username,
+            data: btoa(encrypted.data)
+        }
+
+        var package_str = JSON.stringify(package_struct);
+        console.log(package_str);
+
+        $.ajax({
+            url: "/show",
+            async: false,
+            data: { "package_str": package_str, "title": title, "username": username },
+            success: function (data) {
+                console.log(data);
+                console.log(data.res);
+                console.log(data.message);
+                if (data.res === "1") {
+                    // alert("download success");
+
+                    var decipher = forge.cipher.createDecipher('AES-CBC', key_str);
+                    decipher.start({ iv: iv_str });
+                    decipher.update(forge.util.createBuffer(atob(data.message)));
+                    var result = decipher.finish();
+                    console.log(decipher.output.data);
+                    var article_show = JSON.parse(decipher.output.data);
+                    console.log(article_show);
+
+                    download_txt(title + '.txt', article_show.A);
+
+                    return;
+                } else {
+                    alert(data.message);
+                    window.location.href = '/';
+                    return;
+                }
+            }
+        });
+    }
+
+    function download_txt(filename, text) {
+        var pom = document.createElement('a');
+        pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        pom.setAttribute('download', filename);
+        if (document.createEvent) {
+            var event = document.createEvent('MouseEvents');
+            event.initEvent('click', true, true);
+            pom.dispatchEvent(event);
+        } else {
+            pom.click();
+        }
+    }
+</script>
+
+<!--  delete  -->
+<script>
+    function delete_data(a) {
+        'use strict';
+        var title = a.name;
+        console.log(title);
+
+        var username = window.sessionStorage.getItem("userName");
+        var key = window.sessionStorage.getItem("session_key");
+        console.log(key);
+
+        var key_str_arr = key.split(",");
+
+        var key_arr = [];
+        for (let i = 0; i < 32; i++) {
+            key_arr.push(parseInt(key_str_arr[i]))
+        }
+        console.log(key_arr);
+
+        var key_str = bin2String(key_arr);
+        console.log(key_str);
+        var iv = Uint8Array.from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+        console.log(iv);
+        var iv_str = bin2String(iv);
+        console.log(iv_str);
+
+        var title_struct = {
+            A: username + ' ' + title
+        }
+        var title_str = JSON.stringify(title_struct);
+        console.log(title_str);
+
+        var cipher = forge.cipher.createCipher('AES-CBC', key_str);
+        cipher.start({ iv: iv_str });
+        cipher.update(forge.util.createBuffer(title_str));
+        cipher.finish();
+        var encrypted = cipher.output;
+        console.log(encrypted.data);
+
+        var package_struct = {
+            user: username,
+            data: btoa(encrypted.data)
+        }
+
+        var package_str = JSON.stringify(package_struct);
+        console.log(package_str);
+
+        $.ajax({
+            url: "/delete",
+            async: false,
+            data: { "package_str": package_str, "title": title, "username": username },
+            success: function (data) {
+                console.log(data);
+                console.log(data.res);
+                console.log(data.message);
+                if (data.res === "1") {
+                    alert("已放入回收站");
+                    window.location.href = '/';
+                } else {
+                    alert(data.message);
+                    window.location.href = '/';
+                }
+            }
+        });
+
+
+    }
+</script>
+
+<!--  upload  -->
+<script type="text/javascript">
+    // document.getElementById("userName").innerHTML = window.sessionStorage.getItem("userName")
+    function uploadFile() {
+        'use strict';
+
+        var files = document.getElementById("upfile").files;
+        var file = files[0];
+        var title = file.name;
+
+        if (title.substr(-5, 5) == '.docx') {
+            handle_docx(file, title.slice(0, -5));
             return;
         }
 
-
-        function bin2String(array) {
-            return String.fromCharCode.apply(String, array);
+        if (title.substr(-4, 4) == '.pdf') {
+            handle_pdf(file, title.slice(0, -4));
+            return;
         }
 
-        function string2Bin(str) {
-            var result = [];
-            for (var i = 0; i < str.length; i++) {
-                result.push(str.charCodeAt(i));
-            }
-            return result;
+        if (title.substr(-4, 4) != ".txt") {
+            alert("仅支持txt、docx、pdf文件!");
+            return;
+        } else {
+            title = title.slice(0, -4);
         }
-    </script>
 
-    <!--  logout  -->
-    <script>
-        function logout() {
-            'use strict';
+        var date = new Date();
+        var date_str = date.getFullYear().toString() + "-" + (date.getMonth() + 1).toString() + "-" + date.getDate().toString();
 
-            var username = window.sessionStorage.getItem("userName")
-            console.log(username)
+        var username = window.sessionStorage.getItem("userName");
+        var key = window.sessionStorage.getItem("session_key");
+        console.log(key);
 
-            var userName_struct = {
-                A: username
+        var key_str_arr = key.split(",");
+
+        var key_arr = [];
+        for (let i = 0; i < 32; i++) {
+            key_arr.push(parseInt(key_str_arr[i]))
+        }
+        console.log(key_arr);
+
+        var key_str = bin2String(key_arr);
+        console.log(key_str);
+        var iv = Uint8Array.from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+        console.log(iv);
+        var iv_str = bin2String(iv);
+        console.log(iv_str);
+
+        var reader = new FileReader();
+        reader.onload = function () {
+            var text = this.result;
+            console.log(text);
+            console.log(title);
+
+            var rawinput = {
+                id: title,
+                user: username,
+                text: text,
+                time: date_str
             }
-            var userName_str = JSON.stringify(userName_struct);
-            console.log(userName_str);
+            var rawinput_json = JSON.stringify(rawinput);
 
-            var key = window.sessionStorage.getItem("session_key");
-            console.log(key);
-
-            var key_str_arr = key.split(",");
-
-            var key_arr = [];
-            for (let i = 0; i < 32; i++) {
-                key_arr.push(parseInt(key_str_arr[i]))
+            var rawinput_struct = {
+                A: rawinput_json
             }
-            console.log(key_arr);
-
-            var key_str = bin2String(key_arr);
-            console.log(key_str);
-            var iv = Uint8Array.from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-            console.log(iv);
-            var iv_str = bin2String(iv);
-            console.log(iv_str);
+            var rawinput_str = JSON.stringify(rawinput_struct);
+            console.log(rawinput_str);
 
             var cipher = forge.cipher.createCipher('AES-CBC', key_str);
             cipher.start({ iv: iv_str });
-            cipher.update(forge.util.createBuffer(userName_str));
+            cipher.update(forge.util.createBuffer(rawinput_str));
             cipher.finish();
             var encrypted = cipher.output;
             console.log(encrypted.data);
@@ -1315,41 +1094,374 @@
             console.log(package_str);
 
             $.ajax({
-                url: "/logout",
+                url: "/upload",
                 async: false,
-                data: { "package_str": package_str },
+                method: "POST",
+                data: { "package_str": package_str, "title": title, "username": username, "date": date_str },
                 success: function (data) {
                     console.log(data);
                     console.log(data.res);
                     console.log(data.message);
                     if (data.res === "1") {
-                        sessionStorage.removeItem('userName');
-                        sessionStorage.removeItem('session_key');
-                        // alert("logout success");
-                        window.location.href = '/login';
-                        return;
+                        alert("upload success");
+                        window.location.href = '/';
                     } else {
                         alert(data.message);
                         window.location.href = '/';
-                        return;
                     }
                 }
             });
         }
+        reader.readAsText(file);
 
-        function bin2String(array) {
-            return String.fromCharCode.apply(String, array);
+    }
+
+    function handle_pdf(file, title) {
+        var fReader = new FileReader();
+        fReader.readAsDataURL(file);
+        // console.log(input.files[0]);
+        fReader.onloadend = function (event) {
+            convertDataURIToBinary(event.target.result, title);
+        }
+    }
+
+    var BASE64_MARKER = ';base64,';
+
+    function convertDataURIToBinary(dataURI, title) {
+
+        var base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
+        var base64 = dataURI.substring(base64Index);
+        var raw = window.atob(base64);
+        var rawLength = raw.length;
+        var array = new Uint8Array(new ArrayBuffer(rawLength));
+
+        for (var i = 0; i < rawLength; i++) {
+            array[i] = raw.charCodeAt(i);
         }
 
-        function string2Bin(str) {
-            var result = [];
-            for (var i = 0; i < str.length; i++) {
-                result.push(str.charCodeAt(i));
+        pdfAsArray(array, title);
+        // return pdfAsArray(array)
+
+    }
+
+    function getPageText(pageNum, PDFDocumentInstance) {
+        // Return a Promise that is solved once the text of the page is retrieven
+        return new Promise(function (resolve, reject) {
+            PDFDocumentInstance.getPage(pageNum).then(function (pdfPage) {
+                // The main trick to obtain the text of the PDF page, use the getTextContent method
+                pdfPage.getTextContent().then(function (textContent) {
+                    var textItems = textContent.items;
+                    var finalString = "";
+
+                    // Concatenate the string of the item to the final string
+                    for (var i = 0; i < textItems.length; i++) {
+                        var item = textItems[i];
+
+                        finalString += item.str + " ";
+                    }
+
+                    // Solve promise with the text retrieven from the page
+                    resolve(finalString);
+                });
+            });
+        });
+    }
+
+    function pdfAsArray(pdfAsArray, title) {
+
+        var outputStr = "";
+
+        PDFJS.getDocument(pdfAsArray).then(function (pdf) {
+
+            var pdfDocument = pdf;
+            // Create an array that will contain our promises
+            var pagesPromises = [];
+
+            for (var i = 0; i < pdf.pdfInfo.numPages; i++) {
+                // Required to prevent that i is always the total of pages
+                (function (pageNumber) {
+                    // Store the promise of getPageText that returns the text of a page
+                    pagesPromises.push(getPageText(pageNumber, pdfDocument));
+                })(i + 1);
             }
-            return result;
+
+            // Execute all the promises
+            Promise.all(pagesPromises).then(function (pagesText) {
+
+                // Display text of all the pages in the console
+                // e.g ["Text content page 1", "Text content page 2", "Text content page 3" ... ]
+                for (var pageNum = 0; pageNum < pagesText.length; pageNum++) {
+                    console.log(pagesText[pageNum]);
+                    outputStr = outputStr + pagesText[pageNum];
+                }
+
+                console.log(outputStr);
+
+                var date = new Date();
+                var date_str = date.getFullYear().toString() + "-" + (date.getMonth() + 1).toString() + "-" + date.getDate().toString();
+
+                var username = window.sessionStorage.getItem("userName");
+                var key = window.sessionStorage.getItem("session_key");
+                console.log(key);
+
+                var key_str_arr = key.split(",");
+
+                var key_arr = [];
+                for (let i = 0; i < 32; i++) {
+                    key_arr.push(parseInt(key_str_arr[i]))
+                }
+                console.log(key_arr);
+
+                var key_str = bin2String(key_arr);
+                console.log(key_str);
+                var iv = Uint8Array.from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+                console.log(iv);
+                var iv_str = bin2String(iv);
+                console.log(iv_str);
+
+                var rawinput = {
+                    id: title,
+                    user: username,
+                    text: outputStr,
+                    time: date_str
+                }
+                var rawinput_json = JSON.stringify(rawinput);
+
+                var rawinput_struct = {
+                    A: rawinput_json
+                }
+                var rawinput_str = JSON.stringify(rawinput_struct);
+                console.log(rawinput_str);
+
+                var cipher = forge.cipher.createCipher('AES-CBC', key_str);
+                cipher.start({ iv: iv_str });
+                cipher.update(forge.util.createBuffer(rawinput_str));
+                cipher.finish();
+                var encrypted = cipher.output;
+                console.log(encrypted.data);
+
+                var package_struct = {
+                    user: username,
+                    data: btoa(encrypted.data)
+                }
+
+                var package_str = JSON.stringify(package_struct);
+                console.log(package_str);
+
+                $.ajax({
+                    url: "/upload",
+                    async: false,
+                    method: "POST",
+                    data: { "package_str": package_str, "title": title, "username": username, "date": date_str },
+                    success: function (data) {
+                        console.log(data);
+                        console.log(data.res);
+                        console.log(data.message);
+                        if (data.res === "1") {
+                            alert("upload success");
+                            window.location.href = '/';
+                            return;
+                        } else {
+                            alert(data.message);
+                            window.location.href = '/';
+                            return;
+                        }
+                    }
+                });
+            });
+
+        }, function (reason) {
+            // PDF loading error
+            console.error(reason);
+        });
+
+        return outputStr;
+    }
+
+
+    function handle_docx(file, title) {
+        'use strict';
+
+        var date = new Date();
+        var date_str = date.getFullYear().toString() + "-" + (date.getMonth() + 1).toString() + "-" + date.getDate().toString();
+
+        var username = window.sessionStorage.getItem("userName");
+        var key = window.sessionStorage.getItem("session_key");
+        console.log(key);
+
+        var key_str_arr = key.split(",");
+
+        var key_arr = [];
+        for (let i = 0; i < 32; i++) {
+            key_arr.push(parseInt(key_str_arr[i]))
+        }
+        console.log(key_arr);
+
+        var key_str = bin2String(key_arr);
+        console.log(key_str);
+        var iv = Uint8Array.from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+        console.log(iv);
+        var iv_str = bin2String(iv);
+        console.log(iv_str);
+
+        var reader = new FileReader();
+        reader.onload = function () {
+
+            var zip = new JSZip(reader.result);
+            var doc = new window.docxtemplater().loadZip(zip);
+            var text = doc.getFullText();
+
+            console.log(text);
+            console.log(title);
+            var rawinput = {
+                id: title,
+                user: username,
+                text: text,
+                time: date_str
+            }
+            var rawinput_json = JSON.stringify(rawinput);
+
+            var rawinput_struct = {
+                A: rawinput_json
+            }
+            var rawinput_str = JSON.stringify(rawinput_struct);
+            console.log(rawinput_str);
+
+            var cipher = forge.cipher.createCipher('AES-CBC', key_str);
+            cipher.start({ iv: iv_str });
+            cipher.update(forge.util.createBuffer(rawinput_str));
+            cipher.finish();
+            var encrypted = cipher.output;
+            console.log(encrypted.data);
+
+            var package_struct = {
+                user: username,
+                data: btoa(encrypted.data)
+            }
+
+            var package_str = JSON.stringify(package_struct);
+            console.log(package_str);
+
+            $.ajax({
+                url: "/upload",
+                async: false,
+                method: "POST",
+                data: { "package_str": package_str, "title": title, "username": username, "date": date_str },
+                success: function (data) {
+                    console.log(data);
+                    console.log(data.res);
+                    console.log(data.message);
+                    if (data.res === "1") {
+                        alert("upload success");
+                        window.location.href = '/';
+                    } else {
+                        alert(data.message);
+                        window.location.href = '/';
+                    }
+                }
+            });
+        }
+        reader.readAsArrayBuffer(file);
+        return;
+    }
+
+
+    function bin2String(array) {
+        return String.fromCharCode.apply(String, array);
+    }
+
+    function string2Bin(str) {
+        var result = [];
+        for (var i = 0; i < str.length; i++) {
+            result.push(str.charCodeAt(i));
+        }
+        return result;
+    }
+</script>
+
+<!--  logout  -->
+<script>
+    function logout() {
+        'use strict';
+
+        var username = window.sessionStorage.getItem("userName")
+        console.log(username)
+
+        var userName_struct = {
+            A: username
+        }
+        var userName_str = JSON.stringify(userName_struct);
+        console.log(userName_str);
+
+        var key = window.sessionStorage.getItem("session_key");
+        console.log(key);
+
+        var key_str_arr = key.split(",");
+
+        var key_arr = [];
+        for (let i = 0; i < 32; i++) {
+            key_arr.push(parseInt(key_str_arr[i]))
+        }
+        console.log(key_arr);
+
+        var key_str = bin2String(key_arr);
+        console.log(key_str);
+        var iv = Uint8Array.from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+        console.log(iv);
+        var iv_str = bin2String(iv);
+        console.log(iv_str);
+
+        var cipher = forge.cipher.createCipher('AES-CBC', key_str);
+        cipher.start({ iv: iv_str });
+        cipher.update(forge.util.createBuffer(userName_str));
+        cipher.finish();
+        var encrypted = cipher.output;
+        console.log(encrypted.data);
+
+        var package_struct = {
+            user: username,
+            data: btoa(encrypted.data)
         }
 
-    </script>
+        var package_str = JSON.stringify(package_struct);
+        console.log(package_str);
+
+        $.ajax({
+            url: "/logout",
+            async: false,
+            data: { "package_str": package_str },
+            success: function (data) {
+                console.log(data);
+                console.log(data.res);
+                console.log(data.message);
+                if (data.res === "1") {
+                    sessionStorage.removeItem('userName');
+                    sessionStorage.removeItem('session_key');
+                    // alert("logout success");
+                    window.location.href = '/login';
+                    return;
+                } else {
+                    alert(data.message);
+                    window.location.href = '/';
+                    return;
+                }
+            }
+        });
+    }
+
+    function bin2String(array) {
+        return String.fromCharCode.apply(String, array);
+    }
+
+    function string2Bin(str) {
+        var result = [];
+        for (var i = 0; i < str.length; i++) {
+            result.push(str.charCodeAt(i));
+        }
+        return result;
+    }
+
+</script>
 </body>
 
 </html>

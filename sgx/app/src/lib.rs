@@ -9,6 +9,11 @@ use lazy_static::lazy_static;
 use std::ptr;
 
 
+extern crate rsa;
+extern crate rand;
+
+use rand::{rngs::StdRng, SeedableRng,Rng};
+use rsa::{PublicKey, RSAPrivateKey, PaddingScheme};
 
 extern crate crypto;
 extern crate base64;
@@ -26,9 +31,15 @@ struct G {
 
 
 
+
 static ENCLAVE_FILE: &'static str = "enclave.signed.so";
 lazy_static! {
     static ref SGX_ENCLAVE: SgxResult<SgxEnclave> = init_enclave();
+    static ref private_key: RSAPrivateKey = {
+        let mut rng = rand::rngs::StdRng::seed_from_u64(0);
+        let bits = 2048;
+        RSAPrivateKey::new(&mut rng, bits).expect("failed to generate a key")
+    };
 }
 
 extern "C" {
@@ -209,7 +220,6 @@ pub extern "C" fn rust_do_query(
     let mut encrypted_result_vec: Vec<u8> = vec![0; result_string_limit];
     let encrypted_result_slice = &mut encrypted_result_vec[..];
 
-    println!("[~~]test");
 
     let result = unsafe {
         do_query(
@@ -1238,7 +1248,14 @@ fn rust_decrypt(message: String) -> String {
 fn alertprint(message: String, op: &str){
     println!("==============get message============");
     println!("operation: {}", op);
-    println!("-------------------------------------\n\n");
-    println!("{}",message);
-    println!("\n\n=====================================");
+    println!("-------------------------------------\n");
+    let mut rng = rand::rngs::StdRng::seed_from_u64(0);
+    let encry_message = (*private_key).encrypt(&mut rng, PaddingScheme::new_pkcs1v15_encrypt(), message.as_bytes()).expect("failed to encrypt");
+    let bytes = base64::encode(encry_message);
+    println!("{}",bytes);
+    println!("\n=====================================");
+    println!("use RSA to decrypt outermost ciphertext:");
+    println!("=====================================\n");
+    println!("{}", message);
+    println!("\n=====================================");
 }

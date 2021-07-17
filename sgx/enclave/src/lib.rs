@@ -571,7 +571,7 @@ pub extern "C" fn do_query(
     let searcher = reader.searcher();
 
     let mut point = Articles { A: vec![] };
-    println!("[~~]test1: {}",&pattern);
+    // println!("[~~]test1: {}",&pattern);
 
     
     let mut top_docs;
@@ -608,7 +608,7 @@ pub extern "C" fn do_query(
         };
     }
     
-    println!("[~~]test2");
+    // println!("[~~]test2");
 
     // let top_docs = match searcher.search(&query, &TopDocs::with_limit(100)) {
     //     Ok(top_docs) => top_docs,
@@ -1279,9 +1279,9 @@ pub extern "C" fn user_logout(some_string: *const u8, some_len: usize) -> sgx_st
 }
 
 
-#[no_mangle]
-pub extern "C" fn enclave_test() -> sgx_status_t {
-    println!("[=] test SUCCESS!");
+// #[no_mangle]
+// pub extern "C" fn enclave_test() -> sgx_status_t {
+//     println!("[=] test SUCCESS!");
 
-    return sgx_status_t::SGX_SUCCESS;
-}
+//     return sgx_status_t::SGX_SUCCESS;
+// }

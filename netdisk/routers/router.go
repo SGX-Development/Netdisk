@@ -33,4 +33,5 @@ func init() {
 
 	beego.Router("/introduce", &controllers.IntroController{}, "get:IntroGet")
 	beego.Router("/about_us", &controllers.AboutController{}, "get:AboutGet")
+	beego.Router("/record", &controllers.RecordController{}, "get:RecordGet")
 }

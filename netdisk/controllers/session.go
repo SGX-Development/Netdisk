@@ -23,6 +23,14 @@ func (c *IntroController) Islogin() bool {
 	return !(status == nil || (status != nil && !status.(UserStatus).islogin))
 }
 
+func (c *RecordController) Islogin() bool {
+	status := c.GetSession("status")
+	if status == nil {
+		c.Redirect("/login", 302)
+	}
+	return !(status == nil || (status != nil && !status.(UserStatus).islogin))
+}
+
 func (c *AboutController) Islogin() bool {
 	status := c.GetSession("status")
 	if status == nil {
@@ -40,6 +48,14 @@ func (c *BinController) Islogin() bool {
 }
 
 func (c *MainController) UserName() string {
+	status := c.GetSession("status")
+	if status == nil {
+		c.Redirect("/login", 302)
+	}
+	return status.(UserStatus).userName
+}
+
+func (c *RecordController) UserName() string {
 	status := c.GetSession("status")
 	if status == nil {
 		c.Redirect("/login", 302)

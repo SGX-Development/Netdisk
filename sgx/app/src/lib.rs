@@ -29,7 +29,11 @@ struct G {
     A: String,
 }
 
-
+#[derive(Serialize, Deserialize, Debug)]
+struct Package {
+    user: String,
+    data: String,
+}
 
 
 static ENCLAVE_FILE: &'static str = "enclave.signed.so";
@@ -1244,20 +1248,24 @@ fn rust_decrypt(message: String) -> String {
 
     g.A
 }
-
 fn alertprint(message: String, op: &str){
     println!("==============get message============");
     println!("operation: {}", op);
     println!("-------------------------------------\n");
-    let mut rng = rand::rngs::StdRng::seed_from_u64(0);
-    let encry_message = (*private_key).encrypt(&mut rng, PaddingScheme::new_pkcs1v15_encrypt(), message.as_bytes()).expect("failed to encrypt");
-    let enc:&[u8] = &encry_message;
-    let bytes = String::from_utf8_lossy(enc);
-    // let bytes = base64::encode(encry_message);
-    println!("{}",bytes);
+
+
+    let mut data:Package = serde_json::from_str(&message).unwrap();
+    let user = data.user;
+    let r= message.len() as u64;
+    let mut rng = rand::rngs::StdRng::seed_from_u64(r);
+    let encry_user = (*private_key).encrypt(&mut rng, PaddingScheme::new_pkcs1v15_encrypt(),user.as_bytes()).expect("failed to encrypt");
+    let bytes = base64::encode(&encry_user);
+    data.user =bytes;
+    println!("{}",serde_json::to_string(&data).unwrap());
+    
     println!("\n=====================================");
-    println!("use RSA to decrypt outermost ciphertext:");
-    println!("=====================================\n");
+    println!("use RSA to decrypt \"user\" ciphertext:");
+    println!("-------------------------------------\n");
     println!("{}", message);
-    println!("\n=====================================");
+    println!("\n=====================================\n");
 }

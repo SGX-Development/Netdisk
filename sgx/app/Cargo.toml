@@ -18,7 +18,8 @@ serde = {version="1.0.115",features = ["derive"] }
 serde_json = "1.0.57"
 rsa = { git = "https://github.com/AkaiKen/RSA.git", branch = "sgx-tantivy", default-features = false, features = ["alloc"]}
 rand = { version = "0.7.0", default-features = false }
-num-bigint = { version = "0.6", features = ["i128", "u64_digit", "prime", "zeroize"], default-features = false, package = "num-bigint-dig" }
+zeroize = "=1.3.0"
+num-bigint = { version = "0.6", features = ["i128", "u64_digit", "prime","zeroize"], default-features = false, package = "num-bigint-dig" }
 spin = "0.4.9"
 
 

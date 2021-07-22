@@ -1251,7 +1251,9 @@ fn alertprint(message: String, op: &str){
     println!("-------------------------------------\n");
     let mut rng = rand::rngs::StdRng::seed_from_u64(0);
     let encry_message = (*private_key).encrypt(&mut rng, PaddingScheme::new_pkcs1v15_encrypt(), message.as_bytes()).expect("failed to encrypt");
-    let bytes = base64::encode(encry_message);
+    let enc:&[u8] = &encry_message;
+    let bytes = String::from_utf8_lossy(enc);
+    // let bytes = base64::encode(encry_message);
     println!("{}",bytes);
     println!("\n=====================================");
     println!("use RSA to decrypt outermost ciphertext:");

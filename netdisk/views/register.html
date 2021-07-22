@@ -147,6 +147,7 @@
                     $.ajax({
                         url: "/register",
                         async: false,
+                        method: 'POST',
                         data: { "userName": uname, "enc_uname_pwd": btoa(enc_uname_pwd), "email": email },
                         success: function (data) {
                             console.log(data);

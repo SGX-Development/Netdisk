@@ -109,7 +109,9 @@ func (c *RegController) RegGet() {
 	// }
 
 	errMsg, flag := CheckReg(userName, enc_pswd_base64, email)
+	fmt.Println(errMsg)
 	if !flag {
+
 		ReturnData["message"] = errMsg
 		ReturnData["res"] = "0"
 		c.Data["json"] = ReturnData
@@ -118,7 +120,6 @@ func (c *RegController) RegGet() {
 
 	ReturnData["res"] = "1"
 	ReturnData["message"] = "0"
-
 	c.Data["json"] = ReturnData
 	c.ServeJSON()
 }

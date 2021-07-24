@@ -65,6 +65,7 @@
             color: #999;
         }
     </style>
+
     <!--全站jquery-->
 
     <script src=" https://cdn.jsdelivr.net/gh/ihewro/handsome-static@8.1.0.1/assets/libs/jquery/jquery.min.js"></script>
@@ -396,6 +397,7 @@
                                                             margin:-3px 0px 0px -15px;"></span>
                                                     </svg></span><a href="" name={{$a}}
                                                     onclick="download_article(this);return false;">下载</a></li>
+
                                         </div>
                                         <!--text-muted-->
                                     </div>
@@ -527,10 +529,19 @@
 
                         var scores = new Array();
                         var names = new Array();
-
-                        for (let i = 0; i < article_list.length; i++) {
-                            scores.push(article_list[i].Score/article_list[0].Score);
-                            names.push(article_list[i].Id)
+                        let min = article_list[article_list.length - 1].Score
+                        let k = 1 / (article_list[0].Score - min);
+                        if (article_list[0].Score != min) {
+                            for (let i = 0; i < article_list.length; i++) {
+                                scores.push(k * (article_list[i].Score - min));
+                                names.push(article_list[i].Id)
+                            }
+                        }
+                        else {
+                            for (let i = 0; i < article_list.length; i++) {
+                                scores.push(1);
+                                names.push(article_list[i].Id)
+                            }
                         }
                         console.log("=====================");
                         console.log(scores);
@@ -538,55 +549,110 @@
                         console.log("=====================");
 
                         $('article').remove();
-                        if (scores.length != 0) {
+                        if (scores.length != 0 && isfuzzy == '0') {
                             var html_str = '<div id="container" style="height: 300px"></div><div class="blog-post" id="article">';
                         }
                         else {
                             var html_str = '<div class="blog-post" id="article">';
                         }
                         for (let i = 0; i < article_list.length; i++) {
-                            html_str = html_str + '<div class="single-post panel box-shadow-wrap-normal" style="height: 110px;">' +
-                                '<div class="post-meta wrapper-lg" style="padding: 15px;">' +
-                                '<div class="item-meta-ico bg-ico-note"></div>' +
-                                '<h2 class="m-t-none text-ellipsis index-post-title text-title"' +
-                                'style="padding-top: 11px;"><a href="" name=' + article_list[i].Id +
-                                ' onclick="show(this);return false;">' + article_list[i].Id + '</a></h2>' +
-                                '<div class="line line-lg b-b b-light"></div>' +
-                                '<div class="text-muted post-item-foot-icon text-ellipsis list-inline">' +
-                                '<li><span class="right-small-icons m-r-sm"><svg ' +
-                                'xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"' +
-                                'viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
-                                'stroke-width="2" stroke-linecap="round" stroke-linejoin="round"' +
-                                'class="feather feather-clock">' +
-                                '<circle cx="12" cy="12" r="10"></circle>' +
-                                '<polyline points="12 6 12 12 16 14"></polyline>' +
-                                '</svg></span>' + article_list[i].Time + '</li>' +
-                                '<li><span class="right-small-icons m-r-sm"><svg ' +
-                                'xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"' +
-                                'viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
-                                'stroke-width="2" stroke-linecap="round" stroke-linejoin="round"' +
-                                'class="feather feather-message-square">' +
-                                '<path ' +
-                                'd="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z">' +
-                                '</path>' +
-                                '</svg></span><a href="" name=' + article_list[i].Id +
-                                ' onclick="delete_data(this);return false;">删除</a></li>' +
-                                '<li><span class="right-small-icons m-r-sm"><svg ' +
-                                'xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"' +
-                                'viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
-                                'stroke-width="2" stroke-linecap="round" stroke-linejoin="round"' +
-                                'class="feather feather-message-square">' +
-                                '<path ' +
-                                'd="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z">' +
-                                '</path>' +
-                                '</svg></span><a href="" name=' + article_list[i].Id +
-                                ' onclick="download_article(this);return false;">下载</a></li>' +
-                                '</div>' +
-                                '<!--text-muted-->' +
-                                '</div>' +
-                                '<br>' +
-                                '<br>' +
-                                '</div>'
+                            if (isfuzzy == '0') {
+                                var len = scores[i] * 300;
+                                if (i == article_list.length - 1 && i != 0) len = 10;
+                                var heat = '<div class="progress" style="height:10px;width:' + String(len) + 'px;float:right;margin-top:4px;"> <span class="progress-bar"' +
+                                    ' style="width: 100%; display: block; height: 100%;' +
+                                    ' background: -webkit-gradient(linear, left top, right top, from(#ffd33d), color-stop(17%, #ea4aaa), color-stop(34%, #b34bff), color-stop(51%, #01feff), color-stop(68%, #ffd33d), color-stop(85%, #ea4aaa), to(#b34bff));' +
+                                    ' background: linear-gradient(90deg, #ffd33d, #ea4aaa 17%, #b34bff 34%, #01feff 51%, #ffd33d 68%, #ea4aaa 85%, #b34bff);' +
+                                    ' background-size: 300% 100%;' +
+                                    '-webkit-animation: progress-animation 6s linear 1s infinite, width-animation 10s ease-in-out infinite;' +
+                                    'animation: progress-animation 6s linear 1s infinite, width-animation 10s ease-in-out infinite;"></span> </div><span style="float: right;margin-right: 5px">' + String(scores[i]).substr(0, 5) + '</span>'
+
+                                html_str = html_str + '<div class="single-post panel box-shadow-wrap-normal" style="height: 110px;">' +
+                                    '<div class="post-meta wrapper-lg" style="padding: 15px;">' +
+                                    '<div class="item-meta-ico bg-ico-note"></div>' +
+                                    '<h2 class="m-t-none text-ellipsis index-post-title text-title"' +
+                                    'style="padding-top: 11px;"><a href="" name=' + article_list[i].Id +
+                                    ' onclick="show(this);return false;">' + article_list[i].Id + '</a></h2>' +
+                                    '<div class="line line-lg b-b b-light"></div>' +
+                                    '<div class="text-muted post-item-foot-icon text-ellipsis list-inline">' +
+                                    '<li><span class="right-small-icons m-r-sm"><svg ' +
+                                    'xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"' +
+                                    'viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
+                                    'stroke-width="2" stroke-linecap="round" stroke-linejoin="round"' +
+                                    'class="feather feather-clock">' +
+                                    '<circle cx="12" cy="12" r="10"></circle>' +
+                                    '<polyline points="12 6 12 12 16 14"></polyline>' +
+                                    '</svg></span>' + article_list[i].Time + '</li>' +
+                                    '<li><span class="right-small-icons m-r-sm"><svg ' +
+                                    'xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"' +
+                                    'viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
+                                    'stroke-width="2" stroke-linecap="round" stroke-linejoin="round"' +
+                                    'class="feather feather-message-square">' +
+                                    '<path ' +
+                                    'd="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z">' +
+                                    '</path>' +
+                                    '</svg></span><a href="" name=' + article_list[i].Id +
+                                    ' onclick="delete_data(this);return false;">删除</a></li>' +
+                                    '<li><span class="right-small-icons m-r-sm"><svg ' +
+                                    'xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"' +
+                                    'viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
+                                    'stroke-width="2" stroke-linecap="round" stroke-linejoin="round"' +
+                                    'class="feather feather-message-square">' +
+                                    '<path ' +
+                                    'd="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z">' +
+                                    '</path>' +
+                                    '</svg></span><a href="" name=' + article_list[i].Id +
+                                    ' onclick="download_article(this);return false;">下载</a></li>' + heat +
+                                    '</div>' +
+                                    '<!--text-muted-->' +
+                                    '</div>' +
+                                    '<br>' +
+                                    '<br>' +
+                                    '</div>'
+                            } else {
+                                html_str = html_str + '<div class="single-post panel box-shadow-wrap-normal" style="height: 110px;">' +
+                                    '<div class="post-meta wrapper-lg" style="padding: 15px;">' +
+                                    '<div class="item-meta-ico bg-ico-note"></div>' +
+                                    '<h2 class="m-t-none text-ellipsis index-post-title text-title"' +
+                                    'style="padding-top: 11px;"><a href="" name=' + article_list[i].Id +
+                                    ' onclick="show(this);return false;">' + article_list[i].Id + '</a></h2>' +
+                                    '<div class="line line-lg b-b b-light"></div>' +
+                                    '<div class="text-muted post-item-foot-icon text-ellipsis list-inline">' +
+                                    '<li><span class="right-small-icons m-r-sm"><svg ' +
+                                    'xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"' +
+                                    'viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
+                                    'stroke-width="2" stroke-linecap="round" stroke-linejoin="round"' +
+                                    'class="feather feather-clock">' +
+                                    '<circle cx="12" cy="12" r="10"></circle>' +
+                                    '<polyline points="12 6 12 12 16 14"></polyline>' +
+                                    '</svg></span>' + article_list[i].Time + '</li>' +
+                                    '<li><span class="right-small-icons m-r-sm"><svg ' +
+                                    'xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"' +
+                                    'viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
+                                    'stroke-width="2" stroke-linecap="round" stroke-linejoin="round"' +
+                                    'class="feather feather-message-square">' +
+                                    '<path ' +
+                                    'd="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z">' +
+                                    '</path>' +
+                                    '</svg></span><a href="" name=' + article_list[i].Id +
+                                    ' onclick="delete_data(this);return false;">删除</a></li>' +
+                                    '<li><span class="right-small-icons m-r-sm"><svg ' +
+                                    'xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"' +
+                                    'viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
+                                    'stroke-width="2" stroke-linecap="round" stroke-linejoin="round"' +
+                                    'class="feather feather-message-square">' +
+                                    '<path ' +
+                                    'd="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z">' +
+                                    '</path>' +
+                                    '</svg></span><a href="" name=' + article_list[i].Id +
+                                    ' onclick="download_article(this);return false;">下载</a></li>' +
+                                    '</div>' +
+                                    '<!--text-muted-->' +
+                                    '</div>' +
+                                    '<br>' +
+                                    '<br>' +
+                                    '</div>'
+                            }
                         }
                         html_str = html_str + '</div>'
                         var s = document.getElementById('post-panel');
@@ -619,12 +685,14 @@
                 },
                 xAxis: {
                     type: 'category',
-                    data: names
+                    data: names,
+                    name: 'Article Title'
                 },
                 yAxis: {
                     type: 'value',
                     min: scores[scores.length - 1],
-                    max: scores[0]
+                    max: scores[0],
+                    name: 'Score'
                 },
                 series: [{
                     data: scores,

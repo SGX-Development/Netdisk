@@ -559,7 +559,7 @@
                             if (isfuzzy == '0') {
                                 var len = scores[i] * 300;
                                 if (i == article_list.length - 1 && i != 0) len = 10;
-                                var heat = '<div class="progress" style="height:10px;width:' + String(len) + 'px;float:right;margin-top:4px;"> <span class="progress-bar"' +
+                                var heat = '<div class="progress" style="height:10px;width:300px;float:right;margin-top:4px;padding-left:'+ String(300-len) +'px"> <span class="progress-bar"' +
                                     ' style="width: 100%; display: block; height: 100%;' +
                                     ' background: -webkit-gradient(linear, left top, right top, from(#ffd33d), color-stop(17%, #ea4aaa), color-stop(34%, #b34bff), color-stop(51%, #01feff), color-stop(68%, #ffd33d), color-stop(85%, #ea4aaa), to(#b34bff));' +
                                     ' background: linear-gradient(90deg, #ffd33d, #ea4aaa 17%, #b34bff 34%, #01feff 51%, #ffd33d 68%, #ea4aaa 85%, #b34bff);' +

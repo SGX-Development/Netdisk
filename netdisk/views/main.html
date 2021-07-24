@@ -415,7 +415,7 @@
         <footer id="footer" class="app-footer" role="footer">
             <div class="wrapper bg-light">
                 <span class="pull-right hidden-xs text-ellipsis">
-                    
+
                 </span>
                 <span class="text-ellipsis">&nbsp;&nbsp;</span>
             </div>
@@ -525,9 +525,25 @@
                         var article_list = JSON.parse(article_list_str).A;
                         console.log(article_list);
 
-                        $('article').remove();
+                        var scores = new Array();
+                        var names = new Array();
 
-                        var html_str = '<div class="blog-post" id="article">';
+                        for (let i = 0; i < article_list.length; i++) {
+                            scores.push(article_list[i].Score/article_list[0].Score);
+                            names.push(article_list[i].Id)
+                        }
+                        console.log("=====================");
+                        console.log(scores);
+                        console.log(names);
+                        console.log("=====================");
+
+                        $('article').remove();
+                        if (scores.length != 0) {
+                            var html_str = '<div id="container" style="height: 300px"></div><div class="blog-post" id="article">';
+                        }
+                        else {
+                            var html_str = '<div class="blog-post" id="article">';
+                        }
                         for (let i = 0; i < article_list.length; i++) {
                             html_str = html_str + '<div class="single-post panel box-shadow-wrap-normal" style="height: 110px;">' +
                                 '<div class="post-meta wrapper-lg" style="padding: 15px;">' +
@@ -575,6 +591,7 @@
                         html_str = html_str + '</div>'
                         var s = document.getElementById('post-panel');
                         s.innerHTML = html_str;
+                        show_smooth_line(scores, names);
                         return;
                     } else {
                         alert(data.message);
@@ -586,6 +603,42 @@
         }
     </script>
 
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+
+    <script>
+        function show_smooth_line(scores, names) {
+            var dom = document.getElementById("container");
+            var myChart = echarts.init(dom);
+            var app = {};
+
+            var option;
+
+            option = {
+                tooltip: {
+                    trigger: 'item'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: names
+                },
+                yAxis: {
+                    type: 'value',
+                    min: scores[scores.length - 1],
+                    max: scores[0]
+                },
+                series: [{
+                    data: scores,
+                    type: 'line',
+                    smooth: true
+                }]
+            };
+
+
+            if (option && typeof option === 'object') {
+                myChart.setOption(option);
+            }
+        }
+    </script>
     <!--  show  -->
     <script>
         function show(a) {

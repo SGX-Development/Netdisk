@@ -73,7 +73,7 @@
     <!-- aside -->
     <div id="alllayout" class="app app-aside-fix container app-header-fixed">
         <!-- headnav -->
-        <header id="header" class="app-header navbar box-shadow-bottom-lg" role="menu">
+        <header id="header" class="app-header navbar" role="menu">
             <!-- navbar header（交集处） -->
             <div class="text-ellipsis navbar-header bg-white">
                 <button class="pull-right visible-xs" ui-toggle-class="show animated animated-lento fadeIn"
@@ -110,27 +110,38 @@
             <!-- navbar collapse（顶部导航栏） -->
             <div class="collapse pos-rlt navbar-collapse bg-white">
                 <ul class="nav navbar-nav navbar-right">
-
                     <li class="dropdown hidden-xs hidden-sm"><a href="/login" id="global_player_toggle" class="skPlayer-list-switch dropdown-toggle
-            feathericons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"
+            feathericons" style="padding-bottom: 0px;margin-bottom: 0px;"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round" class="feather feather-disc">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <circle cx="12" cy="12" r="3"></circle>
+                                <span><img src="../static/svg/denglu.svg" style="width: 20px;height: 20px;
+                                    margin:0px 0px 5px -12px;" title="登录"> </span>
+                                <p style="padding-bottom: 0px;margin-bottom: 0px;">登录</p>
                             </svg><span class="visible-xs-inline"></span></a></li>
+                    <!--注册-->
                     <li class="dropdown hidden-xs hidden-sm"><a href="/register" id="global_player_toggle" class="skPlayer-list-switch dropdown-toggle
-            feathericons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"
+            feathericons" style="padding-bottom: 0px;margin-bottom: 0px;"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round" class="feather feather-twitch">
-                                <path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path>
+                                <!--<path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path>-->
+                                <span><img src="../static/svg/zhuce.svg" style="width: 20px;height: 20px;
+                                    margin:0px 0px 5px -12px;" title="注册"></span>
+                                <p style="padding-bottom: 0px;margin-bottom: 0px;">注册</p>
                             </svg><span class="visible-xs-inline"></span></a></li>
+
+                    <!--退出-->
                     <li class="dropdown hidden-xs hidden-sm"><a href="" onclick="logout();return false;"
                             id="global_player_toggle" class="skPlayer-list-switch dropdown-toggle
-            feathericons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"
+            feathericons" style="padding-bottom: 0px;margin-bottom: 0px;"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round" class="feather feather-twitch">
-                                <path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path>
-                            </svg><span class="visible-xs-inline"></span></a></li>
+                                <!--<path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path>-->
+                                <span><img src="../static/svg/tuichu.svg" style="width: 20px;height: 20px;
+                                    margin:0px 0px 5px -12px;"></span>
+
+                                <p style="padding-bottom: 0px;margin-bottom: 0px;">退出</p>
+
+                            </svg><span class="visible-xs-inline"> </span></a></li>
                 </ul>
             </div>
             <!-- / navbar collapse -->
@@ -193,8 +204,7 @@
                             <li> <a target="_self" href="/record" class="auto"><span class="nav-icon"><svg
                                             xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="feather feather-file">
+                                            stroke-linecap="round" stroke-linejoin="round" class="feather feather-file">
                                             <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
                                             <polyline points="13 2 13 9 20 9"></polyline>
                                         </svg></span><span>记录</span></a></li>
@@ -301,7 +311,7 @@
         <footer id="footer" class="app-footer" role="footer">
             <div class="wrapper bg-light">
                 <span class="pull-right hidden-xs text-ellipsis">
-                    SJTU - School of Cyber Science and Engineering
+                    
                 </span>
                 <span class="text-ellipsis">&nbsp;&nbsp;</span>
             </div>

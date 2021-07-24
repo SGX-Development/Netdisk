@@ -74,7 +74,7 @@
     <!-- aside -->
     <div id="alllayout" class="app app-aside-fix container app-header-fixed">
         <!-- headnav -->
-        <header id="header" class="app-header navbar box-shadow-bottom-lg" role="menu">
+        <header id="header" class="app-header navbar" role="menu">
             <!-- navbar header（交集处） -->
             <div class="text-ellipsis navbar-header bg-white">
                 <button class="pull-right visible-xs" ui-toggle-class="show animated animated-lento fadeIn"
@@ -111,27 +111,38 @@
             <!-- navbar collapse（顶部导航栏） -->
             <div class="collapse pos-rlt navbar-collapse bg-white">
                 <ul class="nav navbar-nav navbar-right">
-
                     <li class="dropdown hidden-xs hidden-sm"><a href="/login" id="global_player_toggle" class="skPlayer-list-switch dropdown-toggle
-            feathericons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"
+            feathericons" style="padding-bottom: 0px;margin-bottom: 0px;"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round" class="feather feather-disc">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <circle cx="12" cy="12" r="3"></circle>
+                                <span><img src="../static/svg/denglu.svg" style="width: 20px;height: 20px;
+                                    margin:0px 0px 5px -12px;" title="登录"> </span>
+                                <p style="padding-bottom: 0px;margin-bottom: 0px;">登录</p>
                             </svg><span class="visible-xs-inline"></span></a></li>
+                    <!--注册-->
                     <li class="dropdown hidden-xs hidden-sm"><a href="/register" id="global_player_toggle" class="skPlayer-list-switch dropdown-toggle
-            feathericons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"
+            feathericons" style="padding-bottom: 0px;margin-bottom: 0px;"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round" class="feather feather-twitch">
-                                <path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path>
+                                <!--<path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path>-->
+                                <span><img src="../static/svg/zhuce.svg" style="width: 20px;height: 20px;
+                                    margin:0px 0px 5px -12px;" title="注册"></span>
+                                <p style="padding-bottom: 0px;margin-bottom: 0px;">注册</p>
                             </svg><span class="visible-xs-inline"></span></a></li>
+
+                    <!--退出-->
                     <li class="dropdown hidden-xs hidden-sm"><a href="" onclick="logout();return false;"
                             id="global_player_toggle" class="skPlayer-list-switch dropdown-toggle
-            feathericons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"
+            feathericons" style="padding-bottom: 0px;margin-bottom: 0px;"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round" class="feather feather-twitch">
-                                <path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path>
-                            </svg><span class="visible-xs-inline"></span></a></li>
+                                <!--<path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path>-->
+                                <span><img src="../static/svg/tuichu.svg" style="width: 20px;height: 20px;
+                                    margin:0px 0px 5px -12px;"></span>
+
+                                <p style="padding-bottom: 0px;margin-bottom: 0px;">退出</p>
+
+                            </svg><span class="visible-xs-inline"> </span></a></li>
                 </ul>
             </div>
             <!-- / navbar collapse -->
@@ -240,7 +251,7 @@
             <main class="app-content-body ">
                 <div class="hbox hbox-auto-xs hbox-auto-sm">
                     <div class="col center-part">
-                        <header class="bg-light lter wrapper-md" style="padding-bottom: 5px;">
+                        <header class="bg-light lter wrapper-md" style="padding-bottom: 0px;padding-top: 0px">
                             <div class="form-group" style="float: left;margin-right: 20px;">
                                 <div class="input-group rounded bg-white-pure box-shadow-wrap-normal">
                                     <!-- <button type="button" onclick="empty_bin()" class="transparent btn"
@@ -255,169 +266,204 @@
                         <div class="wrapper-md" style="padding-left: 80px;">
                             <!-- 用户行为统计 -->
 
-                                    <div class="row">
-                                        <div class="col-sm-8 b-l b-light">
-                                            <div class="m-l-xs m-t-xs m-b-sm font-bold">动态日历<span class="info-icons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info" data-toggle="tooltip" title="" data-original-title="统计近10个月的文章和作者评论数目"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                            </span></div>
-                                            <div class="text-center">
-                                                <nav class="loading-echart text-center m-t-lg m-b-lg hide">
-                                                    <p class="infinite-scroll-request"><i class="animate-spin fontello fontello-refresh"></i>Loading...</p>
-                                                </nav>
-                                                <div id="post-calendar" class="top-echart" _echarts_instance_="ec_1626411836253" style="-webkit-tap-highlight-color: transparent; user-select: none; position: relative;"><div style="position: relative; width: 602px; height: 300000px; padding: 0px; margin: 10px; border-width: 0px; cursor: default;"><canvas data-zr-dom-id="zr_0" width="602" height="300" style="position: absolute; left: 0px; top: 0px; width: 602px; height: 300px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); padding: 0px; margin: 0px; border-width: 0px;"></canvas></div><div style="position: absolute; display: none; border-style: solid; white-space: nowrap; z-index: 9999999; transition: left 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s, top 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s; background-color: rgb(85, 85, 85); border-width: 1px; border-color: rgb(119, 119, 119); border-radius: 4px; color: rgb(255, 255, 255); font: 14px / 21px &quot;Microsoft YaHei&quot;; padding: 10px; left: 450px; top: 68px; pointer-events: none;"><div style="font-size: 14px;">2021-05-08：1</div></div></div>
+                            <div class="row">
+                                <div class="col-sm-8 b-l b-light">
+                                    <div class="m-l-xs m-t-xs m-b-sm font-bold">动态日历<span class="info-icons"><svg
+                                                xmlns="http://www.w3.org/2000/svg" width="16px" height="16px"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round"
+                                                class="feather feather-info" data-toggle="tooltip" title=""
+                                                data-original-title="统计近10个月的文章和作者评论数目">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                            </svg>
+                                        </span></div>
+                                    <div class="text-center">
+                                        <nav class="loading-echart text-center m-t-lg m-b-lg hide">
+                                            <p class="infinite-scroll-request"><i
+                                                    class="animate-spin fontello fontello-refresh"></i>Loading...</p>
+                                        </nav>
+                                        <div id="post-calendar" class="top-echart" _echarts_instance_="ec_1626411836253"
+                                            style="-webkit-tap-highlight-color: transparent; user-select: none; position: relative;">
+                                            <div
+                                                style="position: relative; width: 602px; height: 300000px; padding: 0px; margin: 10px; border-width: 0px; cursor: default;">
+                                                <canvas data-zr-dom-id="zr_0" width="602" height="300"
+                                                    style="position: absolute; left: 0px; top: 0px; width: 602px; height: 300px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); padding: 0px; margin: 0px; border-width: 0px;"></canvas>
+                                            </div>
+                                            <div
+                                                style="position: absolute; display: none; border-style: solid; white-space: nowrap; z-index: 9999999; transition: left 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s, top 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s; background-color: rgb(85, 85, 85); border-width: 1px; border-color: rgb(119, 119, 119); border-radius: 4px; color: rgb(255, 255, 255); font: 14px / 21px &quot;Microsoft YaHei&quot;; padding: 10px; left: 450px; top: 68px; pointer-events: none;">
+                                                <div style="font-size: 14px;">2021-05-08：1</div>
                                             </div>
                                         </div>
-
-                                        <script type="text/javascript">
-                                            // 基于准备好的dom，初始化echarts实例
-                                            var myChart = echarts.init(document.getElementById('post-calendar'));
-
-                                            function getVirtulData(year) {
-                                                year = year || '2021';
-                                                var date = +echarts.number.parseDate(year + '-06-01');
-                                                //修改此处为截至时间
-                                                var end = +echarts.number.parseDate((+year + 1) + '-07-16');
-                                                var dayTime = 3600 * 24 * 1000;
-                                                var data = [];
-                                                for (var time = date; time < end; time += dayTime) {
-                                                    if (time === +echarts.number.parseDate(year + '-06-08')
-                                                        || time === +echarts.number.parseDate(year + '-06-10')
-                                                        || time === +echarts.number.parseDate(year + '-07-05')
-                                                        || time === +echarts.number.parseDate(year + '-07-31')
-                                                        || time === +echarts.number.parseDate(year + '-08-11')
-                                                        || time === +echarts.number.parseDate(year + '-08-29')
-                                                        || time === +echarts.number.parseDate(year + '-11-19')) {
-                                                        data.push([
-                                                            echarts.format.formatTime('yyyy-MM-dd', time),
-                                                            1
-                                                        ]);
-                                                    }
-                                                    else if (time === +echarts.number.parseDate(year + '-07-19')
-                                                        || time === +echarts.number.parseDate('2021' + '-02-16')) {
-                                                        data.push([
-                                                            echarts.format.formatTime('yyyy-MM-dd', time),
-                                                            3
-                                                        ]);
-                                                    }
-                                                    else if (time === +echarts.number.parseDate('2021' + '-05-22')) {
-                                                        data.push([
-                                                            echarts.format.formatTime('yyyy-MM-dd', time),
-                                                            5
-                                                        ]);
-                                                    }
-                                                    else {
-                                                        data.push([
-                                                            echarts.format.formatTime('yyyy-MM-dd', time),
-                                                            Math.floor(Math.random() * 3)
-                                                            //0
-                                                        ]);
-                                                    }
-                                                }
-                                                return data;
-                                            }
-
-                                            var option = {
-                                                title: {
-                                                    top: 10,
-                                                    left: 'center',
-                                                    text: '用户操作统计'
-                                                },
-                                                tooltip: {},
-
-                                                visualMap: {
-                                                    show: false,
-                                                    min: 0,
-                                                    max: 4,
-                                                    type: 'piecewise',
-                                                    orient: 'horizontal',
-                                                    left: 'center',
-                                                    top: 65,
-                                                    color: [  '#40C463' , '#216A38', '#30A14E', '#9BE9A8', '#ffffff'],
-                                                },
-                                                calendar: {
-                                                    top: 80,
-                                                    left: 30,
-                                                    right: 30,
-                                                    //bottom: '10%',
-                                                    cellSize: 10,
-                                                    range: ['2020-06-01', '2021-07-16'],
-                                                    itemStyle: {
-                                                        borderWidth: 0.5,
-                                                    },
-                                                    yearLabel: {show: false},
-                                                    dayLabel: {
-                                                        nameMap: ['日', '一', '二' , '三', '四', '五', '六'],
-                                                        fontSize:10
-                                                    },
-                                                    splitLine: false,
-                                                },
-
-                                                series: {
-                                                    type: 'heatmap',
-                                                    coordinateSystem: 'calendar',
-                                                    data: getVirtulData(2020)
-                                                }
-                                            };
-
-                                            // 使用刚指定的配置项和数据显示图表。
-                                            myChart.setOption(option);
-                                        </script>
-                                        <div class="col-sm-4 b-l b-light">
-                                            <div class="m-l-xs m-t-xs m-b-sm font-bold">分类雷达图</div>
-                                            <div class="text-center">
-                                                <nav class="loading-echart text-center m-t-lg m-b-lg hide">
-                                                    <p class="infinite-scroll-request"><i class="animate-spin fontello fontello-refresh"></i>Loading...</p>
-                                                </nav>
-                                                <div id="category-radar" class="top-echart" _echarts_instance_="ec_1626444880188" style="-webkit-tap-highlight-color: transparent; user-select: none; position: relative;"><div style="position: relative; width: 276px; height: 240px; padding: 0px; margin: 0px; border-width: 0px; cursor: default;"><canvas data-zr-dom-id="zr_0" width="552" height="480" style="position: absolute; left: 0px; top: 0px; width: 276px; height: 240px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); padding: 0px; margin: 0px; border-width: 0px;"></canvas></div><div style="position: absolute; display: none; border-style: solid; white-space: nowrap; z-index: 9999999; transition: left 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s, top 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s; background-color: rgba(50, 50, 50, 0.7); border-width: 0px; border-color: rgb(51, 51, 51); border-radius: 4px; color: rgb(255, 255, 255); font: 14px / 21px &quot;Microsoft YaHei&quot;; padding: 5px; left: 80px; top: 87px; pointer-events: none;">2021-06<br><span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#6772e5;"></span>文章篇数: 0</div></div>
-                                            </div>
-                                        </div>
-
-                                        <script type="text/javascript">
-                                            var myChart = echarts.init(document.getElementById('category-radar'));
-
-                                            var option = {
-                                                tooltip: {
-
-                                                    trigger: 'item'
-                                                },
-                                                legend: {
-                                                    top: '5%',
-                                                    left: 'left',
-                                                    show: false
-                                                },
-                                                series: [
-                                                    {
-                                                        name: '访问来源',
-                                                        type: 'pie',
-                                                        radius: ['40%', '70%'],
-                                                        avoidLabelOverlap: false,
-                                                        label: {
-                                                            show: true,
-                                                            position: 'outer'
-                                                        },
-                                                        emphasis: {
-                                                            label: {
-                                                                show: true,
-                                                                fontSize: '40',
-                                                                fontWeight: 'bold'
-                                                            }
-                                                        },
-                                                        labelLine: {
-                                                            show: true
-                                                        },
-                                                        data: [
-                                                            {value: 735, name: '其他'},
-                                                            {value: 1048, name: '个人邮件'},
-                                                            {value: 580, name: '私人日志'}
-                                                        ]
-                                                    }
-                                                ]
-                                            };
-
-                                            // 使用刚指定的配置项和数据显示图表。
-                                            myChart.setOption(option);
-                                        </script>
-
                                     </div>
+                                </div>
+
+                                <script type="text/javascript">
+                                    // 基于准备好的dom，初始化echarts实例
+                                    var myChart = echarts.init(document.getElementById('post-calendar'));
+
+                                    function getVirtulData(year) {
+                                        year = year || '2021';
+                                        var date = +echarts.number.parseDate(year + '-06-01');
+                                        //修改此处为截至时间
+                                        var end = +echarts.number.parseDate((+year + 1) + '-07-16');
+                                        var dayTime = 3600 * 24 * 1000;
+                                        var data = [];
+                                        for (var time = date; time < end; time += dayTime) {
+                                            if (time === +echarts.number.parseDate(year + '-06-08')
+                                                || time === +echarts.number.parseDate(year + '-06-10')
+                                                || time === +echarts.number.parseDate(year + '-07-05')
+                                                || time === +echarts.number.parseDate(year + '-07-31')
+                                                || time === +echarts.number.parseDate(year + '-08-11')
+                                                || time === +echarts.number.parseDate(year + '-08-29')
+                                                || time === +echarts.number.parseDate(year + '-11-19')) {
+                                                data.push([
+                                                    echarts.format.formatTime('yyyy-MM-dd', time),
+                                                    1
+                                                ]);
+                                            }
+                                            else if (time === +echarts.number.parseDate(year + '-07-19')
+                                                || time === +echarts.number.parseDate('2021' + '-02-16')) {
+                                                data.push([
+                                                    echarts.format.formatTime('yyyy-MM-dd', time),
+                                                    3
+                                                ]);
+                                            }
+                                            else if (time === +echarts.number.parseDate('2021' + '-05-22')) {
+                                                data.push([
+                                                    echarts.format.formatTime('yyyy-MM-dd', time),
+                                                    5
+                                                ]);
+                                            }
+                                            else {
+                                                data.push([
+                                                    echarts.format.formatTime('yyyy-MM-dd', time),
+                                                    Math.floor(Math.random() * 3)
+                                                    //0
+                                                ]);
+                                            }
+                                        }
+                                        return data;
+                                    }
+
+                                    var option = {
+                                        title: {
+                                            top: 10,
+                                            left: 'center',
+                                            text: '用户操作统计'
+                                        },
+                                        tooltip: {},
+
+                                        visualMap: {
+                                            show: false,
+                                            min: 0,
+                                            max: 4,
+                                            type: 'piecewise',
+                                            orient: 'horizontal',
+                                            left: 'center',
+                                            top: 65,
+                                            color: ['#40C463', '#216A38', '#30A14E', '#9BE9A8', '#ffffff'],
+                                        },
+                                        calendar: {
+                                            top: 80,
+                                            left: 30,
+                                            right: 30,
+                                            //bottom: '10%',
+                                            cellSize: 10,
+                                            range: ['2020-06-01', '2021-07-16'],
+                                            itemStyle: {
+                                                borderWidth: 0.5,
+                                            },
+                                            yearLabel: { show: false },
+                                            dayLabel: {
+                                                nameMap: ['日', '一', '二', '三', '四', '五', '六'],
+                                                fontSize: 10
+                                            },
+                                            splitLine: false,
+                                        },
+
+                                        series: {
+                                            type: 'heatmap',
+                                            coordinateSystem: 'calendar',
+                                            data: getVirtulData(2020)
+                                        }
+                                    };
+
+                                    // 使用刚指定的配置项和数据显示图表。
+                                    myChart.setOption(option);
+                                </script>
+                                <div class="col-sm-4 b-l b-light">
+                                    <div class="m-l-xs m-t-xs m-b-sm font-bold">分类雷达图</div>
+                                    <div class="text-center">
+                                        <nav class="loading-echart text-center m-t-lg m-b-lg hide">
+                                            <p class="infinite-scroll-request"><i
+                                                    class="animate-spin fontello fontello-refresh"></i>Loading...</p>
+                                        </nav>
+                                        <div id="category-radar" class="top-echart"
+                                            _echarts_instance_="ec_1626444880188"
+                                            style="-webkit-tap-highlight-color: transparent; user-select: none; position: relative;">
+                                            <div
+                                                style="position: relative; width: 276px; height: 240px; padding: 0px; margin: 0px; border-width: 0px; cursor: default;">
+                                                <canvas data-zr-dom-id="zr_0" width="552" height="480"
+                                                    style="position: absolute; left: 0px; top: 0px; width: 276px; height: 240px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); padding: 0px; margin: 0px; border-width: 0px;"></canvas>
+                                            </div>
+                                            <div
+                                                style="position: absolute; display: none; border-style: solid; white-space: nowrap; z-index: 9999999; transition: left 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s, top 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s; background-color: rgba(50, 50, 50, 0.7); border-width: 0px; border-color: rgb(51, 51, 51); border-radius: 4px; color: rgb(255, 255, 255); font: 14px / 21px &quot;Microsoft YaHei&quot;; padding: 5px; left: 80px; top: 87px; pointer-events: none;">
+                                                2021-06<br><span
+                                                    style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#6772e5;"></span>文章篇数:
+                                                0</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <script type="text/javascript">
+                                    var myChart = echarts.init(document.getElementById('category-radar'));
+
+                                    var option = {
+                                        tooltip: {
+
+                                            trigger: 'item'
+                                        },
+                                        legend: {
+                                            top: '5%',
+                                            left: 'left',
+                                            show: false
+                                        },
+                                        series: [
+                                            {
+                                                name: '访问来源',
+                                                type: 'pie',
+                                                radius: ['40%', '70%'],
+                                                avoidLabelOverlap: false,
+                                                label: {
+                                                    show: true,
+                                                    position: 'outer'
+                                                },
+                                                emphasis: {
+                                                    label: {
+                                                        show: true,
+                                                        fontSize: '40',
+                                                        fontWeight: 'bold'
+                                                    }
+                                                },
+                                                labelLine: {
+                                                    show: true
+                                                },
+                                                data: [
+                                                    { value: 735, name: '其他' },
+                                                    { value: 1048, name: '个人邮件' },
+                                                    { value: 580, name: '私人日志' }
+                                                ]
+                                            }
+                                        ]
+                                    };
+
+                                    // 使用刚指定的配置项和数据显示图表。
+                                    myChart.setOption(option);
+                                </script>
+
+                            </div>
 
 
 
@@ -627,7 +673,7 @@
         <footer id="footer" class="app-footer" role="footer">
             <div class="wrapper bg-light">
                 <span class="pull-right hidden-xs text-ellipsis">
-                    SJTU - School of Cyber Science and Engineering
+                    
                 </span>
                 <span class="text-ellipsis">&nbsp;&nbsp;</span>
             </div>

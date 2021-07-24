@@ -260,7 +260,15 @@ pub extern "C" fn build_index(some_string: *const u8, some_len: usize) -> sgx_st
 
     let line = String::from_utf8(v_vec).unwrap();
 
-    let raw_input: RawInput = serde_json::from_str(&line).unwrap();
+    // let raw_input: RawInput = serde_json::from_str(&line).unwrap();
+
+    let raw_input: RawInput = match serde_json::from_str(&line){
+        Ok(r) => r,
+        Err(e) =>{
+            eprintln!("parse build package error.");
+            return sgx_status_t::SGX_ERROR_UNEXPECTED;
+        }
+    };
     // println!("{:?}", &raw_input);
 
     // find if user == request user in package
@@ -594,7 +602,7 @@ pub extern "C" fn do_query(
             Ok(query) => query,
             Err(e) => {
                 eprintln!("{}", e);
-                panic!(e);
+                //panic!(e);
                 return sgx_status_t::SGX_ERROR_UNEXPECTED;
             }
         };
@@ -852,7 +860,14 @@ extern "C" fn sgx_decrypt(ciphertext: *const u8, ciphertext_len: usize, requeste
         Ok(_) => {}
     }
     let z = w.unwrap();
-    let mut x = decrypt(&z[..], &key, &iv).unwrap();
+    // let mut x = decrypt(&z[..], &key, &iv).unwrap();
+    let mut x = match decrypt(&z[..], &key, &iv){
+        Ok(r) => r,
+        Err(e) =>{
+            eprintln!("decrpyt error");
+            return Err("InvalidByte".to_string());
+        }
+    };
     for i in 0..(x.len()) {
         if x[i] < 32 {
             println!("======={:?}", x[i]);

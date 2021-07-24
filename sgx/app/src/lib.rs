@@ -1249,11 +1249,6 @@ fn rust_decrypt(message: String) -> String {
     g.A
 }
 fn alertprint(message: String, op: &str){
-    println!("==============get message============");
-    println!("operation: {}", op);
-    println!("-------------------------------------\n");
-
-
     let mut data:Package = serde_json::from_str(&message).unwrap();
     let user = data.user;
     let r= message.len() as u64;
@@ -1261,10 +1256,14 @@ fn alertprint(message: String, op: &str){
     let encry_user = (*private_key).encrypt(&mut rng, PaddingScheme::new_pkcs1v15_encrypt(),user.as_bytes()).expect("failed to encrypt");
     let bytes = base64::encode(&encry_user);
     data.user =bytes;
+
+    println!("==============get message============");
+    println!("operation: {}", op);
+    println!("-------------------------------------\n");
     println!("{}",serde_json::to_string(&data).unwrap());
     
     println!("\n=====================================");
-    println!("use RSA to decrypt \"user\" ciphertext:");
+    println!("IN ENCLAVE: use RSA to decrypt \"user\" ciphertext:");
     println!("-------------------------------------\n");
     println!("{}", message);
     println!("\n=====================================\n");

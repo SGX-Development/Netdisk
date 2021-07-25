@@ -249,6 +249,11 @@ pub extern "C" fn build_index(some_string: *const u8, some_len: usize) -> sgx_st
 
     let line1: String = x.unwrap();
 
+    let print_struct = Package{user:requester.clone(),data:line1.clone()[requester.len()+1..].to_string()};
+    println!("服务端可信区的明文数据: ");
+    println!("{:#?}", print_struct);
+    println!("=====================================\n\n\n");
+
     // let line1 = line.clone();
     let v: &[u8] = unsafe { std::slice::from_raw_parts(line1.as_ptr() as *const u8, line1.len()) };
     let mut v_vec = v.to_vec();
@@ -534,6 +539,7 @@ pub extern "C" fn do_query(
     let v: &[u8] = unsafe { std::slice::from_raw_parts(some_string, some_len) };
     let vraw = String::from_utf8(v.to_vec()).unwrap();  
     let package_input: Package = serde_json::from_str(&vraw).unwrap();
+
     let requester = package_input.user;
     let enc_data = package_input.data;
 
@@ -544,6 +550,11 @@ pub extern "C" fn do_query(
         return sgx_status_t::SGX_ERROR_UNEXPECTED;
     }
     let search_pattern: String = x.unwrap();
+
+    let print_struct = Package{user:requester.clone(),data:search_pattern.clone()[requester.len()+1..].to_string()};
+    println!("服务端可信区的明文数据: ");
+    println!("{:#?}", print_struct);
+    println!("=====================================\n\n\n");
     // println!("line: {}", line);
 
     // 对line进行拆分，转化为user与pattern
@@ -705,6 +716,7 @@ pub extern "C" fn get_origin_by_id(
     }
 
     let line: String = x.unwrap();
+    
     // println!("line: {}", &line);
 
     let uid = get_id_from_data(line.clone());
@@ -870,7 +882,7 @@ extern "C" fn sgx_decrypt(ciphertext: *const u8, ciphertext_len: usize, requeste
     };
     for i in 0..(x.len()) {
         if x[i] < 32 {
-            println!("======={:?}", x[i]);
+            // println!("======={:?}", x[i]);
             x[i] = 32;
         }
     }
@@ -1069,7 +1081,7 @@ pub extern "C" fn user_register(
     string_limit: usize,
 ) -> sgx_status_t {
 
-    println!("[+] new user!");
+    // println!("[+] new user!");
 
     let enc_vec: &[u8] = unsafe { std::slice::from_raw_parts(enc_user_pswd, enc_user_pswd_len) };
     // let enc_data = String::from_utf8(enc_vec.to_vec()).unwrap();  
@@ -1081,7 +1093,7 @@ pub extern "C" fn user_register(
     // let user_data_vec= (*private_key).decrypt(padding, enc_vec).expect("failed to decrypt");
     let user_data_vec= match (*private_key).decrypt(padding, w) {
         Ok(r) => {
-            println!("[+] session key decrypt SUCCESS!");
+            // println!("[+] session key decrypt SUCCESS!");
             r
         }
         _ => {
@@ -1151,7 +1163,7 @@ pub extern "C" fn get_session_key(
 
     let db_pswd = match (*private_key).decrypt(PaddingScheme::new_pkcs1v15_encrypt(), enc_db_pswd_u8){
         Ok(r) => {
-            println!("[+] password from database decrypt SUCCESS!");
+            // println!("[+] password from database decrypt SUCCESS!");
             r
         }
         _ => {
@@ -1162,7 +1174,7 @@ pub extern "C" fn get_session_key(
 
     let sk_data = match (*private_key).decrypt(PaddingScheme::new_pkcs1v15_encrypt(), enc_data_u8){
         Ok(r) => {
-            println!("[+] session key package decrypt SUCCESS!");
+            // println!("[+] session key package decrypt SUCCESS!");
             r
         }
         _ => {
@@ -1182,7 +1194,7 @@ pub extern "C" fn get_session_key(
 
     let data_struct: SessionKeyPackage  = match serde_json::from_str(&data_str){
         Ok(r) => {
-            println!("[+]  package serde SUCCESS!");
+            // println!("[+]  package serde SUCCESS!");
             r
         }
         _ => {
@@ -1224,7 +1236,7 @@ pub extern "C" fn get_session_key(
     //     }
     // }
     
-    println!("[+] session key SUCCESS!");
+    // println!("[+] session key SUCCESS!");
     // println!("sk2 {:?}", &sk);
     
 

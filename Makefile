@@ -17,6 +17,5 @@ clean:
 	$(MAKE) -C sgx clean
 	$(MAKE) -C test clean
 	rm -f netdisk/enclave.signed.so  netdisk/netdisk
-	rm -rf netdisk/idx
 	sync
 

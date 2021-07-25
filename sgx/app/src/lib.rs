@@ -201,11 +201,11 @@ pub extern "C" fn rust_do_query(
     let v: &[u8] = unsafe { std::slice::from_raw_parts(some_string, some_len) };
     let line = String::from_utf8(v.to_vec()).unwrap();
 
-    alertprint(line.clone(),"query");
+    alertprint(line.clone(),"关键词查询");
 
     let enclave = match &*SGX_ENCLAVE {
         Ok(r) => {
-            println!("[+] rust_do_query !");
+            // println!("[+] rust_do_query !");
             r
         }
         Err(x) => {
@@ -291,11 +291,11 @@ pub extern "C" fn rust_build_index(
     let line = String::from_utf8(v.to_vec()).unwrap();
 
     // println!("[=] Intercept: {}", &line);
-    alertprint(line.clone(), "build");
+    alertprint(line.clone(), "数据上传");
 
     let enclave = match &*SGX_ENCLAVE {
         Ok(r) => {
-            println!("[+] rust_build_index");
+            // println!("[+] rust_build_index");
             r
         }
         Err(x) => {
@@ -359,7 +359,7 @@ pub extern "C" fn rust_build_index(
 pub extern "C" fn rust_empty_bin(success: *mut usize) -> Result<(), std::io::Error> {
     let enclave = match &*SGX_ENCLAVE {
         Ok(r) => {
-            println!("[+] rust_empty_bin");
+            // println!("[+] rust_empty_bin");
             r
         }
         Err(x) => {
@@ -422,7 +422,7 @@ pub extern "C" fn rust_delete_index(
     
     let enclave = match &*SGX_ENCLAVE {
         Ok(r) => {
-            println!("[+] rust_delete_index");
+            // println!("[+] rust_delete_index");
             r
         }
         Err(x) => {
@@ -491,7 +491,7 @@ pub extern "C" fn rust_recover_index(
     
     let enclave = match &*SGX_ENCLAVE {
         Ok(r) => {
-            println!("[+] rust_recover_index");
+            // println!("[+] rust_recover_index");
             r
         }
         Err(x) => {
@@ -554,7 +554,7 @@ pub extern "C" fn rust_recover_index(
 pub extern "C" fn rust_commit(success: *mut usize) -> Result<(), std::io::Error> {
     let enclave = match &*SGX_ENCLAVE {
         Ok(r) => {
-            println!("[+] rust_commit");
+            // println!("[+] rust_commit");
             r
         }
         Err(x) => {
@@ -620,7 +620,7 @@ pub extern "C" fn rust_search_title(
 
     let enclave = match &*SGX_ENCLAVE {
         Ok(r) => {
-            println!("[+] rust_search_title");
+            // println!("[+] rust_search_title");
             r
         }
         Err(x) => {
@@ -715,7 +715,7 @@ pub extern "C" fn rust_server_hello(
 
     let enclave = match &*SGX_ENCLAVE {
         Ok(r) => {
-            println!("[+] rust_server_hello");
+            // println!("[+] rust_server_hello");
             r
         }
         Err(x) => {
@@ -825,7 +825,7 @@ pub extern "C" fn rust_register(
 
     let enclave = match &*SGX_ENCLAVE {
         Ok(r) => {
-            println!("[+] rust register");
+            // println!("[+] rust register");
             r
         }
         Err(x) => {
@@ -927,7 +927,7 @@ pub extern "C" fn rust_get_session_key(
 
     let enclave = match &*SGX_ENCLAVE {
         Ok(r) => {
-            println!("[+] rust_delete_index");
+            // println!("[+] rust_delete_index");
             r
         }
         Err(x) => {
@@ -992,7 +992,7 @@ pub extern "C" fn rust_user_logout(
     
     let enclave = match &*SGX_ENCLAVE {
         Ok(r) => {
-            println!("[+] rust_delete_index");
+            // println!("[+] rust_delete_index");
             r
         }
         Err(x) => {
@@ -1056,7 +1056,7 @@ pub extern "C" fn rust_user_logout(
 pub extern "C" fn rust_test() -> Result<(), std::io::Error>{
     let enclave = match &*SGX_ENCLAVE {
         Ok(r) => {
-            println!("[+] rust_delete_index");
+            // println!("[+] rust_delete_index");
             r
         }
         Err(x) => {
@@ -1250,21 +1250,20 @@ fn rust_decrypt(message: String) -> String {
 }
 fn alertprint(message: String, op: &str){
     let mut data:Package = serde_json::from_str(&message).unwrap();
-    let user = data.user;
-    let r= message.len() as u64;
-    let mut rng = rand::rngs::StdRng::seed_from_u64(r);
-    let encry_user = (*private_key).encrypt(&mut rng, PaddingScheme::new_pkcs1v15_encrypt(),user.as_bytes()).expect("failed to encrypt");
+    // let user = data.user;
+    // let r= message.len() as u64;
+    // let mut rng = rand::rngs::StdRng::seed_from_u64(r);
+    // let encry_user = (*private_key).encrypt(&mut rng, PaddingScheme::new_pkcs1v15_encrypt(),user.as_bytes()).expect("failed to encrypt");
+    let encry_user = rust_encrypt(data.user.clone(),);
     let bytes = base64::encode(&encry_user);
+
     data.user =bytes;
 
-    println!("==============get message============");
-    println!("operation: {}", op);
+    println!("==============get message============\n");
+    println!("操作: {}", op);
     println!("-------------------------------------\n");
-    println!("{}",serde_json::to_string(&data).unwrap());
-    
-    println!("\n=====================================");
-    println!("IN ENCLAVE: use RSA to decrypt \"user\" ciphertext:");
+    println!("服务端不可信区的密文数据: ");
+    println!("{:#?}",data);
+    // println!("\n=====================================");
     println!("-------------------------------------\n");
-    println!("{}", message);
-    println!("\n=====================================\n");
 }
